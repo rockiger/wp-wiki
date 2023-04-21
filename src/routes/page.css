@@ -1,0 +1,44 @@
+/* Basic editor styles */
+.mantine-RichTextEditor-content > .ProseMirror {
+  padding: 0;
+}
+.ProseMirror {
+  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  font-size: 1.125rem;
+  /* height: calc((100vh - 65px) - 40px); */
+  padding: 0.7rem 1rem 0.7rem 0.7rem;
+  overflow-y: auto;
+}
+.ProseMirror li > p {
+  margin: 0;
+}
+
+.ProseMirror ul[data-type='taskList'] {
+  list-style: none;
+  padding: 0;
+}
+.ProseMirror ul[data-type='taskList'] p {
+  margin: 0;
+}
+
+.ProseMirror ul[data-type='taskList'] li {
+  display: flex;
+}
+.ProseMirror ul[data-type='taskList'] li > label {
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+  user-select: none;
+}
+.ProseMirror ul[data-type='taskList'] li > div {
+  flex: 1 1 auto;
+}
+.ProseMirror table {
+  border: 0.0625rem solid rgb(222, 226, 230);
+}
+.ProseMirror table td,
+.ProseMirror table th {
+  border-right: 0.0625rem solid rgb(222, 226, 230);
+  border-bottom: 0.0625rem solid rgb(222, 226, 230);
+}
