@@ -46,6 +46,9 @@ import {
   useFetchSpaces,
 } from '../api'
 
+import fulcrumLogo from '../assets/fulcrum.svg'
+import fulcrumName from '../assets/fulcrum_name.svg'
+
 export function loader() {
   fetchPages()
   fetchSpaces()
@@ -207,7 +210,7 @@ export default function Root() {
             p="md"
             hiddenBreakpoint="sm"
             hidden={!opened}
-            width={{ sm: 200, lg: 300 }}
+            width={{ sm: 300, lg: 300 }}
             sx={(theme) => ({
               backgroundColor:
                 theme.colorScheme === 'dark'
@@ -245,7 +248,7 @@ export default function Root() {
                   />
                   <Link to="/">
                     <Image
-                      src="/fulcrum.svg"
+                      src={fulcrumLogo}
                       alt="Fulcrum Logo"
                       height="sm"
                       width="sm"
@@ -257,8 +260,8 @@ export default function Root() {
                 <Group spacing="xs">
                   <Link to="/">
                     <Image
-                      src="/fulcrum_name.svg"
-                      alt="Fulcrum Logo"
+                      src={fulcrumName}
+                      alt="Fulcrum Logo with name"
                       height="2.125rem"
                     />
                   </Link>
