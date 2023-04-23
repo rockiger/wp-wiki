@@ -69,7 +69,7 @@ const useStyles = createStyles((theme) => ({
     borderRadius: theme.radius.md,
     color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
     display: 'block',
-    margin: 2,
+    marginRight: 1,
     padding: `${theme.spacing.xs} ${theme.spacing.md}`,
     textDecoration: 'none',
 
@@ -97,7 +97,7 @@ const useStyles = createStyles((theme) => ({
     display: 'block',
     borderRadius: theme.radius.sm,
     lineHeight: 1,
-    marginRight: 2,
+    marginRight: 1,
     padding: `${rem(8)} ${rem(12)}`,
     textDecoration: 'none',
     color:
@@ -126,7 +126,6 @@ const useStyles = createStyles((theme) => ({
         ? theme.colors.dark[0]
         : theme.colors.gray[7],
     display: 'block',
-    marginLeft: rem(16),
     marginRight: 1,
     padding: `${theme.spacing.xs} ${theme.spacing.md}`,
     textDecoration: 'none',
@@ -393,7 +392,7 @@ export function LinksGroup({
             )}
           </Group>
         </NavLink>
-        <Collapse in={opened}>
+        <Collapse in={opened} pl="lg">
           {children.map((page) => (
             <LinksGroup key={page?.id} pages={pages} rootPage={page} />
           ))}
