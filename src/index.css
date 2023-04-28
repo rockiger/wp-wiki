@@ -233,4 +233,7 @@
   }
 }
 
+.ProseMirror {
+  padding: 0 !important;
+}
 /* //! TODO Add mdx styling for editor? */

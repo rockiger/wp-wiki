@@ -135,7 +135,6 @@ export default function Navigation() {
     setShowSearch(false)
   }, [])
 
-  //! Style scrollbars
   return (
     <>
       <div ref={scrollDetectorRef} />

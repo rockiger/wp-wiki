@@ -8,11 +8,18 @@
   overflow-wrap: break-word;
   font-size: 1.125rem;
   /* height: calc((100vh - 65px) - 40px); */
-  padding: 0.7rem 1rem 0.7rem 0.7rem;
   overflow-y: auto;
 }
 .ProseMirror li > p {
   margin: 0;
+}
+
+.ProseMirror h2 {
+  margin: 1.5rem 0;
+}
+
+.ProseMirror p {
+  margin: 1rem 0;
 }
 
 .ProseMirror ul[data-type='taskList'] {

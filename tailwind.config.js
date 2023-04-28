@@ -62,11 +62,13 @@ export default {
         display: [
           'Optimistic Display',
           '-apple-system',
+          'Noto Sans',
           ...defaultTheme.fontFamily.sans,
         ],
         text: [
           'Optimistic Text',
           '-apple-system',
+          'Noto Sans',
           ...defaultTheme.fontFamily.sans,
         ],
         mono: ['"Source Code Pro"', ...defaultTheme.fontFamily.mono],

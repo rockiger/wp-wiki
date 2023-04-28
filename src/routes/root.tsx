@@ -21,7 +21,7 @@ import {
 import Navigation from '../components/Navigation'
 import { cx } from 'classix'
 
-//! Thenk about the better icons solution tabler or mdi
+//! Think about the better icons solution tabler or mdi
 
 export function loader() {
   fetchPages()
