@@ -4,14 +4,9 @@
 
 import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
+import type { RouteItem } from '../routes/root'
 
-export interface Breadcrumb {
-  path: string
-  skipBreadcrumb?: boolean
-  title: string
-}
-
-export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: Breadcrumb[] }) {
+export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: RouteItem[] }) {
   if (!breadcrumbs.length) {
     return null
   }

@@ -20,6 +20,7 @@ import {
 
 import Navigation from '../components/Navigation'
 import { cx } from 'classix'
+import SidebarNav from '../components/SidebarNav'
 
 //! Think about the better icons solution tabler or mdi
 
@@ -29,6 +30,40 @@ export function loader() {
   return {}
 }
 
+export type RouteTag =
+  | 'foundation'
+  | 'intermediate'
+  | 'advanced'
+  | 'experimental'
+  | 'deprecated'
+
+export interface RouteItem {
+  /** Page title (for the sidebar) */
+  title: string
+  /** Optional page description for heading */
+  description?: string
+  /* Additional meta info for page tagging */
+  tags?: RouteTag[]
+  /** Path to page */
+  path?: string
+  /** Whether the entry is a heading */
+  heading?: boolean
+  /** Whether the page is under construction */
+  wip?: boolean
+  /** List of sub-routes */
+  routes?: RouteItem[]
+  /** Adds a section header above the route item */
+  hasSectionHeader?: boolean
+  /** Title of section header */
+  sectionHeader?: string
+  /** Whether it should be omitted in breadcrumbs */
+  skipBreadcrumb?: boolean
+}
+
+export interface Routes {
+  /** List of routes */
+  routes: RouteItem[]
+}
 type Pages = Page[]
 type Spaces = Space[]
 
@@ -81,11 +116,18 @@ export default function Root() {
           <div className="lg:-mt-16">
             <div className="lg:pt-16 fixed lg:sticky top-0 left-0 right-0 py-0 shadow lg:shadow-none">
               {/* //! TODO Sidebar nav */}
-              {/* <SidebarNav
-                key={section}
-                routeTree={routeTree}
-                breadcrumbs={breadcrumbs}
-              /> */}
+              <SidebarNav
+                routeTree={{
+                  title: 'Space 1',
+                  path: '/page/cG9zdDoxNjg0',
+                  routes:
+                    pages?.map((p) => ({
+                      title: p.title ?? '',
+                      path: `/page/${p.id}`,
+                    })) ?? [],
+                }}
+                breadcrumbs={[]}
+              />
             </div>
           </div>
         )}
@@ -117,14 +159,14 @@ export default function Root() {
                   isHomePage && 'lg:pt-0'
                 )}
               >
-                {/* //! */}
+                {/* //! footer */}
                 {/*<Footer />*/}
               </div>
             </div>
           </main>
         </Suspense>
         <div className="-mt-16 hidden lg:max-w-xs 2xl:block">
-          {/* //! Should probably go down the component tree */}
+          {/* //! TOC, should probably go down the component tree */}
           {/* {showToc && toc.length > 0 && <Toc headings={toc} key={asPath} />} */}
         </div>
       </div>

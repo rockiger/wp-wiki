@@ -43,10 +43,11 @@ import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
 
 import './page.css'
-import { IconSquareRoundedMinus } from '@tabler/icons-react'
-import Breadcrumbs, { Breadcrumb } from '../components/Breadcrumbs'
+import Breadcrumbs from '../components/Breadcrumbs'
 import IconButton from '../components/IconButton'
 import { IconPencilOff } from '@tabler/icons-react'
+
+import type { RouteItem } from './root'
 
 export async function loader({ params }: LoaderFunctionArgs) {
   await fetchPage(params?.pageId ?? '')
@@ -97,12 +98,11 @@ export default function Page() {
    */
   const { data: spaces } = useFetchSpaces()
   const { data: pages } = useFetchPages()
-  const breadcrumbs: Breadcrumb[] = useMemo(() => {
-    function createBreadcrumbs(pageId: string): Breadcrumb[] {
+  const breadcrumbs: RouteItem[] = useMemo(() => {
+    function createBreadcrumbs(pageId: string): RouteItem[] {
       const page = pages.find((p) => p?.id === pageId)
       if (page?.isOverview) {
         const space = spaces.find((s) => s.overviewPage === page?.id)
-        console.log(space)
         return [
           {
             path: `/page/${page?.id}`,
@@ -132,7 +132,6 @@ export default function Page() {
     }
     return []
   }, [page, pages, spaces])
-  console.log(breadcrumbs)
 
   /**
    * Set the contentent of the editor
@@ -328,7 +327,7 @@ export default function Page() {
                         <IconPencil />
                       </IconButton>
                       <Menu as="div" className="relative">
-                        <Menu.Button>
+                        <Menu.Button as="span">
                           {({ open }) => (
                             <IconButton isActive={open}>
                               <IconDots />
