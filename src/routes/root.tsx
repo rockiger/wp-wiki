@@ -1,4 +1,4 @@
-import { Suspense, useRef, useState } from 'react'
+import { Suspense, useMemo, useRef, useState } from 'react'
 import {
   Form,
   Link,
@@ -13,7 +13,7 @@ import {
   fetchSpaces,
   Page,
   postPage,
-  Space,
+  Spaces,
   useFetchPages,
   useFetchSpaces,
 } from '../api'
@@ -21,6 +21,7 @@ import {
 import Navigation from '../components/Navigation'
 import { cx } from 'classix'
 import SidebarNav from '../components/SidebarNav'
+import _ from 'lodash'
 
 //! Think about the better icons solution tabler or mdi
 
@@ -41,7 +42,7 @@ export interface RouteItem {
   /** Page title (for the sidebar) */
   title: string
   /** Optional page description for heading */
-  description?: string
+  excerpt?: string
   /* Additional meta info for page tagging */
   tags?: RouteTag[]
   /** Path to page */
@@ -49,7 +50,7 @@ export interface RouteItem {
   /** Whether the entry is a heading */
   heading?: boolean
   /** Whether the page is under construction */
-  wip?: boolean
+  isDraft?: boolean
   /** List of sub-routes */
   routes?: RouteItem[]
   /** Adds a section header above the route item */
@@ -65,14 +66,13 @@ export interface Routes {
   routes: RouteItem[]
 }
 type Pages = Page[]
-type Spaces = Space[]
 
 export default function Root() {
   const [opened, setOpened] = useState(false)
   const [autoCompleteValue, setAutoCompleteValue] = useState('')
   const autoCompleteRef = useRef<HTMLInputElement>(null)
-  const { data: pages, refetch: pagesRefetch } = useFetchPages()
-  const { data: spaces, refetch: spacesRefetch } = useFetchSpaces()
+  const { data: pages, refetch: pagesRefetch } = useFetchPages<Pages>()
+  const { data: spaces, refetch: spacesRefetch } = useFetchSpaces<Spaces>()
   const { pageId } = useParams()
   const navigate = useNavigate()
   const navigation = useNavigation()
@@ -103,6 +103,12 @@ export default function Root() {
   let showSidebar = true
   let showToc = true
 
+  const routeTrees = useMemo(() => {
+    return createRouteTrees(pages, spaces)
+  }, [pages, spaces])
+
+  console.log(routeTrees)
+
   return (
     <>
       <Navigation />
@@ -116,18 +122,9 @@ export default function Root() {
           <div className="lg:-mt-16">
             <div className="lg:pt-16 fixed lg:sticky top-0 left-0 right-0 py-0 shadow lg:shadow-none">
               {/* //! TODO Sidebar nav */}
-              <SidebarNav
-                routeTree={{
-                  title: 'Space 1',
-                  path: '/page/cG9zdDoxNjg0',
-                  routes:
-                    pages?.map((p) => ({
-                      title: p.title ?? '',
-                      path: `/page/${p.id}`,
-                    })) ?? [],
-                }}
-                breadcrumbs={[]}
-              />
+              {routeTrees.map((routeTree) => (
+                <SidebarNav routeTree={routeTree} breadcrumbs={[]} />
+              ))}
             </div>
           </div>
         )}
@@ -172,4 +169,28 @@ export default function Root() {
       </div>
     </>
   )
+}
+export function createRouteTrees(pages: Pages, spaces: Spaces): RouteItem[] {
+  if (_.isEmpty(pages)) {
+    return []
+  }
+  const overviews = pages
+    .filter((p) => p?.isOverview)
+    .map((p) => {
+      const space = spaces.find((s) => s?.overviewPage === p?.id)
+      return space ? { ...p, title: space?.name ?? p?.title } : p
+    })
+  const subpages = pages.filter((p) => !p?.isOverview)
+
+  return overviews.map((o) => createRouteTreesHelper(o as Page, subpages))
+}
+
+function createRouteTreesHelper(overview: Page, subpages: Page[]): RouteItem {
+  const children = subpages.filter((s) => s?.parentId === overview?.id)
+  return {
+    path: `/page/${overview?.id}`,
+    title: overview?.title ?? '',
+    isDraft: overview?.status === 'draft',
+    routes: children.map((c) => createRouteTreesHelper(c, subpages)),
+  }
 }

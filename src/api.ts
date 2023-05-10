@@ -150,7 +150,7 @@ function rewriteNodesFetchSpaces(nodes: FulcrumSpace[]) {
   })
 }
 
-export type Space = ReturnType<typeof rewriteNodesFetchSpaces>
+export type Spaces = ReturnType<typeof rewriteNodesFetchSpaces>
 export async function fetchSpaces() {
   const response = await client.query({
     query: GET_FULCRUM_SPACES,
@@ -434,20 +434,20 @@ export async function fetchPages(search = '') {
   )
 }
 
-export const useFetchPages = (search = '') => {
+export const useFetchPages = <T>(search = '') => {
   const { data, ...rest } = useQuery(GET_FULCRUM_PAGES, {
     variables: { search },
   })
   return {
     ...rest,
-    data: data
+    data: (data
       ? _.concat(
           rewriteNodesFetchPages(data.drafts.nodes),
           rewriteNodesFetchPages(data.pendings.nodes),
           rewriteNodesFetchPages(data.privates.nodes),
           rewriteNodesFetchPages(data.publishes.nodes)
         )
-      : [],
+      : []) as T,
   }
 }
 

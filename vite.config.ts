@@ -5,12 +5,16 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ command }) => {
   if (command === 'build') {
     return {
-      base: "/wp-content/reactpress/apps/wp-wiki/dist/",
+      base: '/wp-content/reactpress/apps/wp-wiki/dist/',
       plugins: [react()],
     }
   } else {
     return {
       plugins: [react()],
+      test: {
+        globals: true,
+        environment: 'jsdom',
+      },
     }
   }
 })

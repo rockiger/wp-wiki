@@ -30,9 +30,8 @@ export function SidebarRouteTree({
   const routes = routeTree.routes as RouteItem[]
   const title = routeTree.title
   const selected = slug === path
-  console.log('level:', level)
-  let listItem = null
 
+  let listItem = null
   if (routes) {
     const isBreadcrumb =
       breadcrumbs.length > 1 &&
@@ -55,14 +54,15 @@ export function SidebarRouteTree({
                 selected={selected}
                 level={level}
                 title={title}
-                wip={routeTree.wip}
+                isDraft={routeTree.isDraft}
                 isExpanded={open}
-                hideArrow={isForceExpanded}
+                hideArrow={!routes.length}
               />
               <Disclosure.Panel>
                 <ul>
                   {routes.map((rt) => (
                     <SidebarRouteTree
+                      key={`${rt.title}-${rt.path}-${rt.path}`}
                       isForceExpanded={isForceExpanded}
                       routeTree={rt}
                       breadcrumbs={breadcrumbs}
@@ -85,7 +85,7 @@ export function SidebarRouteTree({
           selected={selected}
           level={level}
           title={title}
-          wip={routeTree.wip}
+          isDraft={routeTree.isDraft}
         />
       </li>
     )

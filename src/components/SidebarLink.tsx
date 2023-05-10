@@ -16,7 +16,7 @@ interface SidebarLinkProps {
   selected?: boolean
   title: string
   level: number
-  wip: boolean | undefined
+  isDraft: boolean | undefined
   icon?: React.ReactNode
   isExpanded?: boolean
   hideArrow?: boolean
@@ -28,7 +28,7 @@ export default function SidebarLink({
   DisclosureButton,
   selected = false,
   title,
-  wip,
+  isDraft,
   level,
   isExpanded,
   hideArrow,
@@ -74,7 +74,7 @@ export default function SidebarLink({
       <span
         className={cx(
           'flex items-center py-2',
-          wip && 'text-gray-400 dark:text-gray-500'
+          isDraft && 'text-gray-400 dark:text-gray-500'
         )}
       >
         {title}

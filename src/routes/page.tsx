@@ -14,7 +14,7 @@ import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
 import {
   Page as PageType,
-  Space,
+  Spaces,
   fetchPage,
   useFetchPage,
   useFetchPages,

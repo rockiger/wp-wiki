@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "compile": "graphql-codegen",
-    "watch": "graphql-codegen -w"
+    "watch": "graphql-codegen -w",
+    "test": "vitest"
   },
   "dependencies": {
     "@apollo/client": "^3.7.10",
@@ -54,9 +55,11 @@
     "@types/wpapi": "^1.1.1",
     "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.14",
+    "jsdom": "^22.0.0",
     "postcss": "^8.4.23",
     "tailwindcss": "^3.3.1",
     "typescript": "^4.9.5",
-    "vite": "^4.1.0"
+    "vite": "^4.1.0",
+    "vitest": "^0.31.0"
   }
 }
