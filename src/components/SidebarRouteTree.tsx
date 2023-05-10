@@ -38,7 +38,6 @@ export function SidebarRouteTree({
       breadcrumbs[breadcrumbs.length - 1].path === path
     // const isExpanded = isForceExpanded || isBreadcrumb || selected
 
-    //! use HeadlessUI disclosure instead
     listItem = (
       <li key={`${title}-${path}-${level}-heading`}>
         <Disclosure defaultOpen={true}>
@@ -49,7 +48,7 @@ export function SidebarRouteTree({
                 DisclosureButton={Disclosure.Button}
                 href={path}
                 isPending={
-                  false /* //! pendingRoute === path maybe in router */
+                  false /* //? pendingRoute === path maybe in router */
                 }
                 selected={selected}
                 level={level}
@@ -80,7 +79,7 @@ export function SidebarRouteTree({
     listItem = (
       <li key={`${title}-${path}-${level}-link`}>
         <SidebarLink
-          isPending={false /* //! pendingRoute === path maybe in router */}
+          isPending={false /* //? pendingRoute === path maybe in router */}
           href={path}
           selected={selected}
           level={level}

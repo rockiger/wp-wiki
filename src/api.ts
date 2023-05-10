@@ -91,7 +91,6 @@ export const CREATE_FULCRUM_PAGE = gql`
         }
         content
         date
-        excerpt
         id
         modified
         parentId
@@ -185,7 +184,6 @@ export const GET_FULCRUM_PAGE = gql`
       }
       content
       date
-      excerpt
       id
       modified
       parentId
@@ -205,7 +203,6 @@ export const normalizeFetchPageData = (data: {
       }
       body: string
       created: string
-      excerpt: string
       id: string
       isOverview: boolean
       isStarred: boolean
@@ -220,7 +217,6 @@ export const normalizeFetchPageData = (data: {
     acfFulcrumPage,
     author,
     content,
-    excerpt,
     date,
     id,
     modified,
@@ -243,7 +239,6 @@ export const normalizeFetchPageData = (data: {
     },
     body: content ?? '',
     created: date ?? '',
-    excerpt: excerpt ?? '',
     id: id ?? '',
     isOverview: isOverview ?? false,
     isStarred: isStarred ?? false,
@@ -291,7 +286,6 @@ export const GET_FULCRUM_PAGES = gql`
           }
         }
         date
-        excerpt
         id
         modified
         parentId
@@ -317,7 +311,6 @@ export const GET_FULCRUM_PAGES = gql`
           }
         }
         date
-        excerpt
         id
         modified
         parentId
@@ -343,7 +336,6 @@ export const GET_FULCRUM_PAGES = gql`
           }
         }
         date
-        excerpt
         id
         modified
         parentId
@@ -369,7 +361,6 @@ export const GET_FULCRUM_PAGES = gql`
           }
         }
         date
-        excerpt
         id
         modified
         parentId
@@ -384,7 +375,6 @@ function rewriteNodesFetchPages(nodes: FulcrumPage[]) {
     const {
       acfFulcrumPage = {},
       author,
-      excerpt,
       date,
       id,
       modified,
@@ -406,7 +396,6 @@ function rewriteNodesFetchPages(nodes: FulcrumPage[]) {
           '',
       },
       created: date,
-      excerpt,
       id,
       isOverview,
       isStarred,
@@ -434,7 +423,7 @@ export async function fetchPages(search = '') {
   )
 }
 
-export const useFetchPages = <T>(search = '') => {
+export const useFetchPages = (search = '') => {
   const { data, ...rest } = useQuery(GET_FULCRUM_PAGES, {
     variables: { search },
   })
@@ -447,7 +436,7 @@ export const useFetchPages = <T>(search = '') => {
           rewriteNodesFetchPages(data.privates.nodes),
           rewriteNodesFetchPages(data.publishes.nodes)
         )
-      : []) as T,
+      : []) as Page[],
   }
 }
 

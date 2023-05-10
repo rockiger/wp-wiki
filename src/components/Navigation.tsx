@@ -17,8 +17,10 @@ import {
   mdiWhiteBalanceSunny,
 } from '@mdi/js'
 import { NavLink, NavLinkProps } from 'react-router-dom'
-
+import type { RouteItem } from '../routes/root'
 import fulcrumLogo from '../assets/fulcrum.svg'
+import SidebarNav from './SidebarNav'
+import { SidebarRouteTree } from './SidebarRouteTree'
 
 declare global {
   interface Window {
@@ -71,7 +73,11 @@ function Kbd(props: { children?: React.ReactNode; wide?: boolean }) {
   )
 }
 
-export default function Navigation() {
+export default function Navigation({
+  routeTrees,
+}: {
+  routeTrees: RouteItem[]
+}) {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const scrollParentRef = useRef<HTMLDivElement>(null)
@@ -88,6 +94,20 @@ export default function Navigation() {
       return undefined
     }
   }, [isOpen])
+
+  // Set light mode
+  useEffect(() => {
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    if (
+      localStorage.theme === 'dark' ||
+      (!('theme' in localStorage) &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  })
 
   // Also close the overlay if the window gets resized past mobile layout.
   // (This is also important because we don't want to keep the body locked!)
@@ -198,7 +218,7 @@ export default function Navigation() {
                   size={1}
                 />
                 Search
-                {/* //! Todo search input */}
+                {/* //! TODO search input */}
                 <span className="ml-auto hidden sm:flex item-center mr-1">
                   {window.navigator.platform.includes('Mac') ? (
                     <Kbd data-platform="mac">⌘</Kbd>
@@ -280,7 +300,8 @@ export default function Navigation() {
               >
                 {/* No fallback UI so need to be careful not to suspend directly inside. */}
                 <Suspense fallback={null}>
-                  <div className="pl-3 xs:pl-5 xs:gap-0.5 xs:text-base overflow-x-auto flex flex-row lg:hidden text-base font-bold text-secondary dark:text-secondary-dark">
+                  {/* //? */}
+                  {/* <div className="pl-3 xs:pl-5 xs:gap-0.5 xs:text-base overflow-x-auto flex flex-row lg:hidden text-base font-bold text-secondary dark:text-secondary-dark">
                     <NavItem url="/learn">Learn</NavItem>
                     <NavItem url="/reference/react">Reference</NavItem>
                     <NavItem url="/community">Community</NavItem>
@@ -289,16 +310,18 @@ export default function Navigation() {
                   <div
                     role="separator"
                     className="ml-5 mt-4 mb-2 border-b border-border dark:border-border-dark"
-                  />
-                  //! Fill menu
-                  {/* <SidebarRouteTree
-                    // Don't share state between the desktop and mobile versions.
-                    // This avoids unnecessary animations and visual flicker.
-                    key={isOpen ? 'mobile-overlay' : 'desktop-or-hidden'}
-                    routeTree={routeTree}
-                    breadcrumbs={breadcrumbs}
-                    isForceExpanded={isOpen}
                   /> */}
+                  <ul>
+                    {routeTrees.map((routeTree) => (
+                      <SidebarRouteTree
+                        key={routeTree.path}
+                        routeTree={routeTree}
+                        breadcrumbs={[]}
+                        isForceExpanded={true}
+                        level={0}
+                      />
+                    ))}
+                  </ul>
                 </Suspense>
               </nav>
             </aside>
@@ -321,7 +344,9 @@ function setPreferredTheme(mode: 'dark' | 'light') {
   //! TODO: Add logic for persisting mode look at _document
   if (mode === 'dark') {
     document.documentElement.classList.add('dark')
+    localStorage.theme = 'dark'
   } else {
     document.documentElement.classList.remove('dark')
+    localStorage.theme = 'light'
   }
 }

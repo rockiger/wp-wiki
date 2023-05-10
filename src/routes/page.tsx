@@ -372,7 +372,6 @@ export default function Page() {
               <h1 className="mt-0 text-primary dark:text-primary-dark -mx-.5 break-words text-5xl font-display font-bold leading-tight">
                 {page?.title}
               </h1>
-              {/* //! excerpt if it differs from the start of the content */}
               <EditorContent className="p-0" editor={editor} />
               {/* //! Tags */}
             </div>

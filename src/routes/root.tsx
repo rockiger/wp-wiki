@@ -71,8 +71,8 @@ export default function Root() {
   const [opened, setOpened] = useState(false)
   const [autoCompleteValue, setAutoCompleteValue] = useState('')
   const autoCompleteRef = useRef<HTMLInputElement>(null)
-  const { data: pages, refetch: pagesRefetch } = useFetchPages<Pages>()
-  const { data: spaces, refetch: spacesRefetch } = useFetchSpaces<Spaces>()
+  const { data: pages, refetch: pagesRefetch } = useFetchPages()
+  const { data: spaces, refetch: spacesRefetch } = useFetchSpaces()
   const { pageId } = useParams()
   const navigate = useNavigate()
   const navigation = useNavigation()
@@ -107,11 +107,11 @@ export default function Root() {
     return createRouteTrees(pages, spaces)
   }, [pages, spaces])
 
-  console.log(routeTrees)
+  console.log(pages)
 
   return (
     <>
-      <Navigation />
+      <Navigation routeTrees={routeTrees} />
       <div
         className={cx(
           hasColumns &&
@@ -121,9 +121,12 @@ export default function Root() {
         {showSidebar && (
           <div className="lg:-mt-16">
             <div className="lg:pt-16 fixed lg:sticky top-0 left-0 right-0 py-0 shadow lg:shadow-none">
-              {/* //! TODO Sidebar nav */}
               {routeTrees.map((routeTree) => (
-                <SidebarNav routeTree={routeTree} breadcrumbs={[]} />
+                <SidebarNav
+                  key={routeTree.path}
+                  routeTree={routeTree}
+                  breadcrumbs={[]}
+                />
               ))}
             </div>
           </div>
@@ -156,14 +159,14 @@ export default function Root() {
                   isHomePage && 'lg:pt-0'
                 )}
               >
-                {/* //! footer */}
+                {/* //? footer */}
                 {/*<Footer />*/}
               </div>
             </div>
           </main>
         </Suspense>
         <div className="-mt-16 hidden lg:max-w-xs 2xl:block">
-          {/* //! TOC, should probably go down the component tree */}
+          {/* //! TODO TOC, should probably go down the component tree */}
           {/* {showToc && toc.length > 0 && <Toc headings={toc} key={asPath} />} */}
         </div>
       </div>
