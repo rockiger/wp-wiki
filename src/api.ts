@@ -407,7 +407,21 @@ function rewriteNodesFetchPages(nodes: FulcrumPage[]) {
   })
 }
 
-export type Page = ReturnType<typeof normalizeFetchPageData>
+export interface Page {
+  author: {
+    avatar: string
+    name: string
+  }
+  body: string
+  created: string
+  id: string
+  isOverview: boolean
+  isStarred: boolean
+  modified: string
+  parentId: string
+  status: string
+  title: string
+}
 
 export async function fetchPages(search = '') {
   const response = await client.query({

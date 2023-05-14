@@ -1,13 +1,15 @@
 import { cx } from 'classix'
 
 export interface IconButtonProps {
+  'aria-label'?: string
   children: React.ReactNode
   className?: string
   isActive?: boolean
-  onClick?: () => void
+  onClick?: (ev: React.MouseEvent) => void
 }
 
 export default function IconButton({
+  'aria-label': ariaLabel,
   children,
   className,
   isActive,
@@ -16,7 +18,7 @@ export default function IconButton({
   return (
     <button
       type="button"
-      aria-label="Use Dark Mode"
+      aria-label={ariaLabel}
       onClick={onClick}
       className={cx(
         'active:scale-95 transition-transform flex w-12 h-12 rounded-full items-center justify-center hover:bg-primary/5 hover:dark:bg-primary-dark/5 outline-link ',

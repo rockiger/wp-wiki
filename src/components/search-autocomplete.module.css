@@ -1,0 +1,50 @@
+.SearchAutocomplete {
+  background-color: var(--common-white);
+  border-radius: 8px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  left: -1px;
+  margin: 0;
+  overflow: hidden;
+  padding: 1px;
+  position: absolute;
+  box-shadow: var(--shadow-1);
+  width: calc(100% + 2px);
+  @media {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    height: calc(100vh - 46px);
+  }
+}
+
+.SearcAutocomplete_MenuItem_icon,
+.SearcAutocomplete_MenuItem_Link,
+.SearchAutocomplete_MenuItem {
+  align-items: center;
+  display: flex;
+}
+
+.SearchAutocomplete_MenuItem {
+  display: flex;
+  height: 56px;
+  &:hover,
+  &__selected {
+    background-color: var(--grey-200);
+  }
+}
+
+.SearcAutocomplete_MenuItem_icon {
+  flex-direction: column;
+  width: 56px;
+}
+
+.SearcAutocomplete_MenuItem_Link {
+  color: var(--text-primary);
+  display: flex;
+  flex-grow: 1;
+  text-decoration: none;
+  align-items: center;
+}

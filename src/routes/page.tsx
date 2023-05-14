@@ -373,7 +373,7 @@ export default function Page() {
                 {page?.title}
               </h1>
               <EditorContent className="p-0" editor={editor} />
-              {/* //! Tags */}
+              {/* //? Tags */}
             </div>
           </div>
         </div>

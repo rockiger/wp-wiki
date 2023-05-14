@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef, useState } from 'react'
+import { Suspense, useCallback, useMemo, useRef, useState } from 'react'
 import {
   Form,
   Link,
@@ -22,6 +22,7 @@ import Navigation from '../components/Navigation'
 import { cx } from 'classix'
 import SidebarNav from '../components/SidebarNav'
 import _ from 'lodash'
+import Search from '../components/Search'
 
 //! Think about the better icons solution tabler or mdi
 
@@ -68,14 +69,38 @@ export interface Routes {
 type Pages = Page[]
 
 export default function Root() {
+  const [isSearchFieldActive, setIsSearchFieldActive] = useState(false)
   const [opened, setOpened] = useState(false)
-  const [autoCompleteValue, setAutoCompleteValue] = useState('')
-  const autoCompleteRef = useRef<HTMLInputElement>(null)
+  const [searchValue, setSearchValue] = useState('')
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const searchToggleRef = useRef<HTMLButtonElement>(null)
   const { data: pages, refetch: pagesRefetch } = useFetchPages()
   const { data: spaces, refetch: spacesRefetch } = useFetchSpaces()
   const { pageId } = useParams()
   const navigate = useNavigate()
   const navigation = useNavigation()
+
+  const toggleSearch = useCallback(
+    (action?: 'open' | 'close') => {
+      if (action === 'open') {
+        setIsSearchFieldActive(true)
+        setTimeout(() => {
+          searchInputRef.current?.focus()
+        }, 100)
+      } else if (action === 'close') {
+        setIsSearchFieldActive(false)
+        searchToggleRef.current?.focus()
+      } else {
+        isSearchFieldActive ? toggleSearch('close') : toggleSearch('open')
+      }
+    },
+    [isSearchFieldActive, searchInputRef, setIsSearchFieldActive]
+  )
+
+  const clearSearch = useCallback(() => {
+    setSearchValue('')
+    searchInputRef.current?.focus()
+  }, [searchInputRef, setSearchValue])
 
   const onClickNewButton = async (ev: React.MouseEvent) => {
     ev.preventDefault()
@@ -107,11 +132,26 @@ export default function Root() {
     return createRouteTrees(pages, spaces)
   }, [pages, spaces])
 
-  console.log(pages)
+  console.log(isSearchFieldActive)
 
   return (
     <>
-      <Navigation routeTrees={routeTrees} />
+      <Navigation
+        isSearchFieldActive={isSearchFieldActive}
+        ref={searchToggleRef}
+        routeTrees={routeTrees}
+        toggleSearch={toggleSearch}
+      >
+        <Search
+          clearSearch={clearSearch}
+          isSearchFieldActive={isSearchFieldActive}
+          pages={pages}
+          ref={searchInputRef}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          toggleSearch={toggleSearch}
+        />
+      </Navigation>
       <div
         className={cx(
           hasColumns &&
