@@ -1,0 +1,114 @@
+/*
+  //! mobile version
+  //! tests
+*/
+.rw-search-wrapper {
+  display: block;
+  flex-grow: 1;
+  position: relative;
+  --background-color: #eaf1fb;
+}
+@media (min-width: 1919px) {
+  .rw-search-wrapper {
+    width: 56rem;
+  }
+}
+
+.rw-search-heading {
+  position: absolute;
+  left: -10000px;
+  top: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.rw-search-input {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  flex-grow: 1;
+  outline: none;
+}
+
+@media (min-width: 768px) {
+  .rw-search {
+    background-color: var(--background-color);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    max-width: 720px;
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+  }
+}
+
+.rw-search-start,
+.rw-search-delete {
+  display: none;
+}
+@media (min-width: 768px) {
+  .rw-search-start {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .rw-search-close {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .rw-search--active {
+    background: white;
+    box-shadow: 0 1px 1px 0 rgba(65, 63, 79, 0.3),
+      0 1px 3px 1px rgba(65, 63, 79, 0.15);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .rw-autocomplete {
+    position: absolute;
+    width: 100%;
+    max-width: 720px;
+    background: white;
+    box-shadow: 0 1px 1px 0 rgba(65, 63, 79, 0.3),
+      0 1px 3px 1px rgba(65, 63, 79, 0.15);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    display: none;
+  }
+  .rw-autocomplete--active {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) {
+  .rw-autocomplete-list {
+    padding: 0.5rem 0;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .rw-autocomplete-list-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem 0.5rem 0;
+  }
+  .rw-autocomplete-list-item:hover,
+  .rw-autocomplete-list-item--selected {
+    background-color: lightgray;
+  }
+}
+
+@media (min-width: 768px) {
+  .rw-autocomplete-list-item-icon {
+    padding: 0 1rem;
+    color: #4285f4;
+  }
+}

@@ -199,7 +199,13 @@ const Navigation = React.forwardRef(
                   </NavLink>
                 </div>
               </div>
-              {children}
+              <div
+                className={cx(
+                  'flex flex-1 relative justify-center items-center w-full 3xl:w-auto 3xl:shrink-0 3xl:justify-center'
+                )}
+              >
+                {children}
+              </div>
               <div className="text-base justify-center items-center gap-1.5 flex 3xl:flex-1 flex-row 3xl:justify-end">
                 {/* <div className="mx-2.5 gap-1.5 hidden lg:flex">
                 <NavItem to="/learn">Learn</NavItem>

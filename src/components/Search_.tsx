@@ -46,8 +46,17 @@ export const Search = React.forwardRef(
     const [submitSelected, setSubmitSelected] = useState(false)
     const [filteredPages, setFilteredPages] = useState(pages)
 
-    // const [searchRef, { height, width }] = useDimensions()
+    const searchRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
+    // const isSearchFieldActive = true
+    const getSearchDimensions = useCallback(() => {
+      const rect = searchRef.current?.getBoundingClientRect() ?? null
+      return {
+        top: rect?.height ? rect.height : 56,
+        left: 0,
+        width: rect?.width ?? 0,
+      }
+    }, [searchRef])
 
     useEffect(() => {
       if (!isSearchFieldActive) setSelectedRow(null)
@@ -68,7 +77,7 @@ export const Search = React.forwardRef(
       }
       // eslint-disable-next-line
     }, [isSearchFieldActive])
-
+    getSearchDimensions()
     return (
       <div
         className={cx(
@@ -87,12 +96,12 @@ export const Search = React.forwardRef(
           onClick={() => toggleSearch('open')}
           onFocus={() => toggleSearch('open')}
           onBlur={() => setTimeout(() => toggleSearch(), 100)}
-          /*ref={searchRef}*/
+          ref={searchRef}
         >
           <div className={styles.Search_start}>
             <IconButton
               aria-label="Search"
-              className={cx(styles.Search_Icon, 'hidden md:block')}
+              className={cx('hidden md:flex')}
               onClick={() => submitSearch()}
             >
               <SearchIcon />
@@ -100,7 +109,7 @@ export const Search = React.forwardRef(
             {isSearchFieldActive && (
               <IconButton
                 aria-label="Clear search"
-                className={styles.backIcon}
+                className={cx('md:hidden')}
                 onClick={() => toggleSearch('close')}
               >
                 <ArrowLeftIcon />
@@ -129,7 +138,6 @@ export const Search = React.forwardRef(
                   ev.preventDefault()
                   searchValue ? clearSearch() : toggleSearch('close')
                 } else if (ev.key === 'ArrowDown') {
-                  console.log('ArrowDown')
                   ev.preventDefault()
                   if (filteredPages.length < 1) {
                     setSelectedRow(null)
@@ -181,6 +189,7 @@ export const Search = React.forwardRef(
               clearSearch={clearSearch}
               pages={pages}
               filteredPages={filteredPages}
+              dimensions={getSearchDimensions()}
               searchValue={searchValue}
               selectedRow={selectedRow}
               setFilteredPages={setFilteredPages}

@@ -1,7 +1,7 @@
 :root {
   --xs: 0px;
   --sm: 600px;
-  --md: 950px;
+  --md: 768px;
   --lg: 1280px;
   --xl: 1920px;
 
@@ -88,27 +88,29 @@
   background-color: var(--bg-gray-30\/20);
   display: flex;
   flex-grow: 1;
-  height: 3rem;
   height: 4rem;
   left: -94px;
   margin: 0;
   max-width: 720px;
-  position: absolute;
-  top: -32px;
+  position: fixed;
   width: 100vw;
   z-index: 1;
+  top: 0;
+  left: 0;
+}
+@media (min-width: 768px) {
+  .Search {
+    position: relative;
+    height: 3rem;
+    border-radius: 24px;
+  }
 }
 @media (min-width: 1919px) {
   .Search {
     width: 56rem;
   }
 }
-@media (max-width: calc(var(--md) - 1px)) {
-  .Search {
-    margin-right: 0.5rem;
-    border-radius: 24px;
-  }
-}
+
 .Search__active {
   background: var(--common-white);
   border: 1px solid transparent;

@@ -6,6 +6,7 @@ export interface IconButtonProps {
   className?: string
   isActive?: boolean
   onClick?: (ev: React.MouseEvent) => void
+  style?: React.CSSProperties
 }
 
 export default function IconButton({
@@ -14,6 +15,7 @@ export default function IconButton({
   className,
   isActive,
   onClick,
+  style,
 }: IconButtonProps) {
   return (
     <button
@@ -26,6 +28,7 @@ export default function IconButton({
           'bg-highlight dark:bg-highlight-dark text-link dark:text-link-dark',
         className
       )}
+      style={style}
     >
       {children}
     </button>

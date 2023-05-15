@@ -132,8 +132,6 @@ export default function Root() {
     return createRouteTrees(pages, spaces)
   }, [pages, spaces])
 
-  console.log(isSearchFieldActive)
-
   return (
     <>
       <Navigation

@@ -12,6 +12,7 @@ interface SearchAutocompleteProps {
   submit: () => void
   pages: Page[]
   filteredPages: Page[]
+  dimensions: { top: number; left: number; width: number }
   searchValue: string
   selectedRow: null | number
   setFilteredPages: (files: Page[]) => void
@@ -23,6 +24,7 @@ export const SearchAutocomplete = ({
   clearSearch,
   pages,
   filteredPages,
+  dimensions,
   searchValue,
   selectedRow,
   setFilteredPages: setFilteredFiles,
@@ -64,12 +66,16 @@ export const SearchAutocomplete = ({
 
   //@ts-ignore
   window.files = pages
+  console.log(dimensions)
   if (filteredPages?.length < 1) return null
   return (
     <div
       className={styles.SearchAutocomplete}
       style={{
-        top: 64,
+        top: dimensions.top,
+        left: dimensions.left,
+        width: dimensions.width,
+        height: (filteredPages.length - 1) * 56 + 16,
       }}
     >
       <div
@@ -83,7 +89,8 @@ export const SearchAutocomplete = ({
               className={cx(
                 styles.SearchAutocomplete_MenuItem,
                 styles.SearcAutocomplete_MenuItem_Link,
-                index === selectedRow && 'bg-highlight text-link'
+                index === selectedRow && 'bg-highlight text-link',
+                'hover:bg-gray-5'
               )}
               key={file.id}
               /* //! selected={index === selectedRow} */
