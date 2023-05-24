@@ -17,6 +17,7 @@ interface SearchProps {
 }
 export default function Search({ pages }: SearchProps) {
   const [isActive, setIsActive] = useState(true)
+  // const isActive = true
   const [filteredPages, setFilteredPages] = useState(pages)
   const [selectedRow, setSelectedRow] = useState<null | number>(null)
   const [value, setValue] = useState('')
@@ -92,10 +93,13 @@ export default function Search({ pages }: SearchProps) {
     }
   }
 
-  console.log(isActive, pages, selectedRow)
-
   return (
-    <div className="rw-search-wrapper">
+    <div
+      className={cx(
+        'rw-search-wrapper',
+        isActive && 'rw-search-wrapper--active'
+      )}
+    >
       <Form
         className={cx('rw-search', isActive && 'rw-search--active')}
         onFocus={() => {
@@ -162,10 +166,12 @@ export default function Search({ pages }: SearchProps) {
                   <FileDocumentIcon />
                 </div>
                 <div style={{ flexGrow: 1 }}>
-                  <div>{filename}</div>
-                  <div>
-                    <small>{author}</small>
+                  <div className="rw-autocomplete-list-item-title">
+                    {filename}
                   </div>
+                  <small className="rw-autocomplete-list-item-subtitle">
+                    {author}
+                  </small>
                 </div>
                 <div>
                   <small>{date.toLocaleDateString()}</small>
