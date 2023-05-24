@@ -201,12 +201,12 @@ const Navigation = React.forwardRef(
               </div>
               <div
                 className={cx(
-                  'flex flex-1 relative justify-center items-center w-full 3xl:w-auto 3xl:shrink-0 3xl:justify-center'
+                  'flex flex-1 relative justify-end items-center w-full 3xl:w-auto 3xl:shrink-0 3xl:justify-center'
                 )}
               >
                 {children}
               </div>
-              <div className="text-base justify-center items-center gap-1.5 flex 3xl:flex-1 flex-row 3xl:justify-end">
+              <div className="text-base justify-center items-center flex 3xl:flex-1 flex-row 3xl:justify-end">
                 {/* <div className="mx-2.5 gap-1.5 hidden lg:flex">
                 <NavItem to="/learn">Learn</NavItem>
                 <NavItem to="/reference/react">Reference</NavItem>
@@ -215,23 +215,6 @@ const Navigation = React.forwardRef(
               </div> */}
                 <div className="flex w-full md:hidden"></div>
                 <div className="flex items-center -space-x-2.5 xs:space-x-0 ">
-                  <div className="flex md:hidden">
-                    <button
-                      aria-label="Search"
-                      type="button"
-                      className="active:scale-95 transition-transform flex md:hidden w-12 h-12 rounded-full items-center justify-center hover:bg-secondary-button hover:dark:bg-secondary-button-dark outline-link"
-                      onClick={() => {
-                        toggleSearch()
-                      }}
-                      ref={ref}
-                    >
-                      <Icon
-                        path={mdiMagnify}
-                        className="align-middle w-5 h-5"
-                        size={1}
-                      />
-                    </button>
-                  </div>
                   <div className="flex dark:hidden">
                     <button
                       type="button"

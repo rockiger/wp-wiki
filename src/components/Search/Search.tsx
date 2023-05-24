@@ -12,11 +12,23 @@ import { Page } from '../../api'
 import IconButton from '../IconButton'
 import './gmail.css'
 
+//! use css vars
+//! react-theme
+//! provide classes for customization
+//! better outside click-handler, onBlur sucks
+//! tests
+
+type RenderFunction = (
+  isActive: boolean,
+  setIsActive: (state: boolean) => void
+) => React.ReactNode
+
 interface SearchProps {
+  children?: RenderFunction | React.ReactNode
   pages: Page[]
 }
-export default function Search({ pages }: SearchProps) {
-  const [isActive, setIsActive] = useState(true)
+export default function Search({ children, pages }: SearchProps) {
+  const [isActive, setIsActive_] = useState(false)
   // const isActive = true
   const [filteredPages, setFilteredPages] = useState(pages)
   const [selectedRow, setSelectedRow] = useState<null | number>(null)
@@ -25,6 +37,17 @@ export default function Search({ pages }: SearchProps) {
 
   const navigate = useNavigate()
   const submit = useSubmit()
+
+  const setIsActive = (state: boolean) => {
+    if (state) {
+      setIsActive_(true)
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 100)
+    } else {
+      setIsActive_(false)
+    }
+  }
 
   /**
    * Filter pages based on search value for instant search
@@ -94,93 +117,113 @@ export default function Search({ pages }: SearchProps) {
   }
 
   return (
-    <div
-      className={cx(
-        'rw-search-wrapper',
-        isActive && 'rw-search-wrapper--active'
-      )}
-    >
-      <Form
-        className={cx('rw-search', isActive && 'rw-search--active')}
-        onFocus={() => {
-          setIsActive(true)
-        }}
-        onBlur={() => setIsActive(false)}
-        onSubmit={(ev) => submit(ev.currentTarget.form)}
-        role="search"
-      >
-        <h2 className="rw-search-heading">Search</h2>
-        <IconButton aria-label="Search" className="rw-search-start">
-          <SearchIcon />
-        </IconButton>
-        <IconButton aria-label="Close Search" className="rw-search-close">
-          <ArrowLeftIcon />
-        </IconButton>
-        <input
-          ref={inputRef}
-          className="rw-search-input"
-          aria-label="Search"
-          autoComplete="off"
-          placeholder="Search"
-          name="q"
-          type="text"
-          dir="ltr"
-          spellCheck="false"
-          aria-haspopup="true"
-          aria-live="off"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={handleKeys}
-        />
-        <IconButton
-          aria-label="Delete Search"
-          className="rw-search-delete"
-          style={{ display: value ? 'flex' : 'none' }}
-          onClick={(e) => {
-            setValue('')
-            inputRef.current?.focus()
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </Form>
+    <>
+      {isFunction(children) ? children(isActive, setIsActive) : children}
       <div
-        className={cx('rw-autocomplete', isActive && 'rw-autocomplete--active')}
+        className={cx(
+          'rw-search-wrapper',
+          isActive && 'rw-search-wrapper--active'
+        )}
       >
-        <div className="rw-autocomplete-list">
-          {filteredPages?.slice(0, 7).map((page, index) => {
-            const filename = page.title
-            const author = page.author.name
-            const date = new Date(page.modified)
-            return (
-              <Link
-                className={cx(
-                  'rw-autocomplete-list-item',
-                  'rw-autocomplete-list-item-link',
-                  index === selectedRow && 'rw-autocomplete-list-item--selected'
-                )}
-                key={page.id}
-                to={`/page/${page.id}`}
-              >
-                <div className={cx('rw-autocomplete-list-item-icon')}>
-                  <FileDocumentIcon />
-                </div>
-                <div style={{ flexGrow: 1 }}>
-                  <div className="rw-autocomplete-list-item-title">
-                    {filename}
+        <Form
+          className={cx('rw-search', isActive && 'rw-search--active')}
+          onFocus={() => {
+            setIsActive(true)
+          }}
+          onBlur={() => setIsActive(false)}
+          onSubmit={(ev) => submit(ev.currentTarget.form)}
+          role="search"
+        >
+          <h2 className="rw-search-heading">Search</h2>
+          <IconButton aria-label="Search" className="rw-search-start">
+            <SearchIcon />
+          </IconButton>
+          <IconButton
+            aria-label="Close Search"
+            className="rw-search-close"
+            onClick={() => setIsActive(false)}
+          >
+            <ArrowLeftIcon />
+          </IconButton>
+          <input
+            ref={inputRef}
+            className="rw-search-input"
+            aria-label="Search"
+            autoComplete="off"
+            placeholder="Search"
+            name="q"
+            type="text"
+            dir="ltr"
+            spellCheck="false"
+            aria-haspopup="true"
+            aria-live="off"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={handleKeys}
+          />
+          <IconButton
+            aria-label="Delete Search"
+            className="rw-search-delete"
+            style={{ display: value ? 'flex' : 'none' }}
+            onClick={(e) => {
+              setValue('')
+              inputRef.current?.focus()
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Form>
+        <div
+          className={cx(
+            'rw-autocomplete',
+            isActive && 'rw-autocomplete--active'
+          )}
+        >
+          <div className="rw-autocomplete-list">
+            {filteredPages?.slice(0, 7).map((page, index) => {
+              const filename = page.title
+              const author = page.author.name
+              const date = new Date(page.modified)
+              return (
+                <Link
+                  className={cx(
+                    'rw-autocomplete-list-item',
+                    'rw-autocomplete-list-item-link',
+                    index === selectedRow &&
+                      'rw-autocomplete-list-item--selected'
+                  )}
+                  key={page.id}
+                  to={`/page/${page.id}`}
+                >
+                  <div className={cx('rw-autocomplete-list-item-icon')}>
+                    <FileDocumentIcon />
                   </div>
-                  <small className="rw-autocomplete-list-item-subtitle">
-                    {author}
-                  </small>
-                </div>
-                <div>
-                  <small>{date.toLocaleDateString()}</small>
-                </div>
-              </Link>
-            )
-          })}
+                  <div style={{ flexGrow: 1 }}>
+                    <div className="rw-autocomplete-list-item-title">
+                      {filename}
+                    </div>
+                    <small className="rw-autocomplete-list-item-subtitle">
+                      {author}
+                    </small>
+                  </div>
+                  <div>
+                    <small>{date.toLocaleDateString()}</small>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
         </div>
       </div>
-    </div>
+    </>
+  )
+}
+
+function isFunction(
+  functionToCheck: SearchProps['children']
+): functionToCheck is RenderFunction {
+  return (
+    !!functionToCheck &&
+    {}.toString.call(functionToCheck) === '[object Function]'
   )
 }

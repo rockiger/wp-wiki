@@ -1,10 +1,11 @@
-/*
-  //! mobile version
-    * render props to toggle search from outside
-  //! tests
-*/
+/* Gmail like theme */
+
+:root {
+  --rw-search-background-color: #eaf1fb;
+  --rw-wrapper-background-color: white;
+}
 .rw-search-wrapper {
-  background-color: white;
+  background-color: var(--rw-wrapper-background-color);
   display: none;
   flex-grow: 1;
   height: 100vh;
@@ -13,7 +14,6 @@
   top: 0;
   width: 100vw;
   z-index: 1;
-  --background-color: #eaf1fb;
 }
 .rw-search-wrapper--active {
   display: block;
@@ -56,7 +56,7 @@
 
 @media (min-width: 768px) {
   .rw-search {
-    background-color: var(--background-color);
+    background-color: var(--rw-search-background-color);
     border: 1px solid transparent;
     border-radius: 8px;
     height: auto;

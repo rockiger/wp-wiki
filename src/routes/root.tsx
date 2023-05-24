@@ -23,6 +23,8 @@ import { cx } from 'classix'
 import SidebarNav from '../components/SidebarNav'
 import _ from 'lodash'
 import Search from '../components/Search'
+import Icon from '@mdi/react'
+import { mdiMagnify } from '@mdi/js'
 
 //! Think about the better icons solution tabler or mdi
 
@@ -140,15 +142,24 @@ export default function Root() {
         routeTrees={routeTrees}
         toggleSearch={toggleSearch}
       >
-        <Search
-          clearSearch={clearSearch}
-          isSearchFieldActive={isSearchFieldActive}
-          pages={pages}
-          ref={searchInputRef}
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          toggleSearch={toggleSearch}
-        />
+        <Search pages={pages}>
+          {(isSearchActive, setIsSearchFieldActive) => (
+            <div className="flex md:hidden">
+              <button
+                aria-label="Search"
+                type="button"
+                className="active:scale-95 transition-transform flex md:hidden w-12 h-12 rounded-full items-center justify-center hover:bg-secondary-button hover:dark:bg-secondary-button-dark outline-link"
+                onClick={() => setIsSearchFieldActive(!isSearchActive)}
+              >
+                <Icon
+                  path={mdiMagnify}
+                  className="align-middle w-5 h-5"
+                  size={1}
+                />
+              </button>
+            </div>
+          )}
+        </Search>
       </Navigation>
       <div
         className={cx(
