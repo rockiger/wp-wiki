@@ -10,9 +10,7 @@ import CloseIcon from 'mdi-react/CloseIcon'
 
 import { Page } from '../../api'
 import IconButton from '../IconButton'
-import './gmail.css'
 
-//! use css vars
 //! react-theme
 //! provide classes for customization
 //! better outside click-handler, onBlur sucks

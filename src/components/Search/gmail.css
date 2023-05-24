@@ -1,8 +1,23 @@
 /* Gmail like theme */
 
 :root {
+  --rw-autocomplete-height: calc(100vh - 3.5rem);
+  --rw-autocomplete-item-border-bottom: 1px solid rgba(65, 63, 79, 0.15);
+  --rw-autocomplete-item-border-bottom-md: 1px solid transparent;
+  --rw-autocomplete-list-item-icon-color: #4285f4;
+  --rw-autocomplete-list-item--selected--background-color: lightgrey;
   --rw-search-background-color: #eaf1fb;
+  --rw-search-border: 1px solid transparent;
+  --rw-search-border-bottom: 1px solid rgba(65, 63, 79, 0.3);
+  --rw-search-border-radius: 8px;
+  --rw-search-height: 3.5rem;
+  --rw-search-height-md: auto;
+  --rw-search-max-width: 720px;
+  --rw-search--active-box-shadow: 0 1px 1px 0 rgba(65, 63, 79, 0.3),
+    0 1px 3px 1px rgba(65, 63, 79, 0.15);
   --rw-wrapper-background-color: white;
+  --rw-wrapper-max-width: 56rem;
+  --rw-wrapper-width: auto;
 }
 .rw-search-wrapper {
   background-color: var(--rw-wrapper-background-color);
@@ -23,8 +38,8 @@
     display: block;
     height: auto;
     position: relative;
-    max-width: 56rem;
-    width: auto;
+    max-width: var(--rw-wrapper-max-width);
+    width: var(--rw-wrapper-width);
   }
 }
 
@@ -48,19 +63,19 @@
 
 .rw-search {
   align-items: center;
-  border-bottom: 1px solid rgba(65, 63, 79, 0.3);
+  border-bottom: var(--rw-search-border-bottom);
   display: flex;
   flex-grow: 1;
-  height: 3.5rem;
+  height: var(--rw-search-height);
 }
 
 @media (min-width: 768px) {
   .rw-search {
     background-color: var(--rw-search-background-color);
-    border: 1px solid transparent;
-    border-radius: 8px;
-    height: auto;
-    max-width: 720px;
+    border: var(--rw-search-border);
+    border-radius: var(--rw-search-border-radius);
+    height: var(--rw-search-height-md);
+    max-width: var(--rw-search-max-width);
     position: relative;
   }
 }
@@ -77,8 +92,8 @@
 
 .rw-search-close {
   display: flex;
-  height: 3.5rem;
-  width: 3.5rem;
+  height: var(--rw-search-height);
+  width: var(--rw-search-height);
 }
 @media (min-width: 768px) {
   .rw-search-close {
@@ -88,27 +103,25 @@
 
 @media (min-width: 768px) {
   .rw-search--active {
-    background: white;
-    box-shadow: 0 1px 1px 0 rgba(65, 63, 79, 0.3),
-      0 1px 3px 1px rgba(65, 63, 79, 0.15);
+    background: var(--rw-wrapper-background-color);
+    box-shadow: var(--rw-search--active-box-shadow);
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
 }
 
 .rw-autocomplete {
-  height: calc(100vh - 3.5rem);
+  height: var(--rw-autocomplete-height);
 }
 @media (min-width: 768px) {
   .rw-autocomplete {
-    background: white;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    box-shadow: 0 1px 1px 0 rgba(65, 63, 79, 0.3),
-      0 1px 3px 1px rgba(65, 63, 79, 0.15);
+    background: var(--rw-wrapper-background-color);
+    border-bottom-left-radius: var(--rw-search-border-radius);
+    border-bottom-right-radius: var(--rw-search-border-radius);
+    box-shadow: var(--rw-search--active-box-shadow);
     display: none;
     height: auto;
-    max-width: 720px;
+    max-width: var(--rw-search-max-width);
     position: absolute;
     width: 100%;
   }
@@ -132,9 +145,9 @@
 
 .rw-autocomplete-list-item {
   align-items: center;
-  border-bottom: 1px solid rgba(65, 63, 79, 0.15);
+  border-bottom: var(--rw-autocomplete-item-border-bottom);
   display: flex;
-  min-height: 3.5rem;
+  min-height: var(--rw-search-height);
   padding: 0.5rem 1rem 0.5rem 0;
 }
 @media (min-width: 768px) {
@@ -142,24 +155,20 @@
     align-items: center;
     display: flex;
     min-height: unset;
-    border-bottom: none;
+    border-bottom: var(--rw-autocomplete-item-border-bottom-md);
     padding: 0.5rem 1rem 0.5rem 0;
   }
   .rw-autocomplete-list-item:hover,
   .rw-autocomplete-list-item--selected {
-    background-color: lightgray;
+    background-color: var(
+      --rw-autocomplete-list-item--selected--background-color
+    );
   }
 }
 
 .rw-autocomplete-list-item-icon {
   padding: 0 1rem;
-  color: #4285f4;
-}
-@media (min-width: 768px) {
-  .rw-autocomplete-list-item-icon {
-    padding: 0 1rem;
-    color: #4285f4;
-  }
+  color: var(--rw-autocomplete-list-item-icon-color);
 }
 
 .rw-autocomplete-list-item-subtitle {

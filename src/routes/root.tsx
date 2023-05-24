@@ -23,6 +23,7 @@ import { cx } from 'classix'
 import SidebarNav from '../components/SidebarNav'
 import _ from 'lodash'
 import Search from '../components/Search'
+import '../components/Search/gmail.css'
 import Icon from '@mdi/react'
 import { mdiMagnify } from '@mdi/js'
 
