@@ -201,7 +201,7 @@ const Navigation = React.forwardRef(
               </div>
               <div
                 className={cx(
-                  'flex flex-1 relative justify-end items-center w-full 3xl:w-auto 3xl:shrink-0 3xl:justify-center'
+                  'flex flex-1 relative justify-end items-center w-full md:justify-start 3xl:w-auto 3xl:shrink-0 3xl:justify-center'
                 )}
               >
                 {children}

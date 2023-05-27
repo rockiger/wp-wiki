@@ -4,7 +4,7 @@ import { Form, Link, useNavigate, useSubmit } from 'react-router-dom'
 import { cx } from 'classix'
 
 import ArrowLeftIcon from 'mdi-react/ArrowLeftIcon'
-import FileDocumentIcon from 'mdi-react/FileDocumentIcon'
+import FileDocumentIcon from 'mdi-react/FileDocumentOutlineIcon'
 import SearchIcon from 'mdi-react/SearchIcon'
 import CloseIcon from 'mdi-react/CloseIcon'
 
@@ -27,7 +27,7 @@ interface SearchProps {
 }
 export default function Search({ children, pages }: SearchProps) {
   const [isActive, setIsActive_] = useState(false)
-  // const isActive = true
+  //const isActive = true
   const [filteredPages, setFilteredPages] = useState(pages)
   const [selectedRow, setSelectedRow] = useState<null | number>(null)
   const [value, setValue] = useState('')
