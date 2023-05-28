@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Form, Link, useNavigate, useSubmit } from 'react-router-dom'
 
 import { cx } from 'classix'
@@ -11,9 +11,7 @@ import CloseIcon from 'mdi-react/CloseIcon'
 import { Page } from '../../api'
 import IconButton from '../IconButton'
 
-//! react-theme
 //! provide classes for customization
-//! better outside click-handler, onBlur sucks
 //! tests
 
 type RenderFunction = (
@@ -32,6 +30,7 @@ export default function Search({ children, pages }: SearchProps) {
   const [selectedRow, setSelectedRow] = useState<null | number>(null)
   const [value, setValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const navigate = useNavigate()
   const submit = useSubmit()
@@ -44,6 +43,12 @@ export default function Search({ children, pages }: SearchProps) {
       }, 100)
     } else {
       setIsActive_(false)
+    }
+  }
+
+  const handleOutsideClick = (ev: FocusEvent) => {
+    if (wrapperRef.current && !wrapperRef.current.contains(ev.target as Node)) {
+      setIsActive(false)
     }
   }
 
@@ -70,6 +75,14 @@ export default function Search({ children, pages }: SearchProps) {
   useEffect(() => {
     setSelectedRow(null)
   }, [value])
+
+  /**
+   * Capture outside click events
+   */
+  useEffect(() => {
+    document.addEventListener('focus', handleOutsideClick)
+    return () => document.removeEventListener('focus', handleOutsideClick)
+  }, [])
 
   const handleKeys = (ev: React.KeyboardEvent<HTMLInputElement>) => {
     const border = Math.min(6, filteredPages.length - 1)
@@ -122,18 +135,23 @@ export default function Search({ children, pages }: SearchProps) {
           'rw-search-wrapper',
           isActive && 'rw-search-wrapper--active'
         )}
+        onKeyDown={handleKeys}
+        ref={wrapperRef}
       >
         <Form
           className={cx('rw-search', isActive && 'rw-search--active')}
           onFocus={() => {
             setIsActive(true)
           }}
-          onBlur={() => setIsActive(false)}
           onSubmit={(ev) => submit(ev.currentTarget.form)}
           role="search"
         >
           <h2 className="rw-search-heading">Search</h2>
-          <IconButton aria-label="Search" className="rw-search-start">
+          <IconButton
+            aria-label="Search"
+            className="rw-search-start"
+            onFocus={(ev) => ev.stopPropagation()}
+          >
             <SearchIcon />
           </IconButton>
           <IconButton
@@ -157,7 +175,6 @@ export default function Search({ children, pages }: SearchProps) {
             aria-live="off"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            onKeyDown={handleKeys}
           />
           <IconButton
             aria-label="Delete Search"
@@ -167,6 +184,7 @@ export default function Search({ children, pages }: SearchProps) {
               setValue('')
               inputRef.current?.focus()
             }}
+            onFocus={(ev) => ev.stopPropagation()}
           >
             <CloseIcon />
           </IconButton>

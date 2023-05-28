@@ -6,6 +6,7 @@ export interface IconButtonProps {
   className?: string
   isActive?: boolean
   onClick?: (ev: React.MouseEvent) => void
+  onFocus?: (ev: React.FocusEvent) => void
   style?: React.CSSProperties
 }
 
@@ -15,6 +16,7 @@ export default function IconButton({
   className,
   isActive,
   onClick,
+  onFocus,
   style,
 }: IconButtonProps) {
   return (
@@ -22,6 +24,7 @@ export default function IconButton({
       type="button"
       aria-label={ariaLabel}
       onClick={onClick}
+      onFocus={onFocus}
       className={cx(
         'active:scale-95 transition-transform flex w-12 h-12 rounded-full items-center justify-center hover:bg-primary/5 hover:dark:bg-primary-dark/5 outline-link ',
         isActive &&
