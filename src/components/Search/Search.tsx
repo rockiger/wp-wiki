@@ -11,7 +11,8 @@ import CloseIcon from 'mdi-react/CloseIcon'
 import { Page } from '../../api'
 import IconButton from '../IconButton'
 
-//! provide classes for customization
+//! provide classes for customization with tailwind
+//! provide functions for behavior customization
 //! tests
 
 type RenderFunction = (
@@ -209,6 +210,7 @@ export default function Search({ children, pages }: SearchProps) {
                       'rw-autocomplete-list-item--selected'
                   )}
                   key={page.id}
+                  onClick={() => setIsActive(false)}
                   to={`/page/${page.id}`}
                 >
                   <div className={cx('rw-autocomplete-list-item-icon')}>
