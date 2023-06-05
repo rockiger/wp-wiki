@@ -47,12 +47,6 @@ export default function Search({ children, pages }: SearchProps) {
     }
   }
 
-  const handleOutsideClick = (ev: FocusEvent) => {
-    if (wrapperRef.current && !wrapperRef.current.contains(ev.target as Node)) {
-      setIsActive(false)
-    }
-  }
-
   /**
    * Filter pages based on search value for instant search
    */
@@ -81,8 +75,21 @@ export default function Search({ children, pages }: SearchProps) {
    * Capture outside click events
    */
   useEffect(() => {
-    document.addEventListener('focus', handleOutsideClick)
-    return () => document.removeEventListener('focus', handleOutsideClick)
+    const handleOutsideClick = (ev: FocusEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(ev.target as Node)
+      ) {
+        setIsActive(false)
+      }
+    }
+
+    document.addEventListener('click', handleOutsideClick)
+    document.addEventListener('focusin', handleOutsideClick)
+    return () => {
+      document.removeEventListener('click', handleOutsideClick)
+      document.removeEventListener('focusin', handleOutsideClick)
+    }
   }, [])
 
   const handleKeys = (ev: React.KeyboardEvent<HTMLInputElement>) => {

@@ -150,7 +150,10 @@ export default function Root() {
                 aria-label="Search"
                 type="button"
                 className="active:scale-95 transition-transform flex md:hidden w-12 h-12 rounded-full items-center justify-center hover:bg-secondary-button hover:dark:bg-secondary-button-dark outline-link"
-                onClick={() => setIsSearchFieldActive(!isSearchActive)}
+                onClick={(ev) => {
+                  setIsSearchFieldActive(true)
+                  ev.stopPropagation()
+                }}
               >
                 <Icon
                   path={mdiMagnify}
