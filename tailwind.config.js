@@ -35,6 +35,8 @@ export default {
       'secondary-button-stroke': 'inset 0 0 0 1px #D9DBE3',
       'secondary-button-stroke-dark': 'inset 0 0 0 1px #404756',
       none: 'none',
+      border: '0 0 0 1px rgba(0,0,0,.10)',
+      'border-dark': '0 0 0 1px rgba(255,255,255,.05)',
     },
     extend: {
       backgroundImage: {

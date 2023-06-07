@@ -162,8 +162,8 @@ const Navigation = React.forwardRef(
         >
           <nav
             className={cx(
-              'duration-300 backdrop-filter backdrop-blur-lg backdrop-saturate-200 transition-shadow bg-opacity-90 items-center w-full flex justify-between bg-wash dark:bg-wash-dark dark:bg-opacity-95 px-1.5 lg:pr-5 lg:pl-4 z-50',
-              (isScrolled || isOpen) && 'dark:shadow-nav-dark shadow-nav'
+              'duration-300 backdrop-filter backdrop-blur-lg backdrop-saturate-200 transition-shadow bg-opacity-90 items-center w-full flex justify-between bg-wash dark:bg-wash-dark dark:bg-opacity-95 px-1.5 lg:pr-5 lg:pl-4 z-50 shadow-border dark:shadow-border-dark',
+              isOpen && 'dark:shadow-nav-dark shadow-nav'
             )}
           >
             <div className="h-16 w-full gap-0 sm:gap-3 flex items-center justify-between">

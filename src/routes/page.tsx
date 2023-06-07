@@ -48,6 +48,7 @@ import IconButton from '../components/IconButton'
 import { IconPencilOff } from '@tabler/icons-react'
 
 import type { RouteItem } from './root'
+import cx from 'classix'
 
 export async function loader({ params }: LoaderFunctionArgs) {
   await fetchPage(params?.pageId ?? '')
@@ -143,11 +144,111 @@ export default function Page() {
     }
   }, [])
 
+  //! add all controls to the toolbar when editing
+  //! think about style in full-width
   return (
     <div className="pl-0">
-      <div className="px-5 sm:px-12">
-        <div className="max-w-7xl mx-auto">
-          {/* {editor?.isEditable ? (
+      <div className={cx('flex border-b h-14 pl-5 pr-2')}>
+        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <div className="flex-1"></div>
+        {/* // Editor Toolbar */}
+        <div className="flex flex-wrap items-center xl:mr-0">
+          {editor?.isEditable ? (
+            <>
+              <IconButton
+                onClick={() => {
+                  editor.setEditable(false)
+                  editor?.commands.blur()
+                }}
+              >
+                <IconPencilOff />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  editor.setEditable(false)
+                  editor?.commands.blur()
+
+                  if (
+                    editor.getHTML() !==
+                    // WordPress transform the HTML content,
+                    // so we have to undo that.
+                    page?.body
+                      .replaceAll('>\n', '>')
+                      .replaceAll('<br />', '<br>')
+                  ) {
+                    console.log('update body')
+                    updatePage({
+                      variables: {
+                        id: pageId!,
+                        body: editor.getHTML(),
+                      },
+                    })
+                  }
+                }}
+              >
+                <IconDeviceFloppy color="blue" />
+              </IconButton>
+            </>
+          ) : (
+            <>
+              <IconButton
+                onClick={() => {
+                  editor?.setEditable(true)
+                  editor?.commands.focus()
+                }}
+              >
+                <IconPencil />
+              </IconButton>
+              <Menu as="div" className="relative">
+                <Menu.Button as="span">
+                  {({ open }) => (
+                    <IconButton isActive={open}>
+                      <IconDots />
+                    </IconButton>
+                  )}
+                </Menu.Button>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="px-1 py-1 ">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <Form method="post" action="trash">
+                            <button
+                              className={`${
+                                active
+                                  ? 'bg-gray-5 dark:bg-gray-80'
+                                  : 'text-gray-900'
+                              } group flex w-full items-center rounded-md px-2 py-2`}
+                            >
+                              <IconTrash className="h-5 mr-2 w-5" />
+                              Delete
+                            </button>
+                          </Form>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            </>
+          )}
+        </div>
+      </div>
+      <div
+        id="scrollwrapper"
+        style={{ height: 'calc(100vh - 4rem - 3.5rem)', overflowY: 'auto' }}
+      >
+        <div className="px-5 sm:px-12">
+          <div className="max-w-7xl mx-auto">
+            {/* {editor?.isEditable ? (
             <RichTextEditor.Toolbar
               sticky
               stickyOffset={56}
@@ -267,113 +368,21 @@ export default function Page() {
             </RichTextEditor.Toolbar>
           ) : (
           )} */}
-          {/* <Container size={'sm'} py="sm">
+            {/* <Container size={'sm'} py="sm">
               <Title mb="lg">{page?.title}</Title>
               <TypographyStylesProvider>
                 <RichTextEditor.Content />
               </TypographyStylesProvider>
                       </Container> */}
-          <div className="px-5 sm:px-12 pt-3.5">
-            <div className="max-w-4xl ml-0 2xl:mx-auto">
-              <div className="flex">
-                <Breadcrumbs breadcrumbs={breadcrumbs} />
-                <div className="flex-1"></div>
-                {/* // Editor Toolbar */}
-                <div className="flex -mr-8 xl:mr-0">
-                  {editor?.isEditable ? (
-                    <>
-                      <IconButton
-                        onClick={() => {
-                          editor.setEditable(false)
-                          editor?.commands.blur()
-                        }}
-                      >
-                        <IconPencilOff />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => {
-                          editor.setEditable(false)
-                          editor?.commands.blur()
 
-                          if (
-                            editor.getHTML() !==
-                            // WordPress transform the HTML content,
-                            // so we have to undo that.
-                            page?.body
-                              .replaceAll('>\n', '>')
-                              .replaceAll('<br />', '<br>')
-                          ) {
-                            console.log('update body')
-                            updatePage({
-                              variables: {
-                                id: pageId!,
-                                body: editor.getHTML(),
-                              },
-                            })
-                          }
-                        }}
-                      >
-                        <IconDeviceFloppy color="blue" />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <>
-                      <IconButton
-                        onClick={() => {
-                          editor?.setEditable(true)
-                          editor?.commands.focus()
-                        }}
-                      >
-                        <IconPencil />
-                      </IconButton>
-                      <Menu as="div" className="relative">
-                        <Menu.Button as="span">
-                          {({ open }) => (
-                            <IconButton isActive={open}>
-                              <IconDots />
-                            </IconButton>
-                          )}
-                        </Menu.Button>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <div className="px-1 py-1 ">
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <Form method="post" action="trash">
-                                    <button
-                                      className={`${
-                                        active
-                                          ? 'bg-gray-5 dark:bg-gray-80'
-                                          : 'text-gray-900'
-                                      } group flex w-full items-center rounded-md px-2 py-2`}
-                                    >
-                                      <IconTrash className="h-5 mr-2 w-5" />
-                                      Delete
-                                    </button>
-                                  </Form>
-                                )}
-                              </Menu.Item>
-                            </div>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
-                    </>
-                  )}
-                </div>
+            <div className="px-5 sm:px-12 pt-8">
+              <div className="max-w-4xl ml-0 2xl:mx-auto">
+                <h1 className="mt-0 text-primary dark:text-primary-dark -mx-.5 break-words text-5xl font-display font-bold leading-tight">
+                  {page?.title}
+                </h1>
+                <EditorContent className="p-0" editor={editor} />
+                {/* //? Tags */}
               </div>
-              <h1 className="mt-0 text-primary dark:text-primary-dark -mx-.5 break-words text-5xl font-display font-bold leading-tight">
-                {page?.title}
-              </h1>
-              <EditorContent className="p-0" editor={editor} />
-              {/* //? Tags */}
             </div>
           </div>
         </div>
