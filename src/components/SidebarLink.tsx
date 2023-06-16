@@ -21,6 +21,7 @@ interface SidebarLinkProps {
   isExpanded?: boolean
   hideArrow?: boolean
   isPending: boolean
+  onClick?: () => void
 }
 
 export default function SidebarLink({
@@ -33,6 +34,7 @@ export default function SidebarLink({
   isExpanded,
   hideArrow,
   isPending,
+  onClick,
 }: SidebarLinkProps) {
   const ref = useRef<HTMLAnchorElement>(null)
 
@@ -57,6 +59,7 @@ export default function SidebarLink({
       title={title}
       target={target}
       aria-current={selected ? 'page' : undefined}
+      onClick={onClick}
       className={cx(
         'pr-1 w-full rounded-none lg:rounded-r-2xl text-left h-12 hover:bg-gray-5 dark:hover:bg-gray-80 relative flex items-center justify-between text-base font-bold',
         level === 0 && !selected && 'text-primary dark:text-primary-dark',

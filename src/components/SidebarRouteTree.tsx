@@ -16,13 +16,16 @@ interface SidebarRouteTreeProps {
   breadcrumbs: RouteItem[]
   routeTree: RouteItem
   level: number
+  closeMenu?: () => void
 }
 
+//! Replace headlessui with radixui
 export function SidebarRouteTree({
   isForceExpanded,
   breadcrumbs,
   routeTree,
   level,
+  closeMenu = () => {},
 }: SidebarRouteTreeProps) {
   // const slug = useRouter().asPath.split(/[\?\#]/)[0];
   const { pathname: slug } = useLocation()
@@ -56,6 +59,7 @@ export function SidebarRouteTree({
                 isDraft={routeTree.isDraft}
                 isExpanded={open}
                 hideArrow={!routes.length}
+                onClick={closeMenu}
               />
               <Disclosure.Panel>
                 <ul>
@@ -66,6 +70,7 @@ export function SidebarRouteTree({
                       routeTree={rt}
                       breadcrumbs={breadcrumbs}
                       level={level + 1}
+                      closeMenu={closeMenu}
                     />
                   ))}
                 </ul>

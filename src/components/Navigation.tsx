@@ -10,14 +10,10 @@ import {
 } from 'react'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import { cx } from 'classix'
-import Icon from '@mdi/react'
-import {
-  mdiClose,
-  mdiMagnify,
-  mdiMenu,
-  mdiMoonWaningCrescent,
-  mdiWhiteBalanceSunny,
-} from '@mdi/js'
+import CloseIcon from 'mdi-react/CloseIcon'
+import MenuIcon from 'mdi-react/MenuIcon'
+import MoonWaningCrescentIcon from 'mdi-react/MoonWaningCrescentIcon'
+import WhiteBalanceSunnyIcon from 'mdi-react/WhiteBalanceSunnyIcon'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import type { RouteItem } from '../routes/root'
 import fulcrumLogo from '../assets/fulcrum.svg'
@@ -176,11 +172,7 @@ const Navigation = React.forwardRef(
                     isOpen && 'text-link dark:text-link-dark'
                   )}
                 >
-                  {isOpen ? (
-                    <Icon path={mdiClose} size={1} />
-                  ) : (
-                    <Icon path={mdiMenu} size={1} />
-                  )}
+                  {isOpen ? <CloseIcon /> : <MenuIcon />}
                 </button>
                 <div className="3xl:flex-1 flex align-center">
                   <NavLink
@@ -223,11 +215,7 @@ const Navigation = React.forwardRef(
                       }}
                       className="active:scale-95 transition-transform flex w-12 h-12 rounded-full items-center justify-center hover:bg-primary/5 hover:dark:bg-primary-dark/5 outline-link"
                     >
-                      <Icon
-                        path={mdiMoonWaningCrescent}
-                        size={1}
-                        rotate={-30}
-                      />
+                      <MoonWaningCrescentIcon className="-rotate-30" />
                     </button>
                   </div>
                   <div className="hidden dark:flex">
@@ -239,7 +227,7 @@ const Navigation = React.forwardRef(
                       }}
                       className="active:scale-95 transition-transform flex w-12 h-12 rounded-full items-center justify-center hover:bg-primary/5 hover:dark:bg-primary-dark/5 outline-link"
                     >
-                      <Icon path={mdiWhiteBalanceSunny} size={1} />
+                      <WhiteBalanceSunnyIcon />
                     </button>
                   </div>
                 </div>
@@ -283,6 +271,7 @@ const Navigation = React.forwardRef(
                           breadcrumbs={[]}
                           isForceExpanded={true}
                           level={0}
+                          closeMenu={() => setIsOpen(false)}
                         />
                       ))}
                     </ul>

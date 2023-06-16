@@ -24,8 +24,7 @@ import SidebarNav from '../components/SidebarNav'
 import _ from 'lodash'
 import Search from '../components/Search'
 import '../components/Search/react.css'
-import Icon from '@mdi/react'
-import { mdiMagnify } from '@mdi/js'
+import MagnifyIcon from 'mdi-react/MagnifyIcon'
 
 //! Think about the better icons solution tabler or mdi
 
@@ -155,11 +154,7 @@ export default function Root() {
                   ev.stopPropagation()
                 }}
               >
-                <Icon
-                  path={mdiMagnify}
-                  className="align-middle w-5 h-5"
-                  size={1}
-                />
+                <MagnifyIcon className="align-middle w-5 h-5" size={1} />
               </button>
             </div>
           )}

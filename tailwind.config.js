@@ -136,6 +136,9 @@ export default {
           '100%': { transform: 'translateX(0%)' },
         },
       },
+      rotate: {
+        '-30': '-30deg',
+      },
       colors,
       gridTemplateColumns: {
         'only-content': 'auto',

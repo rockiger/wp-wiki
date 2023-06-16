@@ -11,6 +11,8 @@ import {
 import { Link, useRouteError } from 'react-router-dom'
 import image from './assets/404.svg'
 
+//! Remove mantine
+
 const useStyles = createStyles((theme) => ({
   root: {
     paddingTop: rem(80),
