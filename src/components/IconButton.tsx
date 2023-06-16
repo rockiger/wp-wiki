@@ -1,13 +1,9 @@
 import { cx } from 'classix'
+import { ButtonHTMLAttributes } from 'react'
 
 export interface IconButtonProps {
-  'aria-label'?: string
-  children: React.ReactNode
-  className?: string
   isActive?: boolean
-  onClick?: (ev: React.MouseEvent) => void
-  onFocus?: (ev: React.FocusEvent) => void
-  style?: React.CSSProperties
+  size?: 'sm' | 'md' | 'lg'
 }
 
 export default function IconButton({
@@ -15,23 +11,27 @@ export default function IconButton({
   children,
   className,
   isActive,
-  onClick,
-  onFocus,
-  style,
-}: IconButtonProps) {
+  size = 'lg',
+  ...rest
+}: IconButtonProps &
+  React.DetailedHTMLProps<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  >) {
   return (
     <button
       type="button"
       aria-label={ariaLabel}
-      onClick={onClick}
-      onFocus={onFocus}
       className={cx(
-        'active:scale-95 transition-transform flex w-12 h-12 rounded-full items-center justify-center hover:bg-primary/5 hover:dark:bg-primary-dark/5 outline-link ',
+        'active:scale-95 transition-transform flex rounded-full items-center justify-center hover:bg-primary/5 hover:dark:bg-primary-dark/5 outline-link ',
         isActive &&
           'bg-highlight dark:bg-highlight-dark text-link dark:text-link-dark',
+        size === 'lg' && 'w-12 h-12',
+        size === 'md' && 'w-12 h-12 lg:w-10 lg:h-10',
+        size === 'sm' && 'w-12 h-12 lg:w-8 lg:h-8',
         className
       )}
-      style={style}
+      {...rest}
     >
       {children}
     </button>

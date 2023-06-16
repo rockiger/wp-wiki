@@ -23,7 +23,6 @@ import type { RouteItem } from '../routes/root'
 import fulcrumLogo from '../assets/fulcrum.svg'
 import SidebarNav from './SidebarNav'
 import { SidebarRouteTree } from './SidebarRouteTree'
-import * as Popover from '@radix-ui/react-popover'
 import React from 'react'
 
 declare global {

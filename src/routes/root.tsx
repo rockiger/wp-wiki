@@ -195,7 +195,7 @@ export default function Root() {
             </article>
             <div
               className={cx(
-                'self-stretch w-full',
+                'hidden self-stretch w-full',
                 isHomePage && 'bg-wash dark:bg-gray-95 mt-[-1px]'
               )}
             >

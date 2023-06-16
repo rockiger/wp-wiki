@@ -11,16 +11,16 @@ export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: RouteItem[] }) {
     return null
   }
   return (
-    <div className="flex flex-wrap">
+    <div className="Breadcrumbs flex flex-nowrap grow-0 justify-end overflow-hidden shrink">
       {breadcrumbs.map(
         (crumb, i) =>
           crumb.path &&
           !crumb.skipBreadcrumb && (
-            <div className="flex items-center" key={i}>
+            <div className="flex flex-nowrap items-center" key={i}>
               <Fragment key={crumb.path}>
                 <Link
                   to={crumb.path}
-                  className="text-link dark:text-link-dark text-sm tracking-wide font-bold uppercase mr-1 hover:underline"
+                  className="font-bold justify-end mr-1 text-link text-sm tracking-wide uppercase whitespace-nowrap hover:dark:text-link-dark hover:underline"
                 >
                   {crumb.title}
                 </Link>
