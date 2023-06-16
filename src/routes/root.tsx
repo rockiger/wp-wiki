@@ -168,7 +168,7 @@ export default function Root() {
       <div
         className={cx(
           hasColumns &&
-            'grid grid-cols-only-content lg:grid-cols-sidebar-content 2xl:grid-cols-sidebar-content-toc'
+            'grid grid-cols-only-content lg:grid-cols-sidebar-content'
         )}
       >
         {showSidebar && (
@@ -218,10 +218,6 @@ export default function Root() {
             </div>
           </main>
         </Suspense>
-        <div className="-mt-16 hidden lg:max-w-xs 2xl:block">
-          {/* //! TODO TOC, should probably go down the component tree */}
-          {/* {showToc && toc.length > 0 && <Toc headings={toc} key={asPath} />} */}
-        </div>
       </div>
     </>
   )

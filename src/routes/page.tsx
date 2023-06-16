@@ -2,7 +2,8 @@ import { Menu, Transition } from '@headlessui/react'
 import { notifications } from '@mantine/notifications'
 import { RichTextEditor, Link } from '@mantine/tiptap'
 import * as Select from '@radix-ui/react-select'
-import { Level } from '@tiptap/core'
+//@ts-ignore
+import type { Level } from '@tiptap/core'
 import { Editor, EditorContent, useEditor } from '@tiptap/react'
 import Highlight from '@tiptap/extension-highlight'
 import StarterKit from '@tiptap/starter-kit'
@@ -83,7 +84,7 @@ export default function Page() {
   const content = page?.body ?? ''
   const editor = useEditor({
     content,
-    editable: true,
+    editable: false,
     extensions: [
       StarterKit,
       Underline,
@@ -166,15 +167,12 @@ export default function Page() {
     }
   }, [])
 
-  //! add all controls to the toolbar when editing
-  //!   Add paragraphs styles
-  //! think about style in full-width
   return (
     <div className="pl-0">
-      <div className={cx('flex border-b h-14 pl-5 pr-2')}>
+      <div className={cx('flex border-b h-14 pl-5')}>
         <Breadcrumbs breadcrumbs={breadcrumbs} />
         {/* // Editor Toolbar */}
-        <div className="EditorToolbar flex flex-wrap grow items-center justify-end w-full xl:mr-0">
+        <div className="EditorToolbar flex flex-wrap grow items-center justify-end min-w-fit pr-2 lg:pr-6 xl:mr-0">
           {editor?.isEditable ? (
             <>
               <ButtonGroup>
