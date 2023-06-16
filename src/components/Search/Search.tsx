@@ -93,18 +93,19 @@ export default function Search({ children, pages }: SearchProps) {
     }
   }, [])
 
-  const handleKeys = (ev: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeys = (ev: React.KeyboardEvent<HTMLFormElement>) => {
     const border = Math.min(6, filteredPages.length - 1)
     if (ev.key === 'Enter') {
-      ev.preventDefault()
-      setIsActive(false)
-      setSelectedRow(null)
-      inputRef.current?.blur()
       if (selectedRow === null) {
-        submit(ev.currentTarget.form)
+        console.log(ev.currentTarget)
+        submit(ev.currentTarget)
       } else {
+        ev.preventDefault()
         navigate(`/page/${filteredPages[selectedRow].id}`)
       }
+      inputRef.current?.blur()
+      setIsActive(false)
+      setSelectedRow(null)
     } else if (ev.key === 'Escape') {
       ev.preventDefault()
       setIsActive(false)
@@ -144,15 +145,19 @@ export default function Search({ children, pages }: SearchProps) {
           'rw-search-wrapper',
           isActive && 'rw-search-wrapper--active'
         )}
-        onKeyDown={handleKeys}
         ref={wrapperRef}
       >
         <Form
+          action="/search"
           className={cx('rw-search', isActive && 'rw-search--active')}
+          method="get"
           onFocus={() => {
             setIsActive(true)
           }}
-          onSubmit={(ev) => submit(ev.currentTarget.form)}
+          onKeyDown={handleKeys}
+          onSubmit={(ev) => {
+            submit(ev.currentTarget)
+          }}
           role="search"
         >
           <h2 className="rw-search-heading">Search</h2>
@@ -177,7 +182,7 @@ export default function Search({ children, pages }: SearchProps) {
             autoComplete="off"
             placeholder="Search"
             name="q"
-            type="text"
+            type="seach"
             dir="ltr"
             spellCheck="false"
             aria-haspopup="true"

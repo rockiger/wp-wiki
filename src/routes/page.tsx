@@ -1,37 +1,25 @@
 import { Menu, Transition } from '@headlessui/react'
-import { notifications } from '@mantine/notifications'
-import { RichTextEditor, Link } from '@mantine/tiptap'
 import * as Select from '@radix-ui/react-select'
 //@ts-ignore
 import type { Level } from '@tiptap/core'
 import { Editor, EditorContent, useEditor } from '@tiptap/react'
 import Highlight from '@tiptap/extension-highlight'
+import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
-import TextAlign from '@tiptap/extension-text-align'
-import Superscript from '@tiptap/extension-superscript'
 import SubScript from '@tiptap/extension-subscript'
+import Superscript from '@tiptap/extension-superscript'
 import Table from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
 import TableRow from '@tiptap/extension-table-row'
-import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
+import TextAlign from '@tiptap/extension-text-align'
+import Underline from '@tiptap/extension-underline'
 
 import cx from 'classix'
-import {
-  Form,
-  LoaderFunctionArgs,
-  useLoaderData,
-  useParams,
-} from 'react-router-dom'
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { Form, LoaderFunctionArgs, useParams } from 'react-router-dom'
+import React, { Fragment, useCallback, useEffect, useMemo } from 'react'
 
 import ChevronDownIcon from 'mdi-react/ChevronDownIcon'
 import ChevronUpIcon from 'mdi-react/ChevronUpIcon'
@@ -59,8 +47,6 @@ import TableRowAddAfterIcon from 'mdi-react/TableRowAddAfterIcon'
 import UndoIcon from 'mdi-react/UndoIcon'
 
 import {
-  Page as PageType,
-  Spaces,
   fetchPage,
   useFetchPage,
   useFetchPages,
@@ -109,12 +95,7 @@ export default function Page() {
   /* GraphQL operations */
   const [updatePage] = useUpdatePage({
     onCompleted: (data) => refetch(),
-    onError: (error) =>
-      notifications.show({
-        title: 'Error while saving',
-        message: error.message,
-        color: 'red',
-      }),
+    onError: (error) => alert(`Error while saving: ${error.message}`),
   })
 
   /**

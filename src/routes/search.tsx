@@ -1,34 +1,7 @@
-import {
-  ActionIcon,
-  Box,
-  Container,
-  createStyles,
-  Flex,
-  Group,
-  Input,
-  Skeleton,
-  Stack,
-  Text,
-  TextInput,
-  Title,
-} from '@mantine/core'
-import {
-  IconCircleX,
-  IconSearch,
-  IconSearchOff,
-  IconWorldSearch,
-  IconZoomExclamation,
-} from '@tabler/icons-react'
-import { useRef, useState } from 'react'
-import {
-  Form,
-  Link,
-  LoaderFunctionArgs,
-  useLoaderData,
-  useNavigation,
-  useSearchParams,
-  useSubmit,
-} from 'react-router-dom'
+import IconWorldSearch from 'mdi-react/SearchWebIcon'
+import ExclamationIcon from 'mdi-react/ExclamationIcon'
+
+import { Link, LoaderFunctionArgs, useLoaderData } from 'react-router-dom'
 import { fetchPages, useFetchPages } from '../api'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -41,121 +14,64 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Search() {
   const { searchTerm } = useLoaderData() as Awaited<ReturnType<typeof loader>>
-  const { data: pages, loading } = useFetchPages(searchTerm ?? '')
-  const navigation = useNavigation()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [isTouched, setIsTouched] = useState(!!searchTerm)
-  const submit = useSubmit()
+  const { data: pages } = useFetchPages(searchTerm ?? '')
 
   return (
-    <Container py="xs">
-      <Title>Search</Title>
-      <Form
-        action=""
-        method="get"
-        onSubmit={(ev) => submit(ev.currentTarget.form)}
-        role="search"
-      >
-        <TextInput
-          aria-label="search wiki"
-          defaultValue={searchTerm ?? ''}
-          icon={<IconSearch size="1rem" stroke={1.5} />}
-          name="q"
-          onChange={(ev) => {
-            if (ev.target.value && !isTouched) setIsTouched(true)
-          }}
-          placeholder="Add keywords to search for pages"
-          ref={inputRef}
-          rightSection={
-            isTouched ? (
-              <ActionIcon
-                onClick={() => {
-                  if (inputRef.current) {
-                    inputRef.current.value = ''
-                    submit(new FormData())
-                    setIsTouched(false)
-                  }
-                }}
-                variant="subtle"
-              >
-                <IconCircleX />
-              </ActionIcon>
-            ) : null
-          }
-          type="search"
-        />
-      </Form>
+    <div className="p-8">
+      <h1 className="mt-0 text-primary dark:text-primary-dark -mx-.5 break-words text-5xl font-display font-bold leading-tight">
+        Search
+      </h1>
 
-      {navigation.state === 'loading' || loading ? (
-        <Box mt="xl">
-          <Skeleton height={50} circle mb="xl" />
-          <Skeleton height={8} radius="xl" />
-          <Skeleton height={8} mt={6} radius="xl" />
-          <Skeleton height={8} mt={6} width="70%" radius="xl" />
-        </Box>
-      ) : (
-        (() => {
-          if (!searchTerm) {
-            return (
-              <Flex align="center" direction="column" mt="6rem" mx="0">
-                <IconWorldSearch color="gray" size={80} stroke={1} />
-                <Text ta="center" fw={700} fz="lg" mt="xl">
-                  Find what you need
-                </Text>
-                <Text ta="center" fz="sm" mt="xs" c="dimmed">
-                  Search for keywords in the title, the content or the tags of
-                  any page.
-                </Text>
-              </Flex>
-            )
-          }
-          if (pages.length === 0) {
-            return (
-              <Flex align="center" direction="column" mt="6rem" mx="0">
-                <IconZoomExclamation color="gray" size={80} stroke={1} />
-                <Text ta="center" fw={700} fz="lg" mt="xl">
-                  We couldn't find any results for your search.
-                </Text>
-                <Text ta="center" fz="sm" mt="xs" c="dimmed">
-                  Try to search for different or less keywords or try to use
-                  more common terms.
-                </Text>
-              </Flex>
-            )
-          }
+      {(() => {
+        if (!searchTerm) {
           return (
-            <Flex align="center" direction="column" mt="xl" mx="0">
-              {pages.map((p) => (
-                <Container
-                  key={p.id}
-                  px={0}
-                  sx={{ display: 'block', marginBottom: '1rem', width: '100%' }}
-                >
-                  <Link to={`/page/${p.id}`}>
-                    <Title order={3} size="h6">
-                      {p.title}
-                    </Title>
-                  </Link>
-                  <Text color="dimmed" size="sm">
-                    {p.modified
-                      ? Intl.DateTimeFormat().format(new Date(p.modified))
-                      : ''}
-                  </Text>
-                  <Text
-                    dangerouslySetInnerHTML={{ __html: p.excerpt ?? '' }}
-                    my="0"
-                    size="sm"
-                    sx={{
-                      '& > *:first-of-type': { marginTop: 0 },
-                      '& > *:last-of-type': { marginBottom: 0 },
-                    }}
-                  />
-                </Container>
-              ))}
-            </Flex>
+            <div className="flex flex-col items-center mt-16">
+              <IconWorldSearch className="text-slate-400 w-20 h-20" />
+              <div className="mt-12 text-center text-bold text-4xl">
+                Find what you need
+              </div>
+              <div className="mt-4 text-center text-lg text-slate-400">
+                Search for keywords in the title, the content or the tags of any
+                page.
+              </div>
+            </div>
           )
-        })()
-      )}
-    </Container>
+        }
+        if (pages.length === 0) {
+          return (
+            <div className="flex flex-col items-center mt-16">
+              <ExclamationIcon className="text-slate-400 w-20 h-20" />
+              <div className="mt-12 text-center text-bold text-4xl">
+                We couldn't find any results for your search.
+              </div>
+              <div className="mt-4 text-center text-lg text-slate-400">
+                Try to search for different or less keywords or try to use more
+                common terms.
+              </div>
+            </div>
+          )
+        }
+        return (
+          <div className="flex flex-col items-center mt-16">
+            {pages.map((p) => (
+              <div className="mb-4 w-full">
+                <Link to={`/page/${p.id}`}>
+                  <h3 className="font-bold">{p.title}</h3>
+                </Link>
+                <div className="text-md text-slate-400">
+                  {p.modified
+                    ? Intl.DateTimeFormat().format(new Date(p.modified))
+                    : ''}
+                </div>
+                <div
+                  dangerouslySetInnerHTML={{ __html: p.excerpt ?? '' }}
+                  className="text-md [&>*:first-of-type]:mt-0 [&>*:last-of-type]:mb-0"
+                />
+              </div>
+            ))}
+          </div>
+        )
+      })()}
+    </div>
   )
 }

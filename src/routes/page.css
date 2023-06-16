@@ -1,7 +1,4 @@
 /* Basic editor styles */
-.mantine-RichTextEditor-content > .ProseMirror {
-  padding: 0;
-}
 .ProseMirror {
   outline: none;
   white-space: pre-wrap;

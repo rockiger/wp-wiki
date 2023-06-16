@@ -414,6 +414,7 @@ export interface Page {
   }
   body: string
   created: string
+  excerpt: string
   id: string
   isOverview: boolean
   isStarred: boolean

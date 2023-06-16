@@ -1,86 +1,26 @@
-import {
-  createStyles,
-  Image,
-  Container,
-  Title,
-  Text,
-  Button,
-  SimpleGrid,
-  rem,
-} from '@mantine/core'
 import { Link, useRouteError } from 'react-router-dom'
 import image from './assets/404.svg'
 
-//! Remove mantine
-
-const useStyles = createStyles((theme) => ({
-  root: {
-    paddingTop: rem(80),
-    paddingBottom: rem(80),
-  },
-
-  title: {
-    fontWeight: 900,
-    fontSize: rem(34),
-    marginBottom: theme.spacing.md,
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-
-    [theme.fn.smallerThan('sm')]: {
-      fontSize: rem(32),
-    },
-  },
-
-  control: {
-    [theme.fn.smallerThan('sm')]: {
-      width: '100%',
-    },
-  },
-
-  mobileImage: {
-    [theme.fn.largerThan('sm')]: {
-      display: 'none',
-    },
-  },
-
-  desktopImage: {
-    [theme.fn.smallerThan('sm')]: {
-      display: 'none',
-    },
-  },
-}))
-
 export default function ErrorPage() {
-  const { classes } = useStyles()
   const error = useRouteError() as { message?: string; statusText?: string }
   console.log(error)
   return (
-    <Container className={classes.root}>
-      <SimpleGrid
-        spacing={80}
-        cols={2}
-        breakpoints={[{ maxWidth: 'sm', cols: 1, spacing: 40 }]}
-      >
-        <Image src={image} className={classes.mobileImage} />
+    <div className="py-[80rem]">
+      <div className="grid grid-cols-1 gap-10 mb-16 md:grid-cols-3 md:gap-20">
+        <img src={image} className="md:hidden" />
         <div>
-          <Title className={classes.title}>Something is not right...</Title>
-          <Text color="dimmed" size="lg">
+          <h1 className="font-black text-[32rem] md:text-[34rem]">
+            Something is not right...
+          </h1>
+          <p className="text-3xl text-slate-400">
             Page you are trying to open does not exist. You may have mistyped
             the address, or the page has been moved to another URL. If you think
             this is an error contact support.
-          </Text>
-          <Button
-            component={Link}
-            variant="outline"
-            size="md"
-            mt="xl"
-            className={classes.control}
-            to="/"
-          >
-            Get back to home page
-          </Button>
+          </p>
+          <Link to="/">Get back to home page</Link>
         </div>
-        <Image src={image} className={classes.desktopImage} />
-      </SimpleGrid>
-    </Container>
+        <img src={image} className="hidden md:block" />
+      </div>
+    </div>
   )
 }

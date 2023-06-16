@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
+import * as Toast from '@radix-ui/react-toast'
 import Root, { loader as rootLoader } from './routes/root'
 import ErrorPage from './error-page'
 import Page, { loader as pageLoader } from './routes/page'
@@ -41,7 +42,9 @@ const router = createHashRouter([
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <RouterProvider router={router} />
+      <Toast.Provider swipeDirection="right">
+        <RouterProvider router={router} />
+      </Toast.Provider>
     </ApolloProvider>
   </React.StrictMode>
 )
