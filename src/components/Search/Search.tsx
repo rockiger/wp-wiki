@@ -11,7 +11,6 @@ import CloseIcon from 'mdi-react/CloseIcon'
 import { Page } from '../../api'
 import IconButton from '../IconButton'
 
-//! darkmode
 //! provide classes for customization with tailwind
 //! provide functions for behavior customization
 //! tests

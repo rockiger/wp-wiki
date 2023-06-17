@@ -1,6 +1,7 @@
 /* React like theme */
 
 :root {
+  --rw-autocomplete-background-color-dark: rgba(52, 58, 70, 1);
   --rw-autocomplete-height: calc(100vh - 4rem);
   --rw-autocomplete-item-border-bottom: 1px solid transparent;
   --rw-autocomplete-item-border-bottom-md: 1px solid transparent;
@@ -9,6 +10,7 @@
   --rw-autocomplete-list-item--selected--background-color: rgb(8 126 164);
   --rw-autocomplete-padding: 0.5rem;
   --rw-search-background-color: rgb(235 236 240);
+  --rw-search-background-color-dark: rgba(120, 131, 155, 0.2);
   --rw-search-border: 1px solid transparent;
   --rw-search-border-bottom: 1px solid transparent;
   --rw-search-border-radius: 22px;
@@ -18,6 +20,7 @@
   --rw-search--active-box-shadow: 0 1px 1px 0 rgba(65, 63, 79, 0.3),
     0 1px 3px 1px rgba(65, 63, 79, 0.15);
   --rw-wrapper-background-color: white;
+  --rw-wrapper-background-color-dark: rgb(35 39 47);
   --rw-wrapper-max-width: 56rem;
   --rw-wrapper-width: auto;
 }
@@ -31,6 +34,10 @@
   top: 0;
   width: 100vw;
   z-index: 1;
+}
+
+.dark .rw-search-wrapper {
+  background-color: var(--rw-wrapper-background-color-dark);
 }
 .rw-search-wrapper--active {
   display: block;
@@ -82,6 +89,9 @@
   height: var(--rw-search-height);
   margin: 0.75rem 1rem;
 }
+.dark .rw-search {
+  background-color: var(--rw-search-background-color-dark);
+}
 
 @media (min-width: 768px) {
   .rw-search {
@@ -125,6 +135,9 @@
   .rw-search--active {
     background: var(--rw-wrapper-background-color);
   }
+  .dark .rw-search--active {
+    background: var(--rw-autocomplete-background-color-dark);
+  }
 }
 
 .rw-autocomplete {
@@ -144,6 +157,9 @@
     top: 0;
     width: 100%;
     z-index: -1;
+  }
+  .dark .rw-autocomplete {
+    background-color: var(--rw-autocomplete-background-color-dark);
   }
   .rw-autocomplete--active {
     display: block;
