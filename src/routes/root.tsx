@@ -25,8 +25,7 @@ import _ from 'lodash'
 import Search from '../components/Search'
 import '../components/Search/react.css'
 import MagnifyIcon from 'mdi-react/MagnifyIcon'
-
-//! Think about the better icons solution tabler or mdi
+import LoadingIcon from 'mdi-react/LoadingIcon'
 
 export function loader() {
   fetchPages()
@@ -186,7 +185,13 @@ export default function Root() {
               className="break-words font-normal text-primary dark:text-primary-dark"
               key={pageId}
             >
-              {navigation.state === 'loading' ? <p>Loading...</p> : <Outlet />}
+              {navigation.state === 'loading' ? (
+                <div className="flex justify-center w-full">
+                  <LoadingIcon className="animate-spin h-8 mt-16 w-8" />
+                </div>
+              ) : (
+                <Outlet />
+              )}
             </article>
             <div
               className={cx(
