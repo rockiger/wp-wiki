@@ -19,8 +19,16 @@ import Underline from '@tiptap/extension-underline'
 
 import cx from 'classix'
 import { Form, LoaderFunctionArgs, useParams } from 'react-router-dom'
-import React, { Fragment, useCallback, useEffect, useMemo } from 'react'
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
+import ArrowSplitVerticalIcon from 'mdi-react/ArrowSplitVerticalIcon'
+import ArrowCollapseVerticalIcon from 'mdi-react/ArrowCollapseVerticalIcon'
 import ChevronDownIcon from 'mdi-react/ChevronDownIcon'
 import ChevronUpIcon from 'mdi-react/ChevronUpIcon'
 import CodeJsonIcon from 'mdi-react/CodeJsonIcon'
@@ -52,6 +60,7 @@ import {
   useFetchPages,
   useFetchSpaces,
   useUpdatePage,
+  useUpdatePageMeta,
 } from '../api'
 import Breadcrumbs from '../components/Breadcrumbs'
 import IconButton from '../components/IconButton'
@@ -97,6 +106,15 @@ export default function Page() {
     onCompleted: (data) => refetch(),
     onError: (error) => alert(`Error while saving: ${error.message}`),
   })
+  const [updatePageMeta] = useUpdatePageMeta({
+    onError: (error) => alert(`Error while saving page meta ${error.message}`),
+  })
+
+  const [width, _setWidth] = useState(page?.width ?? 'standard')
+  const setWidth = (width: string) => {
+    _setWidth(width)
+    updatePageMeta({ variables: { id: page?.id ?? '', width: width } })
+  }
 
   /**
    * Compute breadcrumbs
@@ -461,6 +479,17 @@ export default function Page() {
                 >
                   <FormatPageBreakIcon />
                 </IconButton>
+                <IconButton
+                  size="md"
+                  onClick={() =>
+                    width === 'standard'
+                      ? setWidth('wide')
+                      : setWidth('standard')
+                  }
+                  isActive={width === 'wide'}
+                >
+                  <ArrowSplitVerticalIcon />
+                </IconButton>
               </ButtonGroup>
               <ButtonGroup>
                 <IconButton
@@ -584,20 +613,22 @@ export default function Page() {
         </div>
       </div>
       <div
+        className="no-bg-scrollbar"
         id="scrollwrapper"
         style={{ height: 'calc(100vh - 4rem - 3.5rem)', overflowY: 'auto' }}
       >
-        <div className="px-5 sm:px-12">
-          <div className="max-w-7xl mx-auto">
-            <div className="px-5 sm:px-12 pt-8">
-              <div className="max-w-4xl ml-0 2xl:mx-auto">
-                <h1 className="mt-0 text-primary dark:text-primary-dark -mx-.5 break-words text-5xl font-display font-bold leading-tight">
-                  {page?.title}
-                </h1>
-                <EditorContent className="p-0" editor={editor} />
-                {/* //? Tags */}
-              </div>
-            </div>
+        <div className="pt-12 px-5">
+          <div
+            className={cx(
+              'ml-0 2xl:mx-auto',
+              width === 'standard' && 'max-w-4xl'
+            )}
+          >
+            <h1 className="mt-0 text-primary dark:text-primary-dark -mx-.5 break-words text-5xl font-display font-bold leading-tight">
+              {page?.title}
+            </h1>
+            <EditorContent className="p-0" editor={editor} />
+            {/* //? Tags */}
           </div>
         </div>
       </div>

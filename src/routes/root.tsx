@@ -166,7 +166,7 @@ export default function Root() {
         )}
       >
         {showSidebar && (
-          <div className="lg:-mt-16">
+          <div className="Sidebar lg:-mt-16">
             <div className="lg:pt-16 fixed lg:sticky top-0 left-0 right-0 py-0 shadow lg:shadow-none">
               {routeTrees.map((routeTree) => (
                 <SidebarNav

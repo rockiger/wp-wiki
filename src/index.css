@@ -7,6 +7,9 @@
   html {
     color-scheme: light;
 
+    height: 100vh;
+    overflow-y: hidden;
+
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent;
   }

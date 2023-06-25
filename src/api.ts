@@ -74,10 +74,6 @@ export const CREATE_FULCRUM_PAGE = gql`
     ) {
       clientMutationId
       fulcrumPage {
-        acfFulcrumPage {
-          isoverview
-          isstarred
-        }
         author {
           node {
             avatar {
@@ -167,10 +163,6 @@ export const useFetchSpaces = () => {
 export const GET_FULCRUM_PAGE = gql`
   query FetchPage($id: ID!) {
     fulcrumPage(id: $id) {
-      acfFulcrumPage {
-        isoverview
-        isstarred
-      }
       author {
         node {
           avatar {
@@ -185,10 +177,12 @@ export const GET_FULCRUM_PAGE = gql`
       content
       date
       id
+      isOverview
       modified
       parentId
       status
       title
+      width
     }
   }
 `
@@ -205,27 +199,26 @@ export const normalizeFetchPageData = (data: {
       created: string
       id: string
       isOverview: boolean
-      isStarred: boolean
       modified: string
       parentId: string
       status: string
       title: string
+      width: string
     }
   | undefined => {
   if (!data?.fulcrumPage) return undefined
   const {
-    acfFulcrumPage,
     author,
     content,
     date,
     id,
+    isOverview,
     modified,
     parentId,
     status,
     title,
+    width,
   } = data?.fulcrumPage
-  const isOverview = !!acfFulcrumPage?.isoverview
-  const isStarred = !!acfFulcrumPage?.isstarred
 
   const normalizedData = {
     author: {
@@ -241,11 +234,11 @@ export const normalizeFetchPageData = (data: {
     created: date ?? '',
     id: id ?? '',
     isOverview: isOverview ?? false,
-    isStarred: isStarred ?? false,
     modified: modified ?? '',
     parentId: parentId ?? '',
     status: status ?? '',
     title: title ?? '',
+    width: width ?? '',
   }
   return normalizedData
 }
@@ -270,10 +263,6 @@ export const GET_FULCRUM_PAGES = gql`
   query getFulcrumPages($search: String) {
     drafts: fulcrumPages(where: { status: DRAFT, search: $search }) {
       nodes {
-        acfFulcrumPage {
-          isoverview
-          isstarred
-        }
         author {
           node {
             avatar {
@@ -287,6 +276,7 @@ export const GET_FULCRUM_PAGES = gql`
         }
         date
         id
+        isOverview
         modified
         parentId
         status
@@ -295,10 +285,6 @@ export const GET_FULCRUM_PAGES = gql`
     }
     pendings: fulcrumPages(where: { status: PENDING, search: $search }) {
       nodes {
-        acfFulcrumPage {
-          isoverview
-          isstarred
-        }
         author {
           node {
             avatar {
@@ -312,6 +298,7 @@ export const GET_FULCRUM_PAGES = gql`
         }
         date
         id
+        isOverview
         modified
         parentId
         status
@@ -320,10 +307,6 @@ export const GET_FULCRUM_PAGES = gql`
     }
     privates: fulcrumPages(where: { status: PRIVATE, search: $search }) {
       nodes {
-        acfFulcrumPage {
-          isoverview
-          isstarred
-        }
         author {
           node {
             avatar {
@@ -337,6 +320,7 @@ export const GET_FULCRUM_PAGES = gql`
         }
         date
         id
+        isOverview
         modified
         parentId
         status
@@ -345,10 +329,6 @@ export const GET_FULCRUM_PAGES = gql`
     }
     publishes: fulcrumPages(where: { status: PUBLISH, search: $search }) {
       nodes {
-        acfFulcrumPage {
-          isoverview
-          isstarred
-        }
         author {
           node {
             avatar {
@@ -362,6 +342,7 @@ export const GET_FULCRUM_PAGES = gql`
         }
         date
         id
+        isOverview
         modified
         parentId
         status
@@ -372,18 +353,8 @@ export const GET_FULCRUM_PAGES = gql`
 `
 function rewriteNodesFetchPages(nodes: FulcrumPage[]) {
   return nodes.map((node) => {
-    const {
-      acfFulcrumPage = {},
-      author,
-      date,
-      id,
-      modified,
-      parentId,
-      status,
-      title,
-    } = node
-    const isOverview = !!acfFulcrumPage?.isoverview
-    const isStarred = !!acfFulcrumPage?.isstarred
+    const { author, date, id, isOverview, modified, parentId, status, title } =
+      node
 
     return {
       author: {
@@ -398,7 +369,6 @@ function rewriteNodesFetchPages(nodes: FulcrumPage[]) {
       created: date,
       id,
       isOverview,
-      isStarred,
       modified: modified,
       parentId,
       status,
@@ -519,3 +489,47 @@ export const DELETE_FULCRUM_PAGE = gql`
     }
   }
 `
+
+export const UPDATE_FULCRUM_PAGE_META = gql`
+  mutation UpdateFulcrumPageMeta(
+    $id: String!
+    $isOverview: Boolean
+    $width: String
+  ) {
+    updateFulcrumPageMeta(
+      input: { id: $id, isOverview: $isOverview, width: $width }
+    ) {
+      isOverview
+      width
+    }
+  }
+`
+
+/**
+ * Consumes the varibles object of the new meta properties
+ * and updates the page meta in WordPress.
+ */
+export async function updatePageMeta(variables: {
+  id: string
+  isOverview?: boolean
+  width?: string
+}) {
+  const response = await client.mutate({
+    mutation: UPDATE_FULCRUM_PAGE_META,
+    variables,
+  })
+
+  return response.data.updateFulcrumPage.fulcrumPage
+}
+
+export const useUpdatePageMeta = (options: MutationHookOptions = {}) => {
+  const [mutate, ...rest] = useMutation(UPDATE_FULCRUM_PAGE_META, options)
+
+  const updatePageMeta = useCallback(
+    (options: MutationHookOptions) => {
+      return mutate(options)
+    },
+    [mutate]
+  )
+  return [updatePageMeta, ...rest] as const
+}

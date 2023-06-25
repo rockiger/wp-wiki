@@ -2156,8 +2156,6 @@ export type EnqueuedStylesheetConnectionPageInfo = {
 /** The FulcrumPage type */
 export type FulcrumPage = ContentNode & DatabaseIdentifier & HierarchicalContentNode & HierarchicalNode & MenuItemLinkable & Node & NodeWithAuthor & NodeWithComments & NodeWithContentEditor & NodeWithExcerpt & NodeWithFeaturedImage & NodeWithPageAttributes & NodeWithRevisions & NodeWithTemplate & NodeWithTitle & NodeWithTrackbacks & Previewable & UniformResourceIdentifiable & {
   __typename?: 'FulcrumPage';
-  /** Added to the GraphQL Schema because the ACF Field Group &quot;Fulcrum Page&quot; was set to Show in GraphQL. */
-  acfFulcrumPage?: Maybe<FulcrumPage_Acffulcrumpage>;
   /** Returns ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root). */
   ancestors?: Maybe<HierarchicalContentNodeToContentNodeAncestorsConnection>;
   /** Connection between the NodeWithAuthor type and the User type */
@@ -2217,6 +2215,7 @@ export type FulcrumPage = ContentNode & DatabaseIdentifier & HierarchicalContent
   id: Scalars['ID'];
   /** Whether the node is a Content Node */
   isContentNode: Scalars['Boolean'];
+  isOverview?: Maybe<Scalars['Boolean']>;
   /** Whether the object is a node in the preview state */
   isPreview?: Maybe<Scalars['Boolean']>;
   /** Whether the object is restricted from the current viewer */
@@ -2269,6 +2268,7 @@ export type FulcrumPage = ContentNode & DatabaseIdentifier & HierarchicalContent
   toPing?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** The unique resource identifier path */
   uri?: Maybe<Scalars['String']>;
+  width: Maybe<Scalars['String']>;
 };
 
 
@@ -2778,6 +2778,7 @@ export type FulcrumPage_Acffulcrumpage = AcfFieldGroup & {
   fieldGroupName?: Maybe<Scalars['String']>;
   isoverview?: Maybe<Scalars['Boolean']>;
   isstarred?: Maybe<Scalars['Boolean']>;
+  width: Maybe<Scalars['String']>;
 };
 
 /** The FulcrumSpace type */
