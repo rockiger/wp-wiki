@@ -12,9 +12,10 @@ import { setContext } from '@apollo/client/link/context'
 import _ from 'lodash'
 import { useCallback } from 'react'
 import reactPress from './reactPress'
-import {
+import type {
   FulcrumPage,
   FulcrumSpace,
+  TermNode,
   UpdateFulcrumPageInput,
 } from './__generated__/graphql'
 
@@ -119,24 +120,33 @@ export async function postPage({
 export const GET_FULCRUM_SPACES = gql`
   query getFulcrumSpaces {
     fulcrumSpaces {
-      nodes {
-        acfFulcrumSpace {
-          overviewPage
+      edges {
+        node {
+          count
+          description
+          id
+          name
+          contentNodes {
+            nodes {
+              ... on FulcrumPage {
+                id
+                isOverview
+                title
+              }
+            }
+          }
         }
-        count
-        description
-        id
-        name
       }
     }
   }
 `
 
-function rewriteNodesFetchSpaces(nodes: FulcrumSpace[]) {
-  return nodes.map((node) => {
-    const { count, description, id, name } = node
+function rewriteNodesFetchSpaces(edges: FulcrumSpace[]) {
+  return edges?.map((edge) => {
+    const { count, description, id, name } = edge
     return {
-      overviewPage: node.acfFulcrumSpace?.overviewPage,
+      //@ts-ignore
+      overviewPage: edge.contentNodes?.nodes.find((n) => n?.isOverview) ?? '',
       count,
       description,
       id,
@@ -150,7 +160,9 @@ export async function fetchSpaces() {
   const response = await client.query({
     query: GET_FULCRUM_SPACES,
   })
-  return rewriteNodesFetchSpaces(response.data.fulcrumSpaces.nodes)
+
+  console.log(response.data.fulcrumSpaces.edges)
+  return rewriteNodesFetchSpaces(response.data.fulcrumSpaces.edges)
 }
 export const useFetchSpaces = () => {
   const { data, ...rest } = useQuery(GET_FULCRUM_SPACES, {})
@@ -281,6 +293,13 @@ export const GET_FULCRUM_PAGES = gql`
         parentId
         status
         title
+        terms(where: { taxonomies: FULCRUMSPACE }) {
+          nodes {
+            name
+            id
+            taxonomyName
+          }
+        }
       }
     }
     pendings: fulcrumPages(where: { status: PENDING, search: $search }) {
@@ -303,6 +322,13 @@ export const GET_FULCRUM_PAGES = gql`
         parentId
         status
         title
+        terms(where: { taxonomies: FULCRUMSPACE }) {
+          nodes {
+            name
+            id
+            taxonomyName
+          }
+        }
       }
     }
     privates: fulcrumPages(where: { status: PRIVATE, search: $search }) {
@@ -325,6 +351,13 @@ export const GET_FULCRUM_PAGES = gql`
         parentId
         status
         title
+        terms(where: { taxonomies: FULCRUMSPACE }) {
+          nodes {
+            name
+            id
+            taxonomyName
+          }
+        }
       }
     }
     publishes: fulcrumPages(where: { status: PUBLISH, search: $search }) {
@@ -347,14 +380,30 @@ export const GET_FULCRUM_PAGES = gql`
         parentId
         status
         title
+        terms(where: { taxonomies: FULCRUMSPACE }) {
+          nodes {
+            name
+            id
+            taxonomyName
+          }
+        }
       }
     }
   }
 `
 function rewriteNodesFetchPages(nodes: FulcrumPage[]) {
   return nodes.map((node) => {
-    const { author, date, id, isOverview, modified, parentId, status, title } =
-      node
+    const {
+      author,
+      date,
+      id,
+      isOverview,
+      modified,
+      parentId,
+      status,
+      title,
+      terms,
+    } = node
 
     return {
       author: {
@@ -373,6 +422,9 @@ function rewriteNodesFetchPages(nodes: FulcrumPage[]) {
       parentId,
       status,
       title,
+      fulcrumSpace: terms?.nodes?.find(
+        (n: TermNode) => n.taxonomyName === 'fulcrum_space'
+      ),
     }
   })
 }
@@ -387,11 +439,13 @@ export interface Page {
   excerpt: string
   id: string
   isOverview: boolean
-  isStarred: boolean
   modified: string
   parentId: string
   status: string
   title: string
+  fulcrumSpace:
+    | { id: string; name: string; taxonomyName: 'fulcrum_space' }
+    | undefined
 }
 
 export async function fetchPages(search = '') {
@@ -492,7 +546,7 @@ export const DELETE_FULCRUM_PAGE = gql`
 
 export const UPDATE_FULCRUM_PAGE_META = gql`
   mutation UpdateFulcrumPageMeta(
-    $id: String!
+    $id: ID!
     $isOverview: Boolean
     $width: String
   ) {

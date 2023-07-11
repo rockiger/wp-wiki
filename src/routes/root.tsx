@@ -111,7 +111,7 @@ export default function Root() {
       try {
         const page = await postPage({
           title: title,
-          parentId: pageId ?? spaces[0]['overviewPage'] ?? '',
+          parentId: (pageId as string) ?? spaces[0]['overviewPage'] ?? '',
           spaceId: spaces[0]['id'],
         })
         pagesRefetch()
@@ -130,7 +130,7 @@ export default function Root() {
   let showToc = true
 
   const routeTrees = useMemo(() => {
-    return createRouteTrees(pages, spaces)
+    return createRouteTrees(pages)
   }, [pages, spaces])
 
   return (
@@ -222,15 +222,14 @@ export default function Root() {
     </>
   )
 }
-export function createRouteTrees(pages: Pages, spaces: Spaces): RouteItem[] {
+export function createRouteTrees(pages: Pages): RouteItem[] {
   if (_.isEmpty(pages)) {
     return []
   }
   const overviews = pages
     .filter((p) => p?.isOverview)
     .map((p) => {
-      const space = spaces.find((s) => s?.overviewPage === p?.id)
-      return space ? { ...p, title: space?.name ?? p?.title } : p
+      return { ...p, title: p.fulcrumSpace?.name ?? p?.title }
     })
   const subpages = pages.filter((p) => !p?.isOverview)
 
