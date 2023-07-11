@@ -1,14 +1,9 @@
+import { Navigate } from 'react-router-dom'
+import { useFetchPages } from '../api'
+
 export default function Index() {
-  return (
-    <p id="zero-state" className="mt-5 text-center">
-      <br />
-      This is a demo for ReactPress.
-      <br />
-      Check out{' '}
-      <a href="https://rockiger.com/reactpress">
-        the docs at rockiger.com/reactpress
-      </a>
-      .
-    </p>
-  )
+  const { data: pages, refetch: pagesRefetch } = useFetchPages()
+  const targetPage = pages.filter((page) => page.isOverview)[0]
+
+  return <Navigate to={`/page/${targetPage?.id}`} />
 }
