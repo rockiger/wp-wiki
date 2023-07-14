@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { dependencies } from './package.json'
 
 function renderChunks(deps: Record<string, string>) {
   let chunks = {}
@@ -29,7 +28,7 @@ function renderChunks(deps: Record<string, string>) {
 export default defineConfig(({ command }) => {
   if (command === 'build') {
     return {
-      base: '/wp-content/reactpress/apps/wp-wiki/dist/',
+      base: '/wp-content/plugins/fulcrum/apps/wp-wiki/dist/',
       plugins: [react()],
       build: {
         sourcemap: false,

@@ -28,7 +28,6 @@ import React, {
 } from 'react'
 
 import ArrowSplitVerticalIcon from 'mdi-react/ArrowSplitVerticalIcon'
-import ArrowCollapseVerticalIcon from 'mdi-react/ArrowCollapseVerticalIcon'
 import ChevronDownIcon from 'mdi-react/ChevronDownIcon'
 import ChevronUpIcon from 'mdi-react/ChevronUpIcon'
 import CodeJsonIcon from 'mdi-react/CodeJsonIcon'
