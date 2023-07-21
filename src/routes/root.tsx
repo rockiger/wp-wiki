@@ -1,13 +1,5 @@
 import { Suspense, useCallback, useMemo, useRef, useState } from 'react'
-import {
-  Form,
-  Link,
-  NavLink,
-  Outlet,
-  useNavigate,
-  useNavigation,
-  useParams,
-} from 'react-router-dom'
+import { Outlet, useNavigate, useNavigation, useParams } from 'react-router-dom'
 import {
   fetchPages,
   fetchSpaces,
@@ -26,6 +18,7 @@ import Search from '../components/Search'
 import '../components/Search/react.css'
 import MagnifyIcon from 'mdi-react/MagnifyIcon'
 import LoadingIcon from 'mdi-react/LoadingIcon'
+import PlusIcon from 'mdi-react/PlusIcon'
 
 export function loader() {
   fetchPages()
@@ -81,6 +74,8 @@ export default function Root() {
   const navigate = useNavigate()
   const navigation = useNavigation()
 
+  console.log('pages', pages)
+
   const toggleSearch = useCallback(
     (action?: 'open' | 'close') => {
       if (action === 'open') {
@@ -103,20 +98,24 @@ export default function Root() {
     searchInputRef.current?.focus()
   }, [searchInputRef, setSearchValue])
 
-  const onClickNewButton = async (ev: React.MouseEvent) => {
-    ev.preventDefault()
-
+  const onClickNewButton = () => {
+    const helper = async (title: string) => {
+      const page = await postPage({
+        title: title,
+        parentId:
+          (pageId as string) ??
+          pages.filter((page) => page.isOverview)[0] ??
+          '',
+        spaceId: pages.filter((page) => page.isOverview)[0].fulcrumSpace?.id,
+      })
+      pagesRefetch()
+      spacesRefetch()
+      navigate(`/page/${page.id}?edit`)
+    }
     const title = window.prompt('New Pagename')
     if (title) {
       try {
-        const page = await postPage({
-          title: title,
-          parentId: (pageId as string) ?? spaces[0]['overviewPage'] ?? '',
-          spaceId: spaces[0]['id'],
-        })
-        pagesRefetch()
-        spacesRefetch()
-        navigate(`/page/${page.id}?edit`)
+        helper(title)
       } catch (err) {
         console.error(err)
       }
@@ -170,9 +169,9 @@ export default function Root() {
             <div className="lg:pt-16 fixed lg:sticky top-0 left-0 right-0 py-0 shadow lg:shadow-none">
               {routeTrees.map((routeTree) => (
                 <SidebarNav
+                  breadcrumbs={[]}
                   key={routeTree.path}
                   routeTree={routeTree}
-                  breadcrumbs={[]}
                 />
               ))}
             </div>
@@ -216,6 +215,15 @@ export default function Root() {
                 {/*<Footer />*/}
               </div>
             </div>
+            <button
+              aria-label="Add Page here"
+              className="fixed right-5 bottom-4 h-12 lg:h-10 sm:w-auto justify-center active:scale-[.98] transition-transform inline-flex font-bold items-center outline-none focus:outline-none focus-visible:outline focus-visible:outline-link focus:outline-offset-2 focus-visible:dark:focus:outline-link-dark leading-snug bg-link text-white hover:bg-opacity-80 text-lg py-3 rounded-full pl-5 pr-3"
+              onClick={onClickNewButton}
+              title="Add Page"
+            >
+              New
+              <PlusIcon />
+            </button>
           </main>
         </Suspense>
       </div>

@@ -17,11 +17,11 @@ declare global {
 }
 
 export default function SidebarNav({
-  routeTree,
   breadcrumbs,
+  routeTree,
 }: {
-  routeTree: RouteItem
   breadcrumbs: RouteItem[]
+  routeTree: RouteItem
 }) {
   // HACK. Fix up the data structures instead.
   /* if ((routeTree as any).routes.length === 1) {
@@ -29,9 +29,9 @@ export default function SidebarNav({
   } */
 
   return (
-    <div className="sticky top-0 lg:bottom-0 lg:h-[calc(100vh-4rem)] flex flex-col">
+    <div className="sticky top-0 lg:bottom-0 lg:h-[calc(100vh-4rem)]">
       <div
-        className="overflow-y-scroll no-bg-scrollbar lg:w-[342px] grow bg-wash dark:bg-wash-dark"
+        className="overflow-y-scroll no-bg-scrollbar grow bg-wash dark:bg-wash-dark"
         style={{
           overscrollBehavior: 'contain',
         }}
@@ -40,7 +40,7 @@ export default function SidebarNav({
           <nav
             role="navigation"
             style={{ '--bg-opacity': '.2' } as React.CSSProperties} // Need to cast here because CSS vars aren't considered valid in TS types (cuz they could be anything)
-            className="w-full lg:h-auto grow pr-0 lg:pr-5 pt-6 lg:pb-16 md:pt-4 lg:pt-4 scrolling-touch scrolling-gpu"
+            className="w-full lg:h-auto grow pr-0 lg:pr-5 pt-6 lg:pb-16 md:pt-4 lg:pt-2 scrolling-touch scrolling-gpu"
           >
             {/* No fallback UI so need to be careful not to suspend directly inside. */}
             <Suspense fallback={null}>
@@ -53,7 +53,6 @@ export default function SidebarNav({
                 />
               </ul>
             </Suspense>
-            <div className="h-20" />
           </nav>
         </aside>
       </div>

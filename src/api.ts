@@ -22,20 +22,18 @@ import type {
 const httpLink = createHttpLink({
   uri: import.meta.env.PROD
     ? `${reactPress?.user?.data?.user_url}/graphql`
-    : 'http://rockiger.local/graphql', // live site needs rockiger.com
+    : 'http://wordlassian.local/graphql',
 })
 
 const authLink = setContext((_, { headers }) => {
-  const credentials = btoa('admin:pass')
-
   // return the headers to the context so httpLink can read them
-
+  console.log(import.meta.env)
   return {
     headers: {
       ...headers,
-
-      Authorization: `Basic ${credentials}`, // Use for tests
-      // 'X-WP-Nonce': reactPress.api.nonce, // Use for staging/live site
+      ...(import.meta.env.Prod
+        ? { 'X-WP-Nonce': reactPress.api.nonce }
+        : { Authorization: `Basic ${btoa('admin:pass')}` }),
     },
   }
 })
@@ -58,6 +56,7 @@ export async function fetcher(slug: 'string', options = {}) {
   //! https://developer.wordpress.org/rest-api/using-the-rest-api/client-libraries/
 }
 
+//! Make it possible to make drafts and then turn them into published
 export const CREATE_FULCRUM_PAGE = gql`
   mutation createFulcrumPage(
     $spaceId: ID!
@@ -71,6 +70,7 @@ export const CREATE_FULCRUM_PAGE = gql`
         title: $title
         content: $body
         parentId: $parentId
+        status: PUBLISH
       }
     ) {
       clientMutationId

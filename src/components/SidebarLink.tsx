@@ -80,7 +80,12 @@ export default function SidebarLink({
           isDraft && 'text-gray-400 dark:text-gray-500'
         )}
       >
-        {title}
+        <span>{title}</span>{' '}
+        {isDraft && (
+          <span className="bg-gray-200 h-4 leading-4 ml-1 mt-[1px] px-1 rounded-full text-xs">
+            Draft
+          </span>
+        )}
       </span>
       {isExpanded != null && !hideArrow && DisclosureButton && (
         <DisclosureButton
