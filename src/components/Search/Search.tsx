@@ -96,7 +96,6 @@ export default function Search({ children, pages }: SearchProps) {
     const border = Math.min(6, filteredPages.length - 1)
     if (ev.key === 'Enter') {
       if (selectedRow === null) {
-        console.log(ev.currentTarget)
         submit(ev.currentTarget)
       } else {
         ev.preventDefault()

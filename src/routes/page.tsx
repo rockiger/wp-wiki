@@ -57,7 +57,6 @@ import {
   fetchPage,
   useFetchPage,
   useFetchPages,
-  useFetchSpaces,
   useUpdatePage,
   useUpdatePageMeta,
 } from '../api'
@@ -118,17 +117,15 @@ export default function Page() {
   /**
    * Compute breadcrumbs
    */
-  const { data: spaces } = useFetchSpaces()
   const { data: pages } = useFetchPages()
   const breadcrumbs: RouteItem[] = useMemo(() => {
     function createBreadcrumbs(pageId: string): RouteItem[] {
       const page = pages.find((p) => p?.id === pageId)
       if (page?.isOverview) {
-        const space = spaces.find((s) => s.overviewPage === page?.id)
         return [
           {
             path: `/page/${page?.id}`,
-            title: space?.name ?? '',
+            title: page.fulcrumSpace?.name ?? page?.title ?? '',
           },
         ]
       }
@@ -145,15 +142,15 @@ export default function Page() {
     }
 
     // Show the space name
-    if (page?.isOverview && pages && spaces) {
+    if (page?.isOverview && pages) {
       return createBreadcrumbs(page?.id)
     }
     // Show the title
-    if (page?.parentId && pages && spaces) {
+    if (page?.parentId && pages) {
       return createBreadcrumbs(page.parentId)
     }
     return []
-  }, [page, pages, spaces])
+  }, [page, pages])
 
   /**
    * Set the contentent of the editor
@@ -161,7 +158,6 @@ export default function Page() {
   useEffect(() => {
     if (page && editor) {
       editor.commands.setContent(page?.body)
-      console.log('useEffect')
     }
   }, [])
 
@@ -543,7 +539,6 @@ export default function Page() {
                         .replaceAll('>\n', '>')
                         .replaceAll('<br />', '<br>')
                     ) {
-                      console.log('update body')
                       updatePage({
                         variables: {
                           id: pageId!,

@@ -21,13 +21,12 @@ import type {
 
 const httpLink = createHttpLink({
   uri: import.meta.env.PROD
-    ? `${reactPress?.user?.data?.user_url}/graphql`
+    ? `${reactPress?.api.graphql_url}`
     : 'http://wordlassian.local/graphql',
 })
 
 const authLink = setContext((_, { headers }) => {
   // return the headers to the context so httpLink can read them
-  console.log(import.meta.env)
   return {
     headers: {
       ...headers,
@@ -161,7 +160,6 @@ export async function fetchSpaces() {
     query: GET_FULCRUM_SPACES,
   })
 
-  console.log(response.data.fulcrumSpaces.edges)
   return rewriteNodesFetchSpaces(response.data.fulcrumSpaces.edges)
 }
 export const useFetchSpaces = () => {

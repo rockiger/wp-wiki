@@ -17,7 +17,6 @@ function renderChunks(deps: Record<string, string>) {
       return
     chunks[key] = [key]
   })
-  console.log(Object.keys(chunks))
   return chunks
 }
 

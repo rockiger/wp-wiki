@@ -1,14 +1,6 @@
 import { Suspense, useCallback, useMemo, useRef, useState } from 'react'
 import { Outlet, useNavigate, useNavigation, useParams } from 'react-router-dom'
-import {
-  fetchPages,
-  fetchSpaces,
-  Page,
-  postPage,
-  Spaces,
-  useFetchPages,
-  useFetchSpaces,
-} from '../api'
+import { fetchPages, Page, postPage, useFetchPages } from '../api'
 
 import Navigation from '../components/Navigation'
 import { cx } from 'classix'
@@ -22,7 +14,6 @@ import PlusIcon from 'mdi-react/PlusIcon'
 
 export function loader() {
   fetchPages()
-  fetchSpaces()
   return {}
 }
 
@@ -69,12 +60,9 @@ export default function Root() {
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchToggleRef = useRef<HTMLButtonElement>(null)
   const { data: pages, refetch: pagesRefetch } = useFetchPages()
-  const { data: spaces, refetch: spacesRefetch } = useFetchSpaces()
   const { pageId } = useParams()
   const navigate = useNavigate()
   const navigation = useNavigation()
-
-  console.log('pages', pages)
 
   const toggleSearch = useCallback(
     (action?: 'open' | 'close') => {
@@ -109,7 +97,6 @@ export default function Root() {
         spaceId: pages.filter((page) => page.isOverview)[0].fulcrumSpace?.id,
       })
       pagesRefetch()
-      spacesRefetch()
       navigate(`/page/${page.id}?edit`)
     }
     const title = window.prompt('New Pagename')
@@ -130,7 +117,7 @@ export default function Root() {
 
   const routeTrees = useMemo(() => {
     return createRouteTrees(pages)
-  }, [pages, spaces])
+  }, [pages])
 
   return (
     <>

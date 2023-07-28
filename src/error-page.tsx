@@ -3,7 +3,7 @@ import image from './assets/404.svg'
 
 export default function ErrorPage() {
   const error = useRouteError() as { message?: string; statusText?: string }
-  console.log(error)
+  console.warn(error)
   return (
     <div className="py-[80rem]">
       <div className="grid grid-cols-1 gap-10 mb-16 md:grid-cols-3 md:gap-20">
