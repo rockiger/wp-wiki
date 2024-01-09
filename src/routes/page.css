@@ -74,3 +74,10 @@
   border-right: 0.0625rem solid rgb(222, 226, 230);
   border-bottom: 0.0625rem solid rgb(222, 226, 230);
 }
+
+.ProseMirror a {
+  color: rgb(8 126 164 / var(--tw-text-opacity));
+}
+.ProseMirror a:hover {
+  text-decoration: underline;
+}

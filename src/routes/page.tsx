@@ -59,6 +59,7 @@ import {
   useFetchPages,
   useUpdatePage,
   useUpdatePageMeta,
+  useFetchApi,
 } from '../api'
 import Breadcrumbs from '../components/Breadcrumbs'
 import IconButton from '../components/IconButton'
@@ -67,7 +68,7 @@ import './page.css'
 import type { RouteItem } from './root'
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  await fetchPage(params?.pageId ?? '')
+  // await fetchPage(params?.pageId ?? '')
   return {}
 }
 
@@ -99,6 +100,7 @@ export default function Page() {
     ],
   })
 
+  useFetchApi()
   /* GraphQL operations */
   const [updatePage] = useUpdatePage({
     onCompleted: (data) => refetch(),
@@ -621,7 +623,10 @@ export default function Page() {
             <h1 className="mt-0 text-primary dark:text-primary-dark -mx-.5 break-words text-5xl font-display font-bold leading-tight">
               {page?.title}
             </h1>
-            <EditorContent className="p-0" editor={editor} />
+            <EditorContent
+              className="EditorContent p-0 prose prose-a:text-link"
+              editor={editor}
+            />
             {/* //? Tags */}
           </div>
         </div>

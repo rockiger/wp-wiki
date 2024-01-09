@@ -10,7 +10,7 @@ import {
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import _ from 'lodash'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import reactPress from './reactPress'
 import type {
   FulcrumPage,
@@ -18,6 +18,46 @@ import type {
   TermNode,
   UpdateFulcrumPageInput,
 } from './__generated__/graphql'
+
+import apiFetch from '@wordpress/api-fetch'
+
+apiFetch.use((options, next) => {
+  const { headers = {} } = options
+
+  // If an 'X-WP-Nonce' header (or any case-insensitive variation
+  // thereof) was specified, no need to add a nonce header.
+  for (const headerName in headers) {
+    if (headerName.toLowerCase() === 'Authorization') {
+      return next(options)
+    }
+  }
+  const credentials = btoa('admin:pass')
+  const auth = { Authorization: `Basic ${credentials}` }
+  return next({
+    ...options,
+    headers: {
+      ...headers,
+      ...auth,
+    },
+  })
+})
+
+apiFetch.use(
+  apiFetch.createRootURLMiddleware('http://carolinlaspe.test/wp-json/')
+)
+
+export const useFetchApi = () => {
+  useEffect(() => {
+    const fetchPages = async () => {
+      const posts = await apiFetch({
+        path: '/wp/v2/pages',
+        referrerPolicy: 'unsafe-url',
+      })
+      console.log('posts', posts)
+    }
+    fetchPages()
+  }, [])
+}
 
 const httpLink = createHttpLink({
   uri: import.meta.env.PROD
