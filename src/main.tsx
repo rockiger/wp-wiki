@@ -8,9 +8,10 @@ import ErrorPage from './error-page'
 import Page, { loader as pageLoader } from './routes/page'
 import Search, { loader as searchLoader } from './routes/search'
 import { action as trashAction } from './routes/trash'
-import { ApolloProvider } from '@apollo/client'
-import { client } from './api'
 import Index from './routes'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 const router = createHashRouter([
   {
@@ -41,10 +42,10 @@ const router = createHashRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <Toast.Provider swipeDirection="right">
         <RouterProvider router={router} />
       </Toast.Provider>
-    </ApolloProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 )

@@ -59,7 +59,6 @@ import {
   useFetchPages,
   useUpdatePage,
   useUpdatePageMeta,
-  useFetchApi,
 } from '../api'
 import Breadcrumbs from '../components/Breadcrumbs'
 import IconButton from '../components/IconButton'
@@ -68,13 +67,13 @@ import './page.css'
 import type { RouteItem } from './root'
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  // await fetchPage(params?.pageId ?? '')
+  await fetchPage(params?.pageId ?? '')
   return {}
 }
 
 export default function Page() {
   const { pageId } = useParams()
-  const { data: page, refetch } = useFetchPage(pageId ?? '')
+  const { data: page } = useFetchPage(pageId ?? '')
   const content = page?.body ?? ''
   const editor = useEditor({
     content,
@@ -100,20 +99,19 @@ export default function Page() {
     ],
   })
 
-  useFetchApi()
   /* GraphQL operations */
-  const [updatePage] = useUpdatePage({
-    onCompleted: (data) => refetch(),
+  const { updatePage } = useUpdatePage({
+    //! update pages after saving
     onError: (error) => alert(`Error while saving: ${error.message}`),
   })
-  const [updatePageMeta] = useUpdatePageMeta({
+  const { updatePageMeta } = useUpdatePageMeta({
     onError: (error) => alert(`Error while saving page meta ${error.message}`),
   })
 
   const [width, _setWidth] = useState(page?.width ?? 'standard')
-  const setWidth = (width: string) => {
+  const setWidth = (width: 'wide' | 'standard') => {
     _setWidth(width)
-    updatePageMeta({ variables: { id: page?.id ?? '', width: width } })
+    updatePageMeta({ id: page?.id ?? 0, width: width })
   }
 
   /**
@@ -121,13 +119,13 @@ export default function Page() {
    */
   const { data: pages } = useFetchPages()
   const breadcrumbs: RouteItem[] = useMemo(() => {
-    function createBreadcrumbs(pageId: string): RouteItem[] {
+    function createBreadcrumbs(pageId: number): RouteItem[] {
       const page = pages.find((p) => p?.id === pageId)
       if (page?.isOverview) {
         return [
           {
             path: `/page/${page?.id}`,
-            title: page.fulcrumSpace?.name ?? page?.title ?? '',
+            title: page.wikispace?.name ?? page?.title ?? '',
           },
         ]
       }
@@ -158,10 +156,12 @@ export default function Page() {
    * Set the contentent of the editor
    */
   useEffect(() => {
+    console.log('page', page, editor)
     if (page && editor) {
       editor.commands.setContent(page?.body)
+      setWidth(page.width)
     }
-  }, [])
+  }, [page])
 
   return (
     <div className="pl-0">
@@ -542,10 +542,8 @@ export default function Page() {
                         .replaceAll('<br />', '<br>')
                     ) {
                       updatePage({
-                        variables: {
-                          id: pageId!,
-                          body: editor.getHTML(),
-                        },
+                        id: parseInt(pageId!),
+                        body: editor.getHTML(),
                       })
                     }
                   }}
@@ -709,7 +707,7 @@ const ParagraphSelect = ({
       </Select.Trigger>
       <Select.Portal>
         <Select.Content
-          className="ParagraphMenu olg:-m-5 h-full shadow-nav dark:shadow-nav-dark lg:rounded-2xl bg-wash dark:bg-gray-95 w-full flex grow flex-col mt-2 w-fit"
+          className="ParagraphMenu olg:-m-5 h-full shadow-nav dark:shadow-nav-dark lg:rounded-2xl bg-wash dark:bg-gray-95 flex grow flex-col mt-2 w-fit"
           onCloseAutoFocus={(ev) => {
             ev.preventDefault()
             editor?.commands.focus()

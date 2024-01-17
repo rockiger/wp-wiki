@@ -12,13 +12,13 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.10",
     "@emotion/react": "^11.10.6",
     "@headlessui/react": "^1.7.14",
     "@radix-ui/react-popover": "1.0.5",
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-toast": "^1.1.4",
     "@tabler/icons-react": "^2.23.0",
+    "@tanstack/react-query": "^5.17.12",
     "@tiptap/extension-highlight": "^2.0.0-beta.220",
     "@tiptap/extension-link": "^2.0.3",
     "@tiptap/extension-subscript": "^2.0.0-beta.220",
@@ -34,7 +34,6 @@
     "@tiptap/pm": "^2.0.0-beta.220",
     "@tiptap/react": "^2.0.0-beta.220",
     "@tiptap/starter-kit": "^2.0.0-beta.220",
-    "@types/lodash": "^4.14.191",
     "@wordpress/api-fetch": "^6.45.0",
     "@wordpress/url": "^3.49.0",
     "body-scroll-lock": "^4.0.0-beta.0",
@@ -43,17 +42,14 @@
     "mdi-react": "^9.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.9.0",
-    "wpapi": "^1.2.2"
+    "react-router-dom": "^6.21.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^3.2.2",
-    "@graphql-codegen/client-preset": "^2.1.1",
     "@tailwindcss/typography": "^0.5.10",
     "@types/body-scroll-lock": "^3.1.0",
+    "@types/lodash": "^4.14.202",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "@types/wpapi": "^1.1.1",
     "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.14",
     "jsdom": "^22.0.0",

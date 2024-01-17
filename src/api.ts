@@ -1,141 +1,35 @@
 // password: 'orJp IOvd nQKq PYck q2YO qJky'
-import {
-  ApolloClient,
-  InMemoryCache,
-  gql,
-  createHttpLink,
-  MutationHookOptions,
-  useMutation,
-  useQuery,
-} from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
+
 import _ from 'lodash'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import reactPress from './reactPress'
-import type {
-  FulcrumPage,
-  FulcrumSpace,
-  TermNode,
-  UpdateFulcrumPageInput,
-} from './__generated__/graphql'
 
 import apiFetch from '@wordpress/api-fetch'
+import { WikipageResponse, WikispaceResponse } from './api-types'
+import { addQueryArgs } from '@wordpress/url'
+import { UseMutationOptions, useMutation } from '@tanstack/react-query'
 
 apiFetch.use((options, next) => {
   const { headers = {} } = options
-
-  // If an 'X-WP-Nonce' header (or any case-insensitive variation
-  // thereof) was specified, no need to add a nonce header.
-  for (const headerName in headers) {
-    if (headerName.toLowerCase() === 'Authorization') {
-      return next(options)
-    }
-  }
-  const credentials = btoa('admin:pass')
-  const auth = { Authorization: `Basic ${credentials}` }
+  console.log('headers', import.meta.env.Prod)
   return next({
     ...options,
-    headers: {
-      ...headers,
-      ...auth,
-    },
-  })
-})
-
-apiFetch.use(
-  apiFetch.createRootURLMiddleware('http://carolinlaspe.test/wp-json/')
-)
-
-export const useFetchApi = () => {
-  useEffect(() => {
-    const fetchPages = async () => {
-      const posts = await apiFetch({
-        path: '/wp/v2/pages',
-        referrerPolicy: 'unsafe-url',
-      })
-      console.log('posts', posts)
-    }
-    fetchPages()
-  }, [])
-}
-
-const httpLink = createHttpLink({
-  uri: import.meta.env.PROD
-    ? `${reactPress?.api.graphql_url}`
-    : 'http://wordlassian.local/graphql',
-})
-
-const authLink = setContext((_, { headers }) => {
-  // return the headers to the context so httpLink can read them
-  return {
     headers: {
       ...headers,
       ...(import.meta.env.Prod
         ? { 'X-WP-Nonce': reactPress.api.nonce }
         : { Authorization: `Basic ${btoa('admin:pass')}` }),
     },
-  }
+  })
 })
 
-export const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-})
-
-export async function fetcher(slug: 'string', options = {}) {
-  const url = `${reactPress.api.rest_url}wp/v2${slug}`
-  if (import.meta.env.DEV) {
-    const credentials = btoa('admin:pass')
-    const auth = { Authorization: `Basic ${credentials}` }
-    const response = await fetch(url, { ...options, headers: auth })
-    const data = await response.json()
-    return data
-  }
-  //! https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/
-  //! https://developer.wordpress.org/rest-api/using-the-rest-api/client-libraries/
-}
-
-//! Make it possible to make drafts and then turn them into published
-export const CREATE_FULCRUM_PAGE = gql`
-  mutation createFulcrumPage(
-    $spaceId: ID!
-    $title: String
-    $body: String
-    $parentId: ID
-  ) {
-    createFulcrumPage(
-      input: {
-        fulcrumSpaces: { nodes: { id: $spaceId } }
-        title: $title
-        content: $body
-        parentId: $parentId
-        status: PUBLISH
-      }
-    ) {
-      clientMutationId
-      fulcrumPage {
-        author {
-          node {
-            avatar {
-              url
-            }
-            firstName
-            name
-            nicename
-            nickname
-          }
-        }
-        content
-        date
-        id
-        modified
-        parentId
-        status
-        title
-      }
-    }
-  }
-`
+apiFetch.use(
+  apiFetch.createRootURLMiddleware(
+    import.meta.env.PROD
+      ? `${reactPress?.api.graphql_url}` //! needs to be wp-json url
+      : 'http://fulcrum.test/wp-json/'
+  )
+)
 
 /**
  * Consumes the properties of the new page and creates the
@@ -143,485 +37,260 @@ export const CREATE_FULCRUM_PAGE = gql`
  * @returns
  */
 export async function postPage({
-  spaceId = '',
+  spaceId = 0,
   title = '',
   content = '',
-  parentId = '',
+  parentId = 0,
 }) {
-  const response = await client.mutate({
-    mutation: CREATE_FULCRUM_PAGE,
-    variables: { spaceId, title, content, parentId },
+  const response = await apiFetch({
+    path: '/wp/v2/wikipages',
+    method: 'POST',
+    data: {
+      title,
+      content,
+      wikispaces: spaceId,
+      parent: parentId,
+    },
   })
 
-  return response.data.createFulcrumPage.fulcrumPage
+  console.log(
+    'created wikipage',
+    normalizeWikipageResponse(response as WikipageResponse)
+  )
+  return normalizeWikipageResponse(response as WikipageResponse)
 }
 
-export const GET_FULCRUM_SPACES = gql`
-  query getFulcrumSpaces {
-    fulcrumSpaces {
-      edges {
-        node {
-          count
-          description
-          id
-          name
-          contentNodes {
-            nodes {
-              ... on FulcrumPage {
-                id
-                isOverview
-                title
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-function rewriteNodesFetchSpaces(edges: FulcrumSpace[]) {
-  return edges?.map((edge) => {
-    const { count, description, id, name } = edge
+function normalizeWikispaceResponseArray(nodes: WikispaceResponse[]) {
+  return nodes?.map((node) => {
+    const { count, description, id, name, slug } = node
     return {
-      //@ts-ignore
-      overviewPage: edge.contentNodes?.nodes.find((n) => n?.isOverview) ?? '',
       count,
       description,
       id,
       name,
+      slug,
     }
   })
 }
-
-export type Spaces = ReturnType<typeof rewriteNodesFetchSpaces>
+export type Wikispace = ReturnType<typeof normalizeWikispaceResponseArray>
 export async function fetchSpaces() {
-  const response = await client.query({
-    query: GET_FULCRUM_SPACES,
+  const response = await apiFetch({
+    path: '/wp/v2/wikispaces',
   })
 
-  return rewriteNodesFetchSpaces(response.data.fulcrumSpaces.edges)
+  if (!response) return []
+  console.log('wikispaces', response)
+  return normalizeWikispaceResponseArray(response as WikispaceResponse[])
 }
+
 export const useFetchSpaces = () => {
-  const { data, ...rest } = useQuery(GET_FULCRUM_SPACES, {})
-  return {
-    ...rest,
-    data: data ? rewriteNodesFetchSpaces(data.fulcrumSpaces.nodes) : [],
-  }
+  const [data, setData] = useState<Space[]>([])
+
+  useEffect(() => {
+    const afn = async () => {
+      const pages = await fetchSpaces()
+      if (pages) {
+        setData(pages)
+      }
+    }
+    afn()
+  }, [])
+  return { data }
 }
+export type Space = ReturnType<typeof normalizeWikispaceResponseArray>[0]
 
-export const GET_FULCRUM_PAGE = gql`
-  query FetchPage($id: ID!) {
-    fulcrumPage(id: $id) {
-      author {
-        node {
-          avatar {
-            url
-          }
-          firstName
-          name
-          nicename
-          nickname
-        }
-      }
-      content
-      date
-      id
-      isOverview
-      modified
-      parentId
-      status
-      title
-      width
-    }
-  }
-`
-
-export const normalizeFetchPageData = (data: {
-  fulcrumPage: FulcrumPage
-}):
-  | {
-      author: {
-        avatar: string
-        name: string
-      }
-      body: string
-      created: string
-      id: string
-      isOverview: boolean
-      modified: string
-      parentId: string
-      status: string
-      title: string
-      width: string
-    }
-  | undefined => {
-  if (!data?.fulcrumPage) return undefined
+export const normalizeWikipageResponse = (data: WikipageResponse) => {
   const {
     author,
     content,
     date,
+    excerpt,
     id,
     isOverview,
     modified,
-    parentId,
+    parent,
     status,
     title,
+    wikispace,
     width,
-  } = data?.fulcrumPage
+  } = data
 
-  const normalizedData = {
-    author: {
-      avatar: data.fulcrumPage.author?.node?.avatar?.url ?? '',
-      name:
-        _.get(author?.node, 'firstName') ??
-        _.get(author?.node, 'nickname') ??
-        _.get(author?.node, 'nicename') ??
-        _.get(author?.node, 'name') ??
-        '',
-    },
-    body: content ?? '',
-    created: date ?? '',
-    id: id ?? '',
-    isOverview: isOverview ?? false,
-    modified: modified ?? '',
-    parentId: parentId ?? '',
-    status: status ?? '',
-    title: title ?? '',
-    width: width ?? '',
-  }
-  return normalizedData
-}
-export async function fetchPage(id: string) {
-  const response = await client.query({
-    query: GET_FULCRUM_PAGE,
-    variables: { id },
-  })
-  return normalizeFetchPageData(response.data)
-}
-export const useFetchPage = (id: string) => {
-  const { data, ...rest } = useQuery(GET_FULCRUM_PAGE, {
-    variables: { id },
-  })
   return {
-    ...rest,
-    data: data ? normalizeFetchPageData(data) : undefined,
+    author,
+    body: content.rendered,
+    created: date,
+    excerpt: excerpt.rendered,
+    id,
+    isOverview,
+    modified: modified,
+    parentId: parent,
+    status,
+    title: title.rendered,
+    wikispace,
+    width,
   }
 }
+export type Page = ReturnType<typeof normalizeWikipageResponse>
 
-export const GET_FULCRUM_PAGES = gql`
-  query getFulcrumPages($search: String) {
-    drafts: fulcrumPages(where: { status: DRAFT, search: $search }) {
-      nodes {
-        author {
-          node {
-            avatar {
-              url
-            }
-            firstName
-            name
-            nicename
-            nickname
-          }
-        }
-        date
-        id
-        isOverview
-        modified
-        parentId
-        status
-        title
-        terms(where: { taxonomies: FULCRUMSPACE }) {
-          nodes {
-            name
-            id
-            taxonomyName
-          }
-        }
-      }
-    }
-    pendings: fulcrumPages(where: { status: PENDING, search: $search }) {
-      nodes {
-        author {
-          node {
-            avatar {
-              url
-            }
-            firstName
-            name
-            nicename
-            nickname
-          }
-        }
-        date
-        id
-        isOverview
-        modified
-        parentId
-        status
-        title
-        terms(where: { taxonomies: FULCRUMSPACE }) {
-          nodes {
-            name
-            id
-            taxonomyName
-          }
-        }
-      }
-    }
-    privates: fulcrumPages(where: { status: PRIVATE, search: $search }) {
-      nodes {
-        author {
-          node {
-            avatar {
-              url
-            }
-            firstName
-            name
-            nicename
-            nickname
-          }
-        }
-        date
-        id
-        isOverview
-        modified
-        parentId
-        status
-        title
-        terms(where: { taxonomies: FULCRUMSPACE }) {
-          nodes {
-            name
-            id
-            taxonomyName
-          }
-        }
-      }
-    }
-    publishes: fulcrumPages(where: { status: PUBLISH, search: $search }) {
-      nodes {
-        author {
-          node {
-            avatar {
-              url
-            }
-            firstName
-            name
-            nicename
-            nickname
-          }
-        }
-        date
-        id
-        isOverview
-        modified
-        parentId
-        status
-        title
-        terms(where: { taxonomies: FULCRUMSPACE }) {
-          nodes {
-            name
-            id
-            taxonomyName
-          }
-        }
-      }
-    }
+export async function fetchPage(id: string) {
+  const queryParams = {
+    _fields:
+      'author,content,date,excerpt,id,isOverview,modified,parent,status,title, wikispaces, wikispace, wikispaceId',
   }
-`
-function rewriteNodesFetchPages(nodes: FulcrumPage[]) {
-  return nodes.map((node) => {
-    const {
-      author,
-      date,
-      id,
-      isOverview,
-      modified,
-      parentId,
-      status,
-      title,
-      terms,
-    } = node
-
-    return {
-      author: {
-        avatar: node.author?.node?.avatar?.url,
-        name:
-          _.get(author?.node, 'firstName') ??
-          _.get(author?.node, 'nickname') ??
-          _.get(author?.node, 'nicename') ??
-          _.get(author?.node, 'name') ??
-          '',
-      },
-      created: date,
-      id,
-      isOverview,
-      modified: modified,
-      parentId,
-      status,
-      title,
-      fulcrumSpace: terms?.nodes?.find(
-        (n: TermNode) => n.taxonomyName === 'fulcrum_space'
-      ),
-    }
+  const response = await apiFetch({
+    path: addQueryArgs(`/wp/v2/wikipages/${id}`, queryParams),
   })
+
+  if (!response) return undefined
+  console.log(
+    'wikipage',
+    id,
+    normalizeWikipageResponse(response as WikipageResponse)
+  )
+  return normalizeWikipageResponse(response as WikipageResponse)
 }
 
-export interface Page {
-  author: {
-    avatar: string
-    name: string
-  }
-  body: string
-  created: string
-  excerpt: string
-  id: string
-  isOverview: boolean
-  modified: string
-  parentId: string
-  status: string
-  title: string
-  fulcrumSpace:
-    | { id: string; name: string; taxonomyName: 'fulcrum_space' }
-    | undefined
+export const useFetchPage = (id: string) => {
+  const [data, setData] = useState<Page | undefined>(undefined)
+
+  useEffect(() => {
+    const afn = async () => {
+      const page = await fetchPage(id)
+      if (page) {
+        setData(page)
+      }
+    }
+    afn()
+  }, [])
+  return { data }
+}
+
+function normalizeWikipageResponseArray(nodes: WikipageResponse[]): Page[] {
+  return nodes.map((node) => normalizeWikipageResponse(node))
 }
 
 export async function fetchPages(search = '') {
-  const response = await client.query({
-    query: GET_FULCRUM_PAGES,
-    variables: { search },
+  const queryParams = {
+    status: 'draft,publish,private,pending',
+    _fields:
+      'author,content,date,excerpt,id,isOverview,modified,parent,status,title, wikispaces, wikispace, wikispaceId',
+    search,
+  }
+  const response = await apiFetch({
+    path: addQueryArgs('/wp/v2/wikipages', queryParams),
   })
-  const { drafts, pendings, privates, publishes } = response.data
-  return _.concat(
-    rewriteNodesFetchPages(drafts.nodes),
-    rewriteNodesFetchPages(pendings.nodes),
-    rewriteNodesFetchPages(privates.nodes),
-    rewriteNodesFetchPages(publishes.nodes)
+
+  if (!response) return []
+  console.log(
+    'wikipages',
+    normalizeWikipageResponseArray(response as WikipageResponse[])
   )
+  return normalizeWikipageResponseArray(response as WikipageResponse[])
 }
 
 export const useFetchPages = (search = '') => {
-  const { data, ...rest } = useQuery(GET_FULCRUM_PAGES, {
-    variables: { search },
-  })
-  return {
-    ...rest,
-    data: (data
-      ? _.concat(
-          rewriteNodesFetchPages(data.drafts.nodes),
-          rewriteNodesFetchPages(data.pendings.nodes),
-          rewriteNodesFetchPages(data.privates.nodes),
-          rewriteNodesFetchPages(data.publishes.nodes)
-        )
-      : []) as Page[],
-  }
-}
+  const [data, setData] = useState<Page[]>([])
 
-export const UPDATE_FULCRUM_PAGE = gql`
-  mutation UpdateFulcrumPage(
-    $body: String
-    $id: ID!
-    $parentId: ID
-    $spaceId: ID
-    $status: PostStatusEnum = PRIVATE
-    $title: String
-  ) {
-    updateFulcrumPage(
-      input: {
-        content: $body
-        fulcrumSpaces: { nodes: { id: $spaceId } }
-        id: $id
-        parentId: $parentId
-        status: $status
-        title: $title
-      }
-    ) {
-      fulcrumPage {
-        modified
+  useEffect(() => {
+    const afn = async () => {
+      const pages = await fetchPages(search)
+      if (pages) {
+        setData(pages)
       }
     }
-  }
-`
+    afn()
+  }, [])
+  return { data }
+}
+
 /**
  * Consumes the varibles object of the new properties of the
  * new page and update the
  * page in WordPress.
  * @returns
  */
-export async function updatePage(
-  variables: UpdateFulcrumPageInput & { body?: string }
-) {
-  const response = await client.mutate({
-    mutation: UPDATE_FULCRUM_PAGE,
-    variables,
+export async function updatePage({
+  body,
+  id,
+  parentId,
+  spaceId,
+  title,
+}: {
+  body?: string
+  id: number
+  title?: string
+  spaceId?: number
+  parentId?: number
+}) {
+  const response = await apiFetch({
+    path: `/wp/v2/wikipages/${id}`,
+    method: 'POST',
+    data: {
+      title,
+      content: body,
+      wikispaces: spaceId,
+      parent: parentId,
+    },
   })
 
-  return response.data.updateFulcrumPage.fulcrumPage
-}
-
-export const useUpdatePage = (options: MutationHookOptions = {}) => {
-  const [mutate, ...rest] = useMutation(UPDATE_FULCRUM_PAGE, options)
-
-  const updateFile = useCallback(
-    (options: MutationHookOptions) => {
-      return mutate(options)
-    },
-    [mutate]
+  console.log(
+    'created wikipage',
+    normalizeWikipageResponse(response as WikipageResponse)
   )
-  return [updateFile, ...rest] as const
+  return normalizeWikipageResponse(response as WikipageResponse)
 }
 
-export const DELETE_FULCRUM_PAGE = gql`
-  mutation DeleteFulcrumPage($id: ID!) {
-    deleteFulcrumPage(input: { id: $id }) {
-      fulcrumPage {
-        id
-        title(format: RAW)
-      }
-    }
-  }
-`
+export const useUpdatePage = (
+  options: Omit<UseMutationOptions, 'mutationFn'> = {}
+) => {
+  //@ts-ignore
+  const { mutate, ...rest } = useMutation({
+    ...options,
+    mutationFn: updatePage,
+  })
 
-export const UPDATE_FULCRUM_PAGE_META = gql`
-  mutation UpdateFulcrumPageMeta(
-    $id: ID!
-    $isOverview: Boolean
-    $width: String
-  ) {
-    updateFulcrumPageMeta(
-      input: { id: $id, isOverview: $isOverview, width: $width }
-    ) {
-      isOverview
-      width
-    }
-  }
-`
+  return { updatePage: mutate, ...rest }
+}
 
 /**
  * Consumes the varibles object of the new meta properties
  * and updates the page meta in WordPress.
  */
-export async function updatePageMeta(variables: {
-  id: string
+export async function updatePageMeta({
+  id,
+  isOverview,
+  width,
+}: {
+  id: number
   isOverview?: boolean
   width?: string
 }) {
-  const response = await client.mutate({
-    mutation: UPDATE_FULCRUM_PAGE_META,
-    variables,
+  const response = await apiFetch({
+    path: `/wp/v2/wikipages/${id}`,
+    method: 'POST',
+    data: {
+      meta: {
+        isOverview,
+        width,
+      },
+    },
   })
 
-  return response.data.updateFulcrumPage.fulcrumPage
+  console.log(
+    'created wikipage',
+    normalizeWikipageResponse(response as WikipageResponse)
+  )
+  return normalizeWikipageResponse(response as WikipageResponse)
 }
 
-export const useUpdatePageMeta = (options: MutationHookOptions = {}) => {
-  const [mutate, ...rest] = useMutation(UPDATE_FULCRUM_PAGE_META, options)
+export const useUpdatePageMeta = (
+  options: Omit<UseMutationOptions, 'mutationFn'> = {}
+) => {
+  //@ts-ignore
+  const { mutate, ...rest } = useMutation({
+    ...options,
+    mutationFn: updatePageMeta,
+  })
 
-  const updatePageMeta = useCallback(
-    (options: MutationHookOptions) => {
-      return mutate(options)
-    },
-    [mutate]
-  )
-  return [updatePageMeta, ...rest] as const
+  return { updatePageMeta: mutate, ...rest }
 }

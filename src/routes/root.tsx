@@ -1,6 +1,14 @@
 import { Suspense, useCallback, useMemo, useRef, useState } from 'react'
 import { Outlet, useNavigate, useNavigation, useParams } from 'react-router-dom'
-import { fetchPages, Page, postPage, useFetchPages } from '../api'
+import {
+  fetchPages,
+  fetchSpaces,
+  Page,
+  postPage,
+  Space,
+  useFetchPages,
+  useFetchSpaces,
+} from '../api'
 
 import Navigation from '../components/Navigation'
 import { cx } from 'classix'
@@ -14,6 +22,7 @@ import PlusIcon from 'mdi-react/PlusIcon'
 
 export function loader() {
   fetchPages()
+  fetchSpaces()
   return {}
 }
 
@@ -59,7 +68,8 @@ export default function Root() {
   const [searchValue, setSearchValue] = useState('')
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchToggleRef = useRef<HTMLButtonElement>(null)
-  const { data: pages, refetch: pagesRefetch } = useFetchPages()
+  const { data: pages } = useFetchPages()
+  const { data: spaces } = useFetchSpaces()
   const { pageId } = useParams()
   const navigate = useNavigate()
   const navigation = useNavigation()
@@ -90,13 +100,9 @@ export default function Root() {
     const helper = async (title: string) => {
       const page = await postPage({
         title: title,
-        parentId:
-          (pageId as string) ??
-          pages.filter((page) => page.isOverview)[0] ??
-          '',
-        spaceId: pages.filter((page) => page.isOverview)[0].fulcrumSpace?.id,
+        parentId: parseInt(pageId ?? '0'),
+        spaceId: pages.filter((page) => page.isOverview)[0].wikispace.id,
       })
-      pagesRefetch()
       navigate(`/page/${page.id}?edit`)
     }
     const title = window.prompt('New Pagename')
@@ -116,8 +122,8 @@ export default function Root() {
   let showToc = true
 
   const routeTrees = useMemo(() => {
-    return createRouteTrees(pages)
-  }, [pages])
+    return createRouteTrees(pages, spaces)
+  }, [pages, spaces])
 
   return (
     <>
@@ -217,14 +223,17 @@ export default function Root() {
     </>
   )
 }
-export function createRouteTrees(pages: Pages): RouteItem[] {
+export function createRouteTrees(pages: Pages, spaces: Space[]): RouteItem[] {
   if (_.isEmpty(pages)) {
     return []
   }
   const overviews = pages
     .filter((p) => p?.isOverview)
     .map((p) => {
-      return { ...p, title: p.fulcrumSpace?.name ?? p?.title }
+      return {
+        ...p,
+        title: p.wikispace.name ?? p?.title,
+      }
     })
   const subpages = pages.filter((p) => !p?.isOverview)
 
