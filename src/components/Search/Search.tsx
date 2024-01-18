@@ -50,7 +50,7 @@ export default function Search({ children, pages }: SearchProps) {
   /**
    * Filter pages based on search value for instant search
    */
-  useEffect(() => {
+  /*  useEffect(() => {
     setFilteredPages(
       pages
         .filter((page: Page) =>
@@ -62,7 +62,7 @@ export default function Search({ children, pages }: SearchProps) {
           return 0
         })
     )
-  }, [pages, value, setFilteredPages])
+  }, [pages, value, setFilteredPages]) */
 
   /**
    * Always clear selection if value changes.

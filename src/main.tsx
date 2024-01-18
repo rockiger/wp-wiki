@@ -10,6 +10,7 @@ import Search, { loader as searchLoader } from './routes/search'
 import { action as trashAction } from './routes/trash'
 import Index from './routes'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const queryClient = new QueryClient()
 
@@ -18,7 +19,7 @@ const router = createHashRouter([
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
-    loader: rootLoader,
+    loader: rootLoader(queryClient),
     children: [
       {
         errorElement: <ErrorPage />,
@@ -27,7 +28,7 @@ const router = createHashRouter([
           {
             path: 'page/:pageId',
             element: <Page />,
-            loader: pageLoader,
+            loader: pageLoader(queryClient),
           },
           {
             path: 'page/:pageId/trash',
@@ -46,6 +47,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <Toast.Provider swipeDirection="right">
         <RouterProvider router={router} />
       </Toast.Provider>
+      <ReactQueryDevtools buttonPosition="bottom-left" initialIsOpen={false} />
     </QueryClientProvider>
   </React.StrictMode>
 )

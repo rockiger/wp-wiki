@@ -1,17 +1,16 @@
-// password: 'orJp IOvd nQKq PYck q2YO qJky'
-
-import _ from 'lodash'
-import { useCallback, useEffect, useState } from 'react'
 import reactPress from './reactPress'
 
 import apiFetch from '@wordpress/api-fetch'
 import { WikipageResponse, WikispaceResponse } from './api-types'
 import { addQueryArgs } from '@wordpress/url'
-import { UseMutationOptions, useMutation } from '@tanstack/react-query'
+import {
+  UseMutationOptions,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query'
 
 apiFetch.use((options, next) => {
   const { headers = {} } = options
-  console.log('headers', import.meta.env.Prod)
   return next({
     ...options,
     headers: {
@@ -53,10 +52,6 @@ export async function postPage({
     },
   })
 
-  console.log(
-    'created wikipage',
-    normalizeWikipageResponse(response as WikipageResponse)
-  )
   return normalizeWikipageResponse(response as WikipageResponse)
 }
 
@@ -83,19 +78,12 @@ export async function fetchSpaces() {
   return normalizeWikispaceResponseArray(response as WikispaceResponse[])
 }
 
+export const spacesQuery = () => ({
+  queryKey: ['spaces'],
+  queryFn: async () => fetchSpaces(),
+})
 export const useFetchSpaces = () => {
-  const [data, setData] = useState<Space[]>([])
-
-  useEffect(() => {
-    const afn = async () => {
-      const pages = await fetchSpaces()
-      if (pages) {
-        setData(pages)
-      }
-    }
-    afn()
-  }, [])
-  return { data }
+  return useQuery({ ...spacesQuery(), initialData: [] })
 }
 export type Space = ReturnType<typeof normalizeWikispaceResponseArray>[0]
 
@@ -135,34 +123,24 @@ export type Page = ReturnType<typeof normalizeWikipageResponse>
 export async function fetchPage(id: string) {
   const queryParams = {
     _fields:
-      'author,content,date,excerpt,id,isOverview,modified,parent,status,title, wikispaces, wikispace, wikispaceId',
+      'author,content,date,excerpt,id,isOverview,modified,parent,status,title, wikispaces, wikispace, wikispaceId, width',
   }
   const response = await apiFetch({
     path: addQueryArgs(`/wp/v2/wikipages/${id}`, queryParams),
   })
 
   if (!response) return undefined
-  console.log(
-    'wikipage',
-    id,
-    normalizeWikipageResponse(response as WikipageResponse)
-  )
+
   return normalizeWikipageResponse(response as WikipageResponse)
 }
 
-export const useFetchPage = (id: string) => {
-  const [data, setData] = useState<Page | undefined>(undefined)
+export const pageQuery = (id: string) => ({
+  queryKey: ['page', id],
+  queryFn: async () => fetchPage(id),
+})
 
-  useEffect(() => {
-    const afn = async () => {
-      const page = await fetchPage(id)
-      if (page) {
-        setData(page)
-      }
-    }
-    afn()
-  }, [id])
-  return { data }
+export function useFetchPage(id: string) {
+  return useQuery({ ...pageQuery(id) })
 }
 
 function normalizeWikipageResponseArray(nodes: WikipageResponse[]): Page[] {
@@ -181,26 +159,16 @@ export async function fetchPages(search = '') {
   })
 
   if (!response) return []
-  console.log(
-    'wikipages',
-    normalizeWikipageResponseArray(response as WikipageResponse[])
-  )
   return normalizeWikipageResponseArray(response as WikipageResponse[])
 }
 
-export const useFetchPages = (search = '') => {
-  const [data, setData] = useState<Page[]>([])
+export const pagesQuery = () => ({
+  queryKey: ['pages'],
+  queryFn: async () => fetchPages(),
+})
 
-  useEffect(() => {
-    const afn = async () => {
-      const pages = await fetchPages(search)
-      if (pages) {
-        setData(pages)
-      }
-    }
-    afn()
-  }, [])
-  return { data }
+export const useFetchPages = () => {
+  return useQuery({ ...pagesQuery(), initialData: [] })
 }
 
 /**
@@ -233,10 +201,6 @@ export async function updatePage({
     },
   })
 
-  console.log(
-    'created wikipage',
-    normalizeWikipageResponse(response as WikipageResponse)
-  )
   return normalizeWikipageResponse(response as WikipageResponse)
 }
 
@@ -276,10 +240,6 @@ export async function updatePageMeta({
     },
   })
 
-  console.log(
-    'created wikipage',
-    normalizeWikipageResponse(response as WikipageResponse)
-  )
   return normalizeWikipageResponse(response as WikipageResponse)
 }
 

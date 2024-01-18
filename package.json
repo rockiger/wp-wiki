@@ -19,6 +19,7 @@
     "@radix-ui/react-toast": "^1.1.4",
     "@tabler/icons-react": "^2.23.0",
     "@tanstack/react-query": "^5.17.12",
+    "@tanstack/react-query-devtools": "^5.17.18",
     "@tiptap/extension-highlight": "^2.0.0-beta.220",
     "@tiptap/extension-link": "^2.0.3",
     "@tiptap/extension-subscript": "^2.0.0-beta.220",
@@ -42,7 +43,8 @@
     "mdi-react": "^9.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.1"
+    "react-router-dom": "^6.21.1",
+    "react-router-typesafe": "^1.4.4"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",

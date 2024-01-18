@@ -1,11 +1,17 @@
 import { Suspense, useCallback, useMemo, useRef, useState } from 'react'
-import { Outlet, useNavigate, useNavigation, useParams } from 'react-router-dom'
 import {
-  fetchPages,
-  fetchSpaces,
+  LoaderFunctionArgs,
+  Outlet,
+  useNavigate,
+  useNavigation,
+  useParams,
+} from 'react-router-dom'
+import {
   Page,
+  pagesQuery,
   postPage,
   Space,
+  spacesQuery,
   useFetchPages,
   useFetchSpaces,
 } from '../api'
@@ -19,12 +25,22 @@ import '../components/Search/react.css'
 import MagnifyIcon from 'mdi-react/MagnifyIcon'
 import LoadingIcon from 'mdi-react/LoadingIcon'
 import PlusIcon from 'mdi-react/PlusIcon'
+import { QueryClient } from '@tanstack/react-query'
 
-export function loader() {
-  fetchPages()
-  fetchSpaces()
-  return {}
-}
+export const loader =
+  (queryClient: QueryClient) => async (_args: LoaderFunctionArgs) => {
+    const spacesQ = spacesQuery()
+    const pagesQ = pagesQuery()
+
+    return {
+      spaces:
+        queryClient.getQueryData(spacesQ.queryKey) ??
+        (await queryClient.fetchQuery(spacesQ)),
+      pages:
+        queryClient.getQueryData(pagesQ.queryKey) ??
+        (await queryClient.fetchQuery(pagesQ)),
+    }
+  }
 
 export type RouteTag =
   | 'foundation'
@@ -64,7 +80,6 @@ type Pages = Page[]
 
 export default function Root() {
   const [isSearchFieldActive, setIsSearchFieldActive] = useState(false)
-  const [opened, setOpened] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchToggleRef = useRef<HTMLButtonElement>(null)

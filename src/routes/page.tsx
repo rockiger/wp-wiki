@@ -54,7 +54,8 @@ import TableRowAddAfterIcon from 'mdi-react/TableRowAddAfterIcon'
 import UndoIcon from 'mdi-react/UndoIcon'
 
 import {
-  fetchPage,
+  Page as PageType,
+  pageQuery,
   useFetchPage,
   useFetchPages,
   useUpdatePage,
@@ -65,16 +66,24 @@ import IconButton from '../components/IconButton'
 
 import './page.css'
 import type { RouteItem } from './root'
+import { QueryClient } from '@tanstack/react-query'
 
-export async function loader({ params }: LoaderFunctionArgs) {
-  await fetchPage(params?.pageId ?? '')
-  return {}
-}
+export const loader =
+  (queryClient: QueryClient) =>
+  async ({ params }: LoaderFunctionArgs) => {
+    const query = pageQuery(params?.pageId ?? '')
+
+    return (
+      queryClient.getQueryData(query.queryKey) ??
+      (await queryClient.fetchQuery(query))
+    )
+  }
 
 export default function Page() {
   const { pageId } = useParams()
-  const { data: page } = useFetchPage(pageId ?? '')
-  const content = page?.body ?? ''
+  const { data } = useFetchPage(pageId ?? '')
+  const page = data as PageType
+  const content = page.body ?? ''
   const editor = useEditor({
     content,
     editable: false,
@@ -120,7 +129,7 @@ export default function Page() {
   const { data: pages } = useFetchPages()
   const breadcrumbs: RouteItem[] = useMemo(() => {
     function createBreadcrumbs(pageId: number): RouteItem[] {
-      const page = pages.find((p) => p?.id === pageId)
+      const page = pages?.find((p) => p?.id === pageId)
       if (page?.isOverview) {
         return [
           {
@@ -159,8 +168,9 @@ export default function Page() {
     console.log('page', page, editor)
     if (page && editor) {
       editor.commands.setContent(page?.body)
-      setWidth(page.width)
+      _setWidth(page.width)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page])
 
   return (
