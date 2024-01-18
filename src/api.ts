@@ -161,7 +161,7 @@ export const useFetchPage = (id: string) => {
       }
     }
     afn()
-  }, [])
+  }, [id])
   return { data }
 }
 

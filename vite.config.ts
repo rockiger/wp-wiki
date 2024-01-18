@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import eslint from 'vite-plugin-eslint'
 
 function renderChunks(deps: Record<string, string>) {
   let chunks = {}
@@ -35,7 +36,6 @@ export default defineConfig(({ command }) => {
           output: {
             manualChunks: {
               vendor: ['react', 'react-router-dom', 'react-dom'],
-              '@apollo': ['@apollo/client'],
               // '@emotion/react': ['@emotion/react'],
               '@headlessui': ['@headlessui/react'],
               '@radix-ui': [
@@ -61,8 +61,6 @@ export default defineConfig(({ command }) => {
               ],
               // 'body-scroll-lock': ['body-scroll-lock'],
               // classix: ['classix'],
-              // graphql: ['graphql'],
-              // wpapi: ['wpapi'],
             },
           },
         },
@@ -70,7 +68,7 @@ export default defineConfig(({ command }) => {
     }
   } else {
     return {
-      plugins: [react()],
+      plugins: [react(), eslint()],
       test: {
         globals: true,
         environment: 'jsdom',
