@@ -26,6 +26,8 @@ import MagnifyIcon from 'mdi-react/MagnifyIcon'
 import LoadingIcon from 'mdi-react/LoadingIcon'
 import PlusIcon from 'mdi-react/PlusIcon'
 import { QueryClient } from '@tanstack/react-query'
+import { Navbar } from '../components/Navbar'
+import { Cmdk } from '../components/cmdk'
 
 export const loader =
   (queryClient: QueryClient) => async (_args: LoaderFunctionArgs) => {
@@ -142,7 +144,7 @@ export default function Root() {
 
   return (
     <>
-      <Navigation
+      <Navbar
         isSearchFieldActive={isSearchFieldActive}
         ref={searchToggleRef}
         routeTrees={routeTrees}
@@ -165,7 +167,7 @@ export default function Root() {
             </div>
           )}
         </Search>
-      </Navigation>
+      </Navbar>
       <div
         className={cx(
           hasColumns &&
@@ -232,6 +234,7 @@ export default function Root() {
               New
               <PlusIcon />
             </button>
+            <Cmdk pages={pages} />
           </main>
         </Suspense>
       </div>

@@ -74,7 +74,6 @@ export async function fetchSpaces() {
   })
 
   if (!response) return []
-  console.log('wikispaces', response)
   return normalizeWikispaceResponseArray(response as WikispaceResponse[])
 }
 
@@ -213,6 +212,7 @@ export const useUpdatePage = (
   const { mutate, ...rest } = useMutation({
     ...options,
     mutationKey: ['updatePage'],
+    //@ts-ignore
     mutationFn: (args: UpdatePageArgs) => updatePage(args),
   })
 
@@ -255,6 +255,7 @@ export const useUpdatePageMeta = (
   const { mutate, ...rest } = useMutation({
     ...options,
     mutationKey: ['updatePageMeta'],
+    //@ts-ignore
     mutationFn: (args: UpdatePageMetaArgs) => updatePageMeta(args),
   })
 

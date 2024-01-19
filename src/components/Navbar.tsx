@@ -1,0 +1,267 @@
+'use client'
+
+import { useRef, useState, FC, ReactNode, Key } from 'react'
+import {
+  link,
+  Navbar as NextUINavbar,
+  NavbarContent,
+  NavbarMenu,
+  NavbarMenuToggle,
+  NavbarBrand,
+  NavbarItem,
+  Button,
+  Kbd,
+} from '@nextui-org/react'
+import { dataFocusVisibleClasses } from '@nextui-org/theme'
+import { isAppleDevice } from '@react-aria/utils'
+import { clsx } from '@nextui-org/shared-utils'
+import { includes } from 'lodash'
+import { useEffect } from 'react'
+import { usePress } from '@react-aria/interactions'
+import { useFocusRing } from '@react-aria/focus'
+
+//! import { DocsSidebar } from '@/components/docs/sidebar'
+
+import { NavLink, useLocation } from 'react-router-dom'
+
+import fulcrumLogo from '../assets/fulcrum.svg'
+import cx from 'classix'
+import { ThemeSwitch } from './ThemeSwitch'
+import { SearchLinearIcon } from './icons'
+import { useCmdkStore } from './cmdk'
+
+export interface NavbarProps {
+  routes: any[] //!
+  mobileRoutes?: any[]
+  tag?: string
+  slug?: string
+  children?: ReactNode
+}
+
+export function useIsMounted() {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsMounted(true)
+    })
+  }, [])
+
+  return isMounted
+}
+
+export const Navbar: FC<NavbarProps> = ({
+  children,
+  routes,
+  mobileRoutes = [],
+  slug,
+  tag,
+}) => {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean | undefined>(false)
+  const [commandKey, setCommandKey] = useState<'ctrl' | 'command'>('command')
+
+  const ref = useRef<HTMLElement>(null)
+  const isMounted = useIsMounted()
+
+  const pathname = useLocation().pathname
+  const cmdkStore = useCmdkStore()
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      setIsMenuOpen(false)
+    }
+  }, [pathname])
+
+  useEffect(() => {
+    setCommandKey(isAppleDevice() ? 'command' : 'ctrl')
+  }, [])
+
+  const handleOpenCmdk = () => {
+    cmdkStore.onOpen()
+  }
+
+  const { pressProps } = usePress({
+    onPress: handleOpenCmdk,
+  })
+  const { focusProps, isFocusVisible } = useFocusRing()
+
+  const docsPaths = [
+    '/docs/guide/introduction',
+    '/docs/guide/installation',
+    '/docs/guide/upgrade-to-v2',
+  ]
+
+  const SearchButton = () => (
+    <Button
+      aria-label="Quick search"
+      className="text-sm font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20"
+      endContent={
+        <Kbd className="hidden py-0.5 px-2 lg:inline-block" keys={commandKey}>
+          K
+        </Kbd>
+      }
+      startContent={
+        <SearchLinearIcon
+          className="text-base text-default-400 pointer-events-none flex-shrink-0"
+          size={18}
+          strokeWidth={2}
+        />
+      }
+      onPress={handleOpenCmdk}
+    >
+      Quick Search...
+    </Button>
+  )
+
+  if (pathname.includes('/examples')) {
+    return null
+  }
+
+  const navLinkClasses = clsx(
+    link({ color: 'foreground' }),
+    'data-[active=true]:text-primary'
+  )
+
+  const handlePressNavbarItem = (name: string, url: string) => {
+    /* trackEvent('NavbarItem', {
+      name,
+      action: 'press',
+      category: 'navbar',
+      data: url,
+    }) */
+  }
+
+  return (
+    <NextUINavbar
+      ref={ref}
+      className={clsx({
+        'z-[100001]': isMenuOpen,
+      })}
+      isMenuOpen={isMenuOpen}
+      maxWidth="full"
+      position="sticky"
+      onMenuOpenChange={setIsMenuOpen}
+    >
+      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+        <NavbarBrand as="li" className="gap-3 max-w-fit">
+          <NavLink
+            aria-label="Home"
+            className="flex justify-start items-center gap-2 tap-highlight-transparent transition-opacity active:opacity-50"
+            to="/"
+            onClick={() => handlePressNavbarItem('Home', '/')}
+          >
+            <img
+              src={fulcrumLogo}
+              alt="Fulcrum Logo"
+              className={cx(
+                'text-sm mr-0 w-6 h-6 text-link dark:text-link-dark flex origin-center transition-all ease-in-out'
+              )}
+            />
+            <div className="h-5 text-xl md:h-6">Fulcrum</div>
+          </NavLink>
+        </NavbarBrand>
+        <ul className="hidden lg:flex gap-4 justify-start items-center">
+          <NavbarItem>
+            <NavLink
+              className={navLinkClasses}
+              color="foreground"
+              data-active={includes(docsPaths, pathname)}
+              to="/docs/guide/introduction"
+              onClick={() =>
+                handlePressNavbarItem('Docs', '/docs/guide/introduction')
+              }
+            >
+              Docs
+            </NavLink>
+          </NavbarItem>
+          <NavbarItem>
+            <NavLink
+              className={navLinkClasses}
+              color="foreground"
+              data-active={includes(pathname, 'components')}
+              to="/docs/components/avatar"
+              onClick={() =>
+                handlePressNavbarItem('Components', '/docs/components/avatar')
+              }
+            >
+              Components
+            </NavLink>
+          </NavbarItem>
+          <NavbarItem>
+            <NavLink
+              className={navLinkClasses}
+              color="foreground"
+              data-active={includes(pathname, 'blog')}
+              to="/blog"
+              onClick={() => handlePressNavbarItem('Blog', '/blog')}
+            >
+              Blog
+            </NavLink>
+          </NavbarItem>
+          <NavbarItem>
+            <NavLink
+              className={navLinkClasses}
+              color="foreground"
+              data-active={includes(pathname, 'figma')}
+              to="/figma"
+              onClick={() => handlePressNavbarItem('Figma', '/figma')}
+            >
+              Figma
+            </NavLink>
+          </NavbarItem>
+        </ul>
+      </NavbarContent>
+
+      <NavbarContent className="flex w-full gap-2 sm:hidden" justify="end">
+        <NavbarItem className="flex h-full items-center">
+          <ThemeSwitch />
+        </NavbarItem>
+        <NavbarItem className="flex h-full items-center">
+          <button
+            className={clsx(
+              'transition-opacity p-1 hover:opacity-80 rounded-full cursor-pointer outline-none',
+              // focus ring
+              ...dataFocusVisibleClasses
+            )}
+            data-focus-visible={isFocusVisible}
+            {...focusProps}
+            {...pressProps}
+          >
+            <SearchLinearIcon className="h-5 mt-px text-default-600 w-5 dark:text-default-500" />
+          </button>
+        </NavbarItem>
+        <NavbarItem className="w-10 h-full">
+          <NavbarMenuToggle
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+            className="w-full h-full pt-1"
+          />
+        </NavbarItem>
+      </NavbarContent>
+
+      <NavbarContent
+        className="hidden sm:flex basis-1/5 sm:basis-full"
+        justify="end"
+      >
+        <NavbarItem className="hidden sm:flex">
+          <SearchButton />
+        </NavbarItem>
+        <NavbarItem className="hidden sm:flex">
+          <ThemeSwitch />
+        </NavbarItem>
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          className="hidden sm:flex lg:hidden ml-4"
+        />
+      </NavbarContent>
+
+      <NavbarMenu>
+        <div
+          className={cx('lg:fixed lg:top-20 mt-2 z-0 lg:h-[calc(100vh-121px)]')}
+        >
+          DocsSidebar
+        </div>
+        {children}
+      </NavbarMenu>
+    </NextUINavbar>
+  )
+}
