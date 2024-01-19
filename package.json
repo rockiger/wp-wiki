@@ -14,6 +14,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@headlessui/react": "^1.7.14",
+    "@nextui-org/react": "^2.2.9",
     "@radix-ui/react-popover": "1.0.5",
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-toast": "^1.1.4",
@@ -39,6 +40,7 @@
     "@wordpress/url": "^3.49.0",
     "body-scroll-lock": "^4.0.0-beta.0",
     "classix": "^2.1.30",
+    "framer-motion": "^10.18.0",
     "graphql": "^16.6.0",
     "mdi-react": "^9.2.0",
     "react": "^18.2.0",

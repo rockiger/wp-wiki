@@ -108,7 +108,6 @@ export default function Page() {
     ],
   })
 
-  /* GraphQL operations */
   const { updatePage } = useUpdatePage({
     //! update pages after saving
     onError: (error) => alert(`Error while saving: ${error.message}`),
@@ -165,7 +164,6 @@ export default function Page() {
    * Set the contentent of the editor
    */
   useEffect(() => {
-    console.log('page', page, editor)
     if (page && editor) {
       editor.commands.setContent(page?.body)
       _setWidth(page.width)

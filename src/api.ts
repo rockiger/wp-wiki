@@ -171,6 +171,14 @@ export const useFetchPages = () => {
   return useQuery({ ...pagesQuery(), initialData: [] })
 }
 
+interface UpdatePageArgs {
+  body?: string
+  id: number
+  title?: string
+  spaceId?: number
+  parentId?: number
+}
+
 /**
  * Consumes the varibles object of the new properties of the
  * new page and update the
@@ -183,13 +191,7 @@ export async function updatePage({
   parentId,
   spaceId,
   title,
-}: {
-  body?: string
-  id: number
-  title?: string
-  spaceId?: number
-  parentId?: number
-}) {
+}: UpdatePageArgs) {
   const response = await apiFetch({
     path: `/wp/v2/wikipages/${id}`,
     method: 'POST',
@@ -210,10 +212,17 @@ export const useUpdatePage = (
   //@ts-ignore
   const { mutate, ...rest } = useMutation({
     ...options,
-    mutationFn: updatePage,
+    mutationKey: ['updatePage'],
+    mutationFn: (args: UpdatePageArgs) => updatePage(args),
   })
 
   return { updatePage: mutate, ...rest }
+}
+
+interface UpdatePageMetaArgs {
+  id: number
+  isOverview?: boolean
+  width?: string
 }
 
 /**
@@ -224,11 +233,7 @@ export async function updatePageMeta({
   id,
   isOverview,
   width,
-}: {
-  id: number
-  isOverview?: boolean
-  width?: string
-}) {
+}: UpdatePageMetaArgs) {
   const response = await apiFetch({
     path: `/wp/v2/wikipages/${id}`,
     method: 'POST',
@@ -249,7 +254,8 @@ export const useUpdatePageMeta = (
   //@ts-ignore
   const { mutate, ...rest } = useMutation({
     ...options,
-    mutationFn: updatePageMeta,
+    mutationKey: ['updatePageMeta'],
+    mutationFn: (args: UpdatePageMetaArgs) => updatePageMeta(args),
   })
 
   return { updatePageMeta: mutate, ...rest }

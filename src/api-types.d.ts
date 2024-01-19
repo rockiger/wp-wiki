@@ -1,6 +1,9 @@
 export interface WikipageResponse {
   _links: Links
-  author: number
+  author: {
+    id: number
+    name: string
+  }
   comment_status: string
   content: Content
   date_gmt: string

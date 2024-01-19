@@ -1,9 +1,15 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
+const { nextui } = require('@nextui-org/react')
+const typography = require('@tailwindcss/typography')
 const colors = require('./colors')
 
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+const config = {
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+  ],
   darkMode: 'class',
   theme: {
     // Override base screen sizes
@@ -147,7 +153,7 @@ export default {
       },
     },
   },
-  plugins: [
-    //require('@tailwindcss/typography')
-  ],
+  plugins: [typography, nextui({ addCommonColors: true })],
 }
+
+export default config
