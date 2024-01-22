@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/no-autofocus */
-'use client'
 
 import { Command } from 'cmdk'
 import { useEffect, useState, FC, useMemo, useCallback, useRef } from 'react'
@@ -23,7 +22,6 @@ import { writeStorage, useLocalStorage } from '@rehooks/local-storage'
 
 import {
   DocumentCodeBoldIcon,
-  HashBoldIcon,
   ChevronRightLinearIcon,
   SearchLinearIcon,
 } from './icons'
@@ -31,8 +29,6 @@ import {
 import { useUpdateEffect } from '../hooks/use-update-effect'
 import { useNavigate } from 'react-router-dom'
 import { Page } from '../api'
-
-const searchData = {} //!
 
 export interface CmdkStore {
   isOpen: boolean
@@ -126,7 +122,6 @@ const MAX_RECENT_SEARCHES = 10
 const MAX_RESULTS = 20
 
 export const Cmdk: FC<{ pages: Page[] }> = ({ pages }) => {
-  console.log('pages', pages)
   const [query, setQuery] = useState('')
   const [activeItem, setActiveItem] = useState(0)
   const [menuNodes] = useState(() => new MultiRef<number, HTMLElement>())
@@ -207,6 +202,7 @@ export const Cmdk: FC<{ pages: Page[] }> = ({ pages }) => {
     return () => {
       document.removeEventListener('keydown', onKeyDown)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   const onItemSelect = useCallback(
@@ -215,6 +211,7 @@ export const Cmdk: FC<{ pages: Page[] }> = ({ pages }) => {
       navigate(`/page/${item.id}`)
       addToRecentSearches(item)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [navigate, recentSearches]
   )
 
@@ -253,6 +250,7 @@ export const Cmdk: FC<{ pages: Page[] }> = ({ pages }) => {
         }
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [activeItem, items, navigate]
   )
 
@@ -348,6 +346,7 @@ export const Cmdk: FC<{ pages: Page[] }> = ({ pages }) => {
         </Command.Item>
       )
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [activeItem, onItemSelect, CloseButton, slots]
   )
 

@@ -65,7 +65,7 @@ import Breadcrumbs from '../components/Breadcrumbs'
 import IconButton from '../components/IconButton'
 
 import './page.css'
-import type { RouteItem } from './root'
+import type { RouteItem } from '../components/Sidebar'
 import { QueryClient } from '@tanstack/react-query'
 
 export const loader =
@@ -132,18 +132,29 @@ export default function Page() {
       if (page?.isOverview) {
         return [
           {
-            path: `/page/${page?.id}`,
+            id: page.id.toString(),
+            path: `/page/${page.id}`,
             title: page.wikispace?.name ?? page?.title ?? '',
           },
         ]
       }
       if (!page?.parentId) {
-        return [{ path: `/page/${page?.id}`, title: page?.title ?? '' }]
+        return [
+          {
+            id: page?.id.toString() ?? '',
+            path: `/page/${page?.id}`,
+            title: page?.title ?? '',
+          },
+        ]
       }
       if (page?.parentId) {
         return [
           ...createBreadcrumbs(page?.parentId),
-          { path: `/page/${page?.id}`, title: page?.title ?? '' },
+          {
+            id: page?.id.toString(),
+            path: `/page/${page?.id}`,
+            title: page?.title ?? '',
+          },
         ]
       }
       return []
@@ -614,29 +625,35 @@ export default function Page() {
           )}
         </div>
       </div>
-      <div
-        className="no-bg-scrollbar"
-        id="scrollwrapper"
-        style={{ height: 'calc(100vh - 4rem - 3.5rem)', overflowY: 'auto' }}
+
+      <article
+        className="break-words font-normal text-primary dark:text-primary-dark"
+        key={pageId}
       >
-        <div className="pt-12 px-5">
-          <div
-            className={cx(
-              'ml-0 2xl:mx-auto',
-              width === 'standard' && 'max-w-4xl'
-            )}
-          >
-            <h1 className="mt-0 text-primary dark:text-primary-dark -mx-.5 break-words text-5xl font-display font-bold leading-tight">
-              {page?.title}
-            </h1>
-            <EditorContent
-              className="EditorContent p-0 prose prose-a:text-link"
-              editor={editor}
-            />
-            {/* //? Tags */}
+        <div
+          className="no-bg-scrollbar"
+          id="scrollwrapper"
+          style={{ height: 'calc(100vh - 4rem - 3.5rem)', overflowY: 'auto' }}
+        >
+          <div className="pt-12 px-5">
+            <div
+              className={cx(
+                'ml-0 2xl:mx-auto',
+                width === 'standard' && 'max-w-4xl'
+              )}
+            >
+              <h1 className="mt-0 text-primary dark:text-primary-dark -mx-.5 break-words text-5xl font-display font-bold leading-tight">
+                {page?.title}
+              </h1>
+              <EditorContent
+                className="EditorContent p-0 prose prose-a:text-link"
+                editor={editor}
+              />
+              {/* //? Tags */}
+            </div>
           </div>
         </div>
-      </div>
+      </article>
     </div>
   )
 }

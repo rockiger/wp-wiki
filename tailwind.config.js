@@ -1,7 +1,10 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 const { nextui } = require('@nextui-org/react')
-const typography = require('@tailwindcss/typography')
-const colors = require('./colors')
+const { commonColors } = require('@nextui-org/theme/colors')
+const plugin = require('tailwindcss/plugin')
+const {
+  default: flattenColorPalette,
+} = require('tailwindcss/lib/util/flattenColorPalette')
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -12,148 +15,356 @@ const config = {
   ],
   darkMode: 'class',
   theme: {
-    // Override base screen sizes
-    screens: {
-      ...defaultTheme.screens,
-      betterhover: { raw: '(hover: hover)' },
-      xs: '374px',
-      '3xl': '1919px',
-    },
-    boxShadow: {
-      sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-      DEFAULT:
-        '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-      md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-      lg: '0px 0.8px 2px rgba(0, 0, 0, 0.032), 0px 2.7px 6.7px rgba(0, 0, 0, 0.048), 0px 12px 30px rgba(0, 0, 0, 0.08)',
-      'lg-dark':
-        '0 0 0 1px rgba(255,255,255,.15), 0px 0.8px 2px rgba(0, 0, 0, 0.032), 0px 2.7px 6.7px rgba(0, 0, 0, 0.048), 0px 12px 30px rgba(0, 0, 0, 0.08)',
-      xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-      '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-      '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
-      nav: '0 16px 32px -16px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0,0,0,.10)',
-      'nav-dark':
-        '0 16px 32px -16px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255,255,255,.05)',
-      inner: 'inset 0 1px 4px 0 rgba(0, 0, 0, 0.05)',
-      'inner-border': 'inset 0 0 0 1px rgba(0, 0, 0, 0.08)',
-      'inner-border-dark': 'inset 0 0 0 1px rgba(255, 255, 255, 0.08)',
-      'outer-border': '0 0 0 1px rgba(0, 0, 0, 0.1)',
-      'outer-border-dark': '0 0 0 1px rgba(255, 255, 255, 0.1)',
-      'secondary-button-stroke': 'inset 0 0 0 1px #D9DBE3',
-      'secondary-button-stroke-dark': 'inset 0 0 0 1px #404756',
-      none: 'none',
-      border: '0 0 0 1px rgba(0,0,0,.10)',
-      'border-dark': '0 0 0 1px rgba(255,255,255,.05)',
-    },
     extend: {
-      backgroundImage: {
-        'gradient-left-dark':
-          'conic-gradient(from 90deg at -10% 100%, #2B303B 0deg, #2B303B 90deg, #16181D 360deg)',
-        'gradient-right-dark':
-          'conic-gradient(from -90deg at 110% 100%, #2B303B 0deg, #16181D 90deg, #16181D 360deg)',
-        'gradient-left':
-          'conic-gradient(from 90deg at -10% 100%, #BCC1CD 0deg, #BCC1CD 90deg, #FFFFFF 360deg)',
-        'gradient-right':
-          'conic-gradient(from -90deg at 110% 100%, #FFFFFF 0deg, #EBECF0 90deg, #EBECF0 360deg)',
-        'meta-gradient': "url('/images/meta-gradient.png')",
-        'meta-gradient-dark': "url('/images/meta-gradient-dark.png')",
+      colors: {
+        'code-foreground': 'rgb(var(--code-foreground) / <alpha-value>)',
+        'code-syntax1': 'rgb(var(--code-syntax1) / <alpha-value>)',
+        'code-syntax2': 'rgb(var(--code-syntax2) / <alpha-value>)',
+        'code-syntax3': 'rgb(var(--code-syntax3) / <alpha-value>)',
+        'code-syntax4': 'rgb(var(--code-syntax4) / <alpha-value>)',
+        'code-syntax5': 'rgb(var(--code-syntax5) / <alpha-value>)',
+        'code-syntax6': 'rgb(var(--code-syntax6) / <alpha-value>)',
+        'code-removed': 'rgb(var(--code-removed) / <alpha-value>)',
+        'code-string': 'rgb(var(--code-string) / <alpha-value>)',
+        'code-class': 'rgb(var(--code-class) / <alpha-value>)',
+        'code-punctuation': 'rgb(var(--code-punctuation) / <alpha-value>)',
+        'code-number': 'rgb(var(--code-number) / <alpha-value>)',
+        'code-added': 'rgb(var(--code-added) / <alpha-value>)',
+        'code-line-number': 'rgb(var(--code-line-number) / <alpha-value>)',
+        'code-faded-line': 'rgb(var(--code-faded-line) / <alpha-value>)',
+        'code-comment': 'rgb(var(--code-comment) / <alpha-value>)',
+        'code-keyword': 'rgb(var(--code-keyword) / <alpha-value>)',
+        'code-function': 'rgb(var(--code-function) / <alpha-value>)',
+        'code-tag': 'rgb(var(--code-tag) / <alpha-value>)',
+        'code-attr-name': 'rgb(var(--code-attr-name) / <alpha-value>)',
+        'code-language-javascript':
+          'rgb(var(--code-language-javascript) / <alpha-value>)',
+        'code-highlighted-word1-bg':
+          'rgb(var(--code-highlighted-word1-bg) / <alpha-value>)',
+        'code-highlighted-word1-bg-active':
+          'rgb(var(--code-highlighted-word1-bg-active) / <alpha-value>)',
+        'code-highlighted-word1-text':
+          'rgb(var(--code-highlighted-word1-text) / <alpha-value>)',
+        'code-highlighted-word2-bg':
+          'rgb(var(--code-highlighted-word2-bg) / <alpha-value>)',
+        'code-highlighted-word2-bg-active':
+          'rgb(var(--code-highlighted-word2-bg-active) / <alpha-value>)',
+        'code-highlighted-word2-text':
+          'rgb(var(--code-highlighted-word2-text) / <alpha-value>)',
+        'code-highlighted-word3-bg':
+          'rgb(var(--code-highlighted-word3-bg) / <alpha-value>)',
+        'code-highlighted-word3-bg-active':
+          'rgb(var(--code-highlighted-word3-bg-active) / <alpha-value>)',
+        'code-highlighted-word3-text':
+          'rgb(var(--code-highlighted-word3-text) / <alpha-value>)',
       },
-      maxWidth: {
-        xs: '21rem',
-      },
-      outline: {
-        blue: ['1px auto ' + colors.link, '3px'],
-      },
-      opacity: {
-        8: '0.08',
+      boxShadow: {
+        highlighted: `${commonColors.purple[500]} 1px 0 0, ${commonColors.purple[500]} -1px 0 0`,
       },
       fontFamily: {
-        display: [
-          'Optimistic Display',
-          '-apple-system',
-          'Noto Sans',
-          ...defaultTheme.fontFamily.sans,
-        ],
-        text: [
-          'Optimistic Text',
-          '-apple-system',
-          'Noto Sans',
-          ...defaultTheme.fontFamily.sans,
-        ],
-        mono: ['"Source Code Pro"', ...defaultTheme.fontFamily.mono],
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+        serif: defaultTheme.fontFamily.serif,
+        mono: defaultTheme.fontFamily.mono,
       },
-      lineHeight: {
-        base: '30px',
-        large: '38px',
-        xl: '1.15',
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
-      fontSize: {
-        '6xl': '52px',
-        '5xl': '40px',
-        '4xl': '32px',
-        '3xl': '28px',
-        '2xl': '24px',
-        xl: '20px',
-        lg: '17px',
-        base: '15px',
-        sm: '13px',
-        xs: '11px',
-        code: 'calc(1em - 20%)',
-      },
-      animation: {
-        marquee: 'marquee 40s linear infinite',
-        marquee2: 'marquee2 40s linear infinite',
-        'large-marquee': 'large-marquee 80s linear infinite',
-        'large-marquee2': 'large-marquee2 80s linear infinite',
-      },
-      keyframes: {
-        shimmer: {
-          '100%': {
-            transform: 'translateX(100%)',
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            color: 'hsl(var(--nextui-foreground))',
+            maxWidth: 'none',
+            hr: {
+              marginTop: '2em',
+              marginBottom: '2em',
+            },
+            'h1, h2, h3': {
+              letterSpacing: '-0.025em',
+            },
+            h2: {
+              marginTop: '1.5em',
+              marginBottom: `${16 / 24}em`,
+            },
+            h3: {
+              marginTop: '1.8em',
+              lineHeight: '1.4',
+            },
+            h4: {
+              marginTop: '2em',
+              fontSize: '1.125em',
+            },
+            'h2 a': {
+              fontSize: `${theme('fontSize.2xl')[0]} !important`,
+              fontWeight: theme('fontWeight.semibold'),
+              ...theme('fontSize.2xl')[1],
+            },
+            'h3 a': {
+              fontSize: '1.25rem !important',
+              fontWeight: theme('fontWeight.medium'),
+            },
+            'h2 small, h3 small, h4 small': {
+              fontFamily: theme('fontFamily.mono').join(', '),
+              color: theme('colors.slate.500'),
+              fontWeight: 500,
+            },
+            'h2 small': {
+              fontSize: theme('fontSize.lg')[0],
+              ...theme('fontSize.lg')[1],
+            },
+            'h3 small': {
+              fontSize: theme('fontSize.base')[0],
+              ...theme('fontSize.base')[1],
+            },
+            'h4 small': {
+              fontSize: theme('fontSize.sm')[0],
+              ...theme('fontSize.sm')[1],
+            },
+            'h2, h3, h4': {
+              'scroll-margin-top': 'var(--scroll-mt)',
+            },
+            ul: {
+              listStyleType: 'none',
+              paddingLeft: 0,
+            },
+            'ul > li': {
+              marginTop: '0.1em',
+              marginBottom: '0.1em',
+              fontWeight: theme('fontWeight.normal'),
+            },
+            'ul > li > *:last-child': {
+              marginTop: 0,
+              marginBottom: 0,
+            },
+            'ul > li > a': {
+              marginTop: '0',
+              marginBottom: '0',
+            },
+            a: {
+              fontWeight: theme('fontWeight.normal'),
+            },
+            'a code': {
+              color: 'inherit',
+              fontWeight: 'inherit',
+            },
+            strong: {
+              color: theme('colors.cyan.600'),
+              fontWeight: theme('fontWeight.semibold'),
+            },
+            'a strong': {
+              color: 'inherit',
+              fontWeight: 'inherit',
+            },
+            kbd: {
+              fontSize: '0.875em',
+              fontVariantLigatures: 'none',
+              borderRadius: '4px',
+              margin: '0 1px',
+            },
+            code: {
+              fontWeight: theme('fontWeight.medium'),
+              fontVariantLigatures: 'none',
+            },
+            pre: {
+              display: 'flex',
+              fontSize: theme('fontSize.sm')[0],
+              backgroundColor: 'transparent',
+              fontWeight: theme('fontWeight.light'),
+              padding: 0,
+              margin: 0,
+            },
+            p: {
+              marginTop: `${12 / 14}em`,
+              marginBottom: `${12 / 14}em`,
+              fontWeight: theme('fontWeight.normal'),
+            },
+            'pre code': {
+              flex: 'none',
+              minWidth: '100%',
+            },
+            table: {
+              marginTop: '0px',
+              fontSize: theme('fontSize.sm')[0],
+              lineHeight: theme('fontSize.sm')[1].lineHeight,
+            },
+            thead: {
+              border: 'none',
+            },
+            'thead th': {
+              paddingTop: 0,
+              fontWeight: theme('fontWeight.semibold'),
+            },
+            'tbody tr': {
+              border: 'none',
+            },
+            'tbody tr:last-child': {
+              border: 'none',
+            },
+            'figure figcaption': {
+              textAlign: 'center',
+              fontStyle: 'italic',
+            },
+            'figure > figcaption': {
+              marginTop: `${12 / 14}em`,
+            },
+            blockquote: {
+              fontWeight: theme('fontWeight.normal'),
+              fontStyle: 'font-normal',
+            },
+            'blockquote p:first-of-type::before': {
+              content: '',
+            },
+            'blockquote p:last-of-type::after': {
+              content: '',
+            },
           },
         },
-        rotate: {
-          from: { transform: 'rotate(0deg)' },
-          to: { transform: 'rotate(180deg)' },
+        dark: {
+          css: {
+            color: 'hsl(var(--nextui-default-700))',
+            strong: {
+              color: theme('colors.pink.500'),
+            },
+          },
         },
-        scale: {
-          from: { transform: 'scale(0.8)' },
-          '90%': { transform: 'scale(1.05)' },
-          to: { transform: 'scale(1)' },
+        neutral: {
+          css: {
+            '--tw-prose-body': 'hsl(var(--nextui-default-700))',
+            '--tw-prose-headings': 'hsl(var(--nextui-foreground))',
+            '--tw-prose-lead': 'hsl(var(--nextui-default-600))',
+            '--tw-prose-links': 'hsl(var(--nextui-default-900))',
+            '--tw-prose-bold': 'hsl(var(--nextui-default-900))',
+            '--tw-prose-counters': 'hsl(var(--nextui-default-500))',
+            '--tw-prose-bullets': 'hsl(var(--nextui-default-300))',
+            '--tw-prose-hr': 'hsl(var(--nextui-default-200))',
+            '--tw-prose-quotes': 'hsl(var(--nextui-default-900))',
+            '--tw-prose-quote-borders': 'hsl(var(--nextui-default-200))',
+            '--tw-prose-captions': 'hsl(var(--nextui-default-500))',
+            '--tw-prose-code': 'hsl(var(--nextui-default-900))',
+            '--tw-prose-pre-code': 'hsl(var(--nextui-default-200))',
+            '--tw-prose-pre-bg': 'hsl(var(--nextui-default-800))',
+            '--tw-prose-th-borders': 'hsl(var(--nextui-default-300))',
+            '--tw-prose-td-borders': 'hsl(var(--nextui-default-200))',
+            '--tw-prose-invert-body': 'hsl(var(--nextui-default-300))',
+            '--tw-prose-invert-headings': commonColors.white,
+            '--tw-prose-invert-lead': theme('twColors.neutral[400]'),
+            '--tw-prose-invert-links': commonColors.white,
+            '--tw-prose-invert-bold': commonColors.white,
+            '--tw-prose-invert-counters': theme('twColors.neutral[400]'),
+            '--tw-prose-invert-bullets': theme('twColors.neutral[600]'),
+            '--tw-prose-invert-hr': theme('twColors.neutral[700]'),
+            '--tw-prose-invert-quotes': theme('twColors.neutral[100]'),
+            '--tw-prose-invert-quote-borders': theme('twColors.neutral[700]'),
+            '--tw-prose-invert-captions': theme('twColors.neutral[400]'),
+            '--tw-prose-invert-code': commonColors.white,
+            '--tw-prose-invert-pre-code': 'hsl(var(--nextui-default-300))',
+            '--tw-prose-invert-pre-bg': 'rgb(0 0 0 / 50%)',
+            '--tw-prose-invert-th-borders': theme('twColors.neutral[600]'),
+            '--tw-prose-invert-td-borders': theme('twColors.neutral[700]'),
+          },
         },
-        circle: {
-          from: { transform: 'scale(0)', strokeWidth: '16px' },
-          '50%': { transform: 'scale(0.5)', strokeWidth: '16px' },
-          to: { transform: 'scale(1)', strokeWidth: '0px' },
+      }),
+      keyframes: {
+        heartbeat: {
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.2)' },
+          '100%': { transform: 'scale(1)' },
         },
-        marquee: {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-400%)' },
+        levitate: {
+          '0%': {
+            transform: 'translateY(0)',
+          },
+          '30%': {
+            transform: 'translateY(-10px)',
+          },
+          '50%': {
+            transform: 'translateY(4px)',
+          },
+          '70%': {
+            transform: 'translateY(-15px)',
+          },
+          '100%': {
+            transform: 'translateY(0)',
+          },
         },
-        marquee2: {
-          '0%': { transform: 'translateX(400%)' },
-          '100%': { transform: 'translateX(0%)' },
+        expand: {
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.2)' },
+          '100%': { transform: 'scale(1)' },
         },
-        'large-marquee': {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-200%)' },
-        },
-        'large-marquee2': {
-          '0%': { transform: 'translateX(200%)' },
-          '100%': { transform: 'translateX(0%)' },
+        'expand-opacity': {
+          '0%': {
+            opacity: 0,
+            transform: 'scale(1)',
+          },
+          '50%': {
+            opacity: 1,
+            transform: 'scale(1.3)',
+          },
+          '100%': {
+            opacity: 0,
+            transform: 'scale(1.295)',
+          },
         },
       },
-      rotate: {
-        '-30': '-30deg',
-      },
-      colors,
-      gridTemplateColumns: {
-        'only-content': 'auto',
-        'sidebar-content': '20rem auto',
-        'sidebar-content-toc': '20rem auto 20rem',
+      animation: {
+        heartbeat: 'heartbeat 1s ease-in-out infinite',
+        levitate: 'levitate 5s ease infinite',
+        expand: 'expand 6s ease-out infinite both',
+        'expand-opacity': 'expand-opacity 6s linear infinite both',
       },
     },
   },
-  plugins: [typography, nextui({ addCommonColors: true })],
+  plugins: [
+    nextui({
+      addCommonColors: true,
+      themes: {
+        light: {
+          colors: {
+            'code-background': '#363449',
+            'code-mdx': '#ff4ecd',
+          },
+        },
+        dark: {
+          colors: {
+            'code-background': '#0D0B0B',
+            'code-mdx': '#06B7DB',
+          },
+        },
+        // only for testing purpose
+        olive: {
+          extend: 'dark',
+          layout: {
+            radius: {
+              small: '2px',
+              medium: '4px',
+              large: '6px',
+            },
+            borderWidth: {
+              small: '1px',
+              medium: '1px',
+              large: '2px',
+            },
+          },
+          colors: {
+            primary: {
+              DEFAULT: '#BEF264',
+              foreground: '#000000',
+            },
+            focus: '#BEF264',
+          },
+        },
+      },
+    }),
+    require('@tailwindcss/typography'),
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities({
+        values: flattenColorPalette(theme('backgroundColor')),
+        type: 'color',
+      })
+    }),
+  ],
 }
 
 export default config

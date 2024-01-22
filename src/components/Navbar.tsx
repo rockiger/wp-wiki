@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, FC, ReactNode, Key } from 'react'
+import { useRef, useState, FC, ReactNode } from 'react'
 import {
   link,
   Navbar as NextUINavbar,
@@ -11,6 +11,7 @@ import {
   NavbarItem,
   Button,
   Kbd,
+  Link,
 } from '@nextui-org/react'
 import { dataFocusVisibleClasses } from '@nextui-org/theme'
 import { isAppleDevice } from '@react-aria/utils'
@@ -61,7 +62,6 @@ export const Navbar: FC<NavbarProps> = ({
   const [commandKey, setCommandKey] = useState<'ctrl' | 'command'>('command')
 
   const ref = useRef<HTMLElement>(null)
-  const isMounted = useIsMounted()
 
   const pathname = useLocation().pathname
   const cmdkStore = useCmdkStore()
@@ -70,6 +70,7 @@ export const Navbar: FC<NavbarProps> = ({
     if (isMenuOpen) {
       setIsMenuOpen(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
   useEffect(() => {
@@ -84,12 +85,6 @@ export const Navbar: FC<NavbarProps> = ({
     onPress: handleOpenCmdk,
   })
   const { focusProps, isFocusVisible } = useFocusRing()
-
-  const docsPaths = [
-    '/docs/guide/introduction',
-    '/docs/guide/installation',
-    '/docs/guide/upgrade-to-v2',
-  ]
 
   const SearchButton = () => (
     <Button
@@ -122,15 +117,6 @@ export const Navbar: FC<NavbarProps> = ({
     'data-[active=true]:text-primary'
   )
 
-  const handlePressNavbarItem = (name: string, url: string) => {
-    /* trackEvent('NavbarItem', {
-      name,
-      action: 'press',
-      category: 'navbar',
-      data: url,
-    }) */
-  }
-
   return (
     <NextUINavbar
       ref={ref}
@@ -143,12 +129,11 @@ export const Navbar: FC<NavbarProps> = ({
       onMenuOpenChange={setIsMenuOpen}
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
+        <NavbarBrand as="li" className="gap-3 max-w-fit mr-2 -mt-1.5">
           <NavLink
             aria-label="Home"
             className="flex justify-start items-center gap-2 tap-highlight-transparent transition-opacity active:opacity-50"
             to="/"
-            onClick={() => handlePressNavbarItem('Home', '/')}
           >
             <img
               src={fulcrumLogo}
@@ -162,52 +147,15 @@ export const Navbar: FC<NavbarProps> = ({
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start items-center">
           <NavbarItem>
-            <NavLink
+            <Link
               className={navLinkClasses}
-              color="foreground"
-              data-active={includes(docsPaths, pathname)}
-              to="/docs/guide/introduction"
-              onClick={() =>
-                handlePressNavbarItem('Docs', '/docs/guide/introduction')
-              }
+              color={includes('/page/15', pathname) ? 'primary' : 'foreground'}
+              data-active={includes('/page/15', pathname)}
+              href="/"
+              isBlock
             >
-              Docs
-            </NavLink>
-          </NavbarItem>
-          <NavbarItem>
-            <NavLink
-              className={navLinkClasses}
-              color="foreground"
-              data-active={includes(pathname, 'components')}
-              to="/docs/components/avatar"
-              onClick={() =>
-                handlePressNavbarItem('Components', '/docs/components/avatar')
-              }
-            >
-              Components
-            </NavLink>
-          </NavbarItem>
-          <NavbarItem>
-            <NavLink
-              className={navLinkClasses}
-              color="foreground"
-              data-active={includes(pathname, 'blog')}
-              to="/blog"
-              onClick={() => handlePressNavbarItem('Blog', '/blog')}
-            >
-              Blog
-            </NavLink>
-          </NavbarItem>
-          <NavbarItem>
-            <NavLink
-              className={navLinkClasses}
-              color="foreground"
-              data-active={includes(pathname, 'figma')}
-              to="/figma"
-              onClick={() => handlePressNavbarItem('Figma', '/figma')}
-            >
-              Figma
-            </NavLink>
+              Homepage
+            </Link>
           </NavbarItem>
         </ul>
       </NavbarContent>

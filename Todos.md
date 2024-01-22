@@ -1,0 +1,3 @@
+- [] Persist sidebar, use Zustand?
+- [] New Breadcrumbs
+- [] Style page
