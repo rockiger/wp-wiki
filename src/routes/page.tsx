@@ -185,7 +185,16 @@ export default function Page() {
   return (
     <div className="pl-0">
       <div className={cx('flex border-b h-14 pl-5')}>
-        <Breadcrumbs breadcrumbs={breadcrumbs} />
+        <Breadcrumbs
+          breadcrumbs={[
+            ...breadcrumbs,
+            {
+              title: page.title,
+              id: page.id.toString(),
+              path: `/page/${page.id}`,
+            },
+          ]}
+        />
         {/* // Editor Toolbar */}
         <div className="EditorToolbar flex flex-wrap grow items-center justify-end min-w-fit pr-2 lg:pr-6 xl:mr-0">
           {editor?.isEditable ? (
