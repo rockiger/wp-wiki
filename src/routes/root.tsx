@@ -1,23 +1,10 @@
-import { Suspense, useCallback, useRef, useState } from 'react'
-import {
-  LoaderFunctionArgs,
-  Outlet,
-  useNavigate,
-  useNavigation,
-  useParams,
-} from 'react-router-dom'
-import {
-  pagesQuery,
-  postPage,
-  spacesQuery,
-  useFetchPages,
-  useFetchSpaces,
-} from '../api'
+import { Suspense } from 'react'
+import { LoaderFunctionArgs, Outlet, useNavigation } from 'react-router-dom'
+import { pagesQuery, spacesQuery, useFetchPages, useFetchSpaces } from '../api'
 
 import { cx } from 'classix'
 import '../components/Search/react.css'
 import LoadingIcon from 'mdi-react/LoadingIcon'
-import PlusIcon from 'mdi-react/PlusIcon'
 import { QueryClient } from '@tanstack/react-query'
 import { Navbar } from '../components/Navbar'
 import { Cmdk } from '../components/cmdk'
@@ -46,50 +33,9 @@ export type RouteTag =
   | 'deprecated'
 
 export default function Root() {
-  const [isSearchFieldActive, setIsSearchFieldActive] = useState(false)
-  const searchInputRef = useRef<HTMLInputElement>(null)
-  const searchToggleRef = useRef<HTMLButtonElement>(null)
   const { data: pages } = useFetchPages()
   const { data: spaces } = useFetchSpaces()
-  const { pageId } = useParams()
-  const navigate = useNavigate()
   const navigation = useNavigation()
-
-  const toggleSearch = useCallback(
-    (action?: 'open' | 'close') => {
-      if (action === 'open') {
-        setIsSearchFieldActive(true)
-        setTimeout(() => {
-          searchInputRef.current?.focus()
-        }, 100)
-      } else if (action === 'close') {
-        setIsSearchFieldActive(false)
-        searchToggleRef.current?.focus()
-      } else {
-        isSearchFieldActive ? toggleSearch('close') : toggleSearch('open')
-      }
-    },
-    [isSearchFieldActive, searchInputRef, setIsSearchFieldActive]
-  )
-
-  const onClickNewButton = () => {
-    const helper = async (title: string) => {
-      const page = await postPage({
-        title: title,
-        parentId: parseInt(pageId ?? '0'),
-        spaceId: pages.filter((page) => page.isOverview)[0].wikispace.id,
-      })
-      navigate(`/page/${page.id}?edit`)
-    }
-    const title = window.prompt('New Pagename')
-    if (title) {
-      try {
-        helper(title)
-      } catch (err) {
-        console.error(err)
-      }
-    }
-  }
 
   // Change later based on requirements
   let isHomePage = false
@@ -97,16 +43,16 @@ export default function Root() {
   return (
     <>
       <div className="relative flex flex-col">
-        <Navbar routes={[]} />
-        <main className="relative mx-auto z-10 px-6 min-h-[calc(100vh_-_64px_-_108px)] mb-12 flex-grow">
+        <Navbar pages={pages} spaces={spaces}></Navbar>
+        <main className="relative mx-auto z-10 min-h-[calc(100vh_-_64px_-_108px)] mb-12 flex-grow">
           <div className="flex">
-            <div className="hidden mt-8 overflow-visible pr-4 relative w-64 z-10 lg:block">
+            <div className="hidden mt-8 overflow-visible pr-4 relative w-80 z-10 lg:block">
               <Sidebar pages={pages} spaces={spaces} />
             </div>
             {/* No fallback UI so need to be careful not to suspend directly inside. */}
             <Suspense fallback={null}>
-              <div className="grow w-[calc(100vw-16rem-3rem)] xl:col-span-8 lg:px-16 mt-10">
-                <div className="w-full prose prose-neutral">
+              <div className="grow xl:col-span-8 lg:w-[calc(100vw-20rem)] mt-8">
+                <div className="w-full">
                   {navigation.state === 'loading' ? (
                     <div className="flex justify-center w-full">
                       <LoadingIcon className="animate-spin h-8 mt-16 w-8" />
@@ -137,15 +83,6 @@ export default function Root() {
                       {/*<Footer />*/}
                     </div>
                   </div>
-                  <button
-                    aria-label="Add Page here"
-                    className="fixed right-5 bottom-4 h-12 lg:h-10 sm:w-auto justify-center active:scale-[.98] transition-transform inline-flex font-bold items-center outline-none focus:outline-none focus-visible:outline focus-visible:outline-link focus:outline-offset-2 focus-visible:dark:focus:outline-link-dark leading-snug bg-link text-white hover:bg-opacity-80 text-lg py-3 rounded-full pl-5 pr-3"
-                    onClick={onClickNewButton}
-                    title="Add Page"
-                  >
-                    New
-                    <PlusIcon />
-                  </button>
                 </div>
               </div>
             </Suspense>

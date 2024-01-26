@@ -1,10 +1,13 @@
 /* Basic editor styles */
 .ProseMirror {
+  padding-inline-start: 0;
+}
+
+/* .ProseMirror {
   outline: none;
   white-space: pre-wrap;
   overflow-wrap: break-word;
   font-size: 1.125rem;
-  /* height: calc((100vh - 65px) - 40px); */
   overflow-y: auto;
 }
 .ProseMirror li > p {
@@ -81,3 +84,4 @@
 .ProseMirror a:hover {
   text-decoration: underline;
 }
+ */

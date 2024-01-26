@@ -12,6 +12,8 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@blocknote/core": "^0.11.1",
+    "@blocknote/react": "^0.11.1",
     "@emotion/react": "^11.10.6",
     "@headlessui/react": "^1.7.14",
     "@nextui-org/react": "^2.2.9",

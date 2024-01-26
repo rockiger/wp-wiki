@@ -20,22 +20,24 @@ import { includes } from 'lodash'
 import { useEffect } from 'react'
 import { usePress } from '@react-aria/interactions'
 import { useFocusRing } from '@react-aria/focus'
+import { TbPlus as PlusIcon } from 'react-icons/tb'
 
 //! import { DocsSidebar } from '@/components/docs/sidebar'
 
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import fulcrumLogo from '../assets/fulcrum.svg'
 import cx from 'classix'
 import { ThemeSwitch } from './ThemeSwitch'
 import { SearchLinearIcon } from './icons'
 import { useCmdkStore } from './cmdk'
+import { useQueryClient } from '@tanstack/react-query'
+import { Page, Space, pagesQuery, postPage } from '../api'
+import Sidebar from './Sidebar'
 
 export interface NavbarProps {
-  routes: any[] //!
-  mobileRoutes?: any[]
-  tag?: string
-  slug?: string
+  pages: Page[]
+  spaces: Space[]
   children?: ReactNode
 }
 
@@ -51,15 +53,12 @@ export function useIsMounted() {
   return isMounted
 }
 
-export const Navbar: FC<NavbarProps> = ({
-  children,
-  routes,
-  mobileRoutes = [],
-  slug,
-  tag,
-}) => {
+export const Navbar: FC<NavbarProps> = ({ children, pages, spaces }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean | undefined>(false)
   const [commandKey, setCommandKey] = useState<'ctrl' | 'command'>('command')
+  const { pageId } = useParams()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const ref = useRef<HTMLElement>(null)
 
@@ -79,6 +78,26 @@ export const Navbar: FC<NavbarProps> = ({
 
   const handleOpenCmdk = () => {
     cmdkStore.onOpen()
+  }
+
+  const onClickNewButton = () => {
+    const helper = async (title: string) => {
+      const page = await postPage({
+        title: title,
+        parentId: parseInt(pageId ?? '0'),
+        spaceId: pages.filter((page) => page.isOverview)[0].wikispace.id,
+      })
+      queryClient.invalidateQueries({ queryKey: pagesQuery().queryKey })
+      navigate(`/page/${page.id}?edit`)
+    }
+    const title = window.prompt('New Pagename')
+    if (title) {
+      try {
+        helper(title)
+      } catch (err) {
+        console.error(err)
+      }
+    }
   }
 
   const { pressProps } = usePress({
@@ -123,6 +142,7 @@ export const Navbar: FC<NavbarProps> = ({
       className={clsx({
         'z-[100001]': isMenuOpen,
       })}
+      isBordered
       isMenuOpen={isMenuOpen}
       maxWidth="full"
       position="sticky"
@@ -158,6 +178,18 @@ export const Navbar: FC<NavbarProps> = ({
             </Link>
           </NavbarItem>
         </ul>
+        <NavbarItem>
+          <Button
+            aria-label="Add Page here"
+            className="font-bold h-12 lg:h-10 bg-gradient-to-br from-blue-500 to-pink-500 border-small border-white/50 shadow-pink-500/30 text-white
+                    sm:w-auto text-lg"
+            onClick={onClickNewButton}
+            title="Add Page"
+          >
+            New
+            <PlusIcon />
+          </Button>
+        </NavbarItem>
       </NavbarContent>
 
       <NavbarContent className="flex w-full gap-2 sm:hidden" justify="end">
@@ -206,7 +238,7 @@ export const Navbar: FC<NavbarProps> = ({
         <div
           className={cx('lg:fixed lg:top-20 mt-2 z-0 lg:h-[calc(100vh-121px)]')}
         >
-          DocsSidebar
+          <Sidebar spaces={spaces} pages={pages} />
         </div>
         {children}
       </NavbarMenu>

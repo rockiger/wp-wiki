@@ -4,7 +4,7 @@ import { Fragment } from 'react'
 import { useLocation } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
-import type { RouteItem } from '../../routes/root'
+import type { RouteItem } from './Sidebar'
 import SidebarLink from './SidebarLink'
 
 interface SidebarRouteTreeProps {

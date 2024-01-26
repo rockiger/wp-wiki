@@ -40,8 +40,8 @@ export default function Sidebar({
   }, [pages, spaces])
 
   return (
-    <div className="lg:fixed lg:top-20 mt-2 z-0 lg:h-[calc(100vh-121px)]">
-      <ScrollArea className="relative overflow-hidden h-full w-64 lg:max-h-[calc(100vh_-_64px)]">
+    <div className="z-0 lg:h-[calc(100vh-121px)]">
+      <ScrollArea className="relative overflow-hidden h-full pl-6 w-full lg:max-h-[calc(100vh_-_64px)]">
         {routeTrees.map((routeTree) => (
           <SidebarNav
             breadcrumbs={[]}
@@ -77,7 +77,6 @@ function createRouteTreesHelper(page: Page, subpages: Page[]): RouteItem {
   const created = new Date(page?.created)
   const difference =
     (today.getTime() - created.getTime()) / (1000 * 60 * 60 * 24)
-  console.log(difference, created, today)
   return {
     id: page.id.toString(),
     path: `/page/${page?.id}`,

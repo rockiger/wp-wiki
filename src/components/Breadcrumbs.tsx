@@ -4,12 +4,18 @@ import {
 } from '@nextui-org/react'
 import type { RouteItem } from './Sidebar'
 
-export function Breadcrumbs({ breadcrumbs }: { breadcrumbs: RouteItem[] }) {
+export function Breadcrumbs({
+  breadcrumbs,
+  className,
+}: {
+  breadcrumbs: RouteItem[]
+  className: string
+}) {
   if (!breadcrumbs.length) {
     return null
   }
   return (
-    <BreadcrumbsWrapper maxItems={5}>
+    <BreadcrumbsWrapper className={className} maxItems={5}>
       {breadcrumbs.map(
         (crumb, i) =>
           crumb.path &&

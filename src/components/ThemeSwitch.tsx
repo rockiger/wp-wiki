@@ -1,7 +1,3 @@
-'use client'
-
-import { FC } from 'react'
-import { VisuallyHidden } from '@react-aria/visually-hidden'
 import { SunFilledIcon, MoonFilledIcon } from './icons'
 import cx from 'classix'
 import { Button } from '@nextui-org/react'

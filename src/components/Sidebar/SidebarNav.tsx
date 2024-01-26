@@ -1,13 +1,7 @@
-/*
- * Copyright (c) Facebook, Inc. and its affiliates.
- */
-
 import { Suspense } from 'react'
-import * as React from 'react'
-import cx from 'classix'
 import { SidebarRouteTree } from './SidebarRouteTree'
 
-import type { RouteItem } from '../../routes/root'
+import type { RouteItem } from './Sidebar'
 
 declare global {
   interface Window {
