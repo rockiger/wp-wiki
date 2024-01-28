@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from '../types'
 
-export const HashLinearIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const HashLinearIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -40,4 +45,4 @@ export const HashLinearIcon = ({size = 24, width, height, ...props}: IconSvgProp
       strokeWidth="1.5"
     />
   </svg>
-);
+)

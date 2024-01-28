@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from '../types'
 
-export const CubesLinearIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const CubesLinearIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -68,4 +73,4 @@ export const CubesLinearIcon = ({size = 24, width, height, ...props}: IconSvgPro
       strokeWidth="1.5"
     />
   </svg>
-);
+)

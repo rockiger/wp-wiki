@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from '../types'
 
-export const PreviousBoldIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const PreviousBoldIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -20,4 +25,4 @@ export const PreviousBoldIcon = ({size = 24, width, height, ...props}: IconSvgPr
       fill="currentColor"
     />
   </svg>
-);
+)

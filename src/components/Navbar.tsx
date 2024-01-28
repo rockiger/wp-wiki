@@ -181,7 +181,7 @@ export const Navbar: FC<NavbarProps> = ({ children, pages, spaces }) => {
         <NavbarItem>
           <Button
             aria-label="Add Page here"
-            className="font-bold h-12 lg:h-10 bg-gradient-to-br from-blue-500 to-pink-500 border-small border-white/50 shadow-pink-500/30 text-white
+            className="font-bold h-12 lg:h-10 bg-gradient-to-b  from-primary-500 to-primary-600 border-small shadow-primary-500/30 text-primary-50
                     sm:w-auto text-lg"
             onClick={onClickNewButton}
             title="Add Page"

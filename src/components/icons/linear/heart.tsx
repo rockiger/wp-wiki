@@ -1,11 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from '../types'
 
 export const HeartLinearIcon = ({
   size = 24,
   width,
   height,
   strokeWidth = 1.5,
-  fill = "none",
+  fill = 'none',
   ...props
 }: IconSvgProps) => (
   <svg
@@ -26,4 +26,4 @@ export const HeartLinearIcon = ({
       strokeWidth={strokeWidth}
     />
   </svg>
-);
+)

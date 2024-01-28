@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from './types'
 
-export const GamingConsoleIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const GamingConsoleIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -36,4 +41,4 @@ export const GamingConsoleIcon = ({size = 24, width, height, ...props}: IconSvgP
       strokeWidth={2}
     />
   </svg>
-);
+)

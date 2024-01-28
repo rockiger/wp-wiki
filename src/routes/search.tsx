@@ -14,7 +14,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Search() {
   const { searchTerm } = useLoaderData() as Awaited<ReturnType<typeof loader>>
-  const { data: pages } = useFetchPages(searchTerm ?? '')
+  const { data: pages } = useFetchPages()
 
   return (
     <div className="p-8">

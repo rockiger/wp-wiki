@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from './types'
 
-export const MoonIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const MoonIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     focusable="false"
@@ -15,4 +20,4 @@ export const MoonIcon = ({size = 24, width, height, ...props}: IconSvgProps) => 
       fill="currentColor"
     />
   </svg>
-);
+)

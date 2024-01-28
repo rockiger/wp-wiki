@@ -17,6 +17,7 @@ import {
 import {
   Page as PageType,
   pageQuery,
+  uploadFile,
   useFetchPage,
   useFetchPages,
   useUpdatePage,
@@ -49,6 +50,7 @@ export default function Page() {
 
   const editor: BlockNoteEditor = useBlockNote({
     editable: false,
+    //! uploadFile: uploadFile,
   })
   const { updatePage } = useUpdatePage({
     //! update pages after saving
@@ -172,9 +174,9 @@ export default function Page() {
                 variant="light"
               >
                 {width === 'wide' ? (
-                  <ViewportNarrowIcon size={22} stroke-width={1} />
+                  <ViewportNarrowIcon size={22} strokeWidth={1} />
                 ) : (
-                  <ViewportWideIcon size={22} stroke-width={1} />
+                  <ViewportWideIcon size={22} strokeWidth={1} />
                 )}
               </Button>
               <Button
@@ -187,7 +189,7 @@ export default function Page() {
                 size="sm"
                 variant="light"
               >
-                <EditOffIcon size={22} stroke-width={1} />
+                <EditOffIcon size={22} strokeWidth={1} />
               </Button>
               <Button
                 aria-label="Save page"
@@ -204,7 +206,7 @@ export default function Page() {
                 size="sm"
                 variant="light"
               >
-                <SaveIcon size={22} stroke-width={1} />
+                <SaveIcon size={22} strokeWidth={1} />
               </Button>
             </div>
           ) : (
@@ -220,7 +222,7 @@ export default function Page() {
                 size="sm"
                 variant="light"
               >
-                <EditIcon size={22} stroke-width={1} />
+                <EditIcon size={22} strokeWidth={1} />
               </Button>
             </div>
           )}

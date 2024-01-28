@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from './types'
 
-export const PaletteIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const PaletteIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -23,4 +28,4 @@ export const PaletteIcon = ({size = 24, width, height, ...props}: IconSvgProps) 
       <path d="M18.37 11.29L15.66 14l-6.8 6.79A4.007 4.007 0 0010 18V8.335l2.71-2.705a2.368 2.368 0 013.54 0l2.12 2.12a2.368 2.368 0 010 3.54zM7 18a1 1 0 11-1-1 1 1 0 011 1z" />
     </g>
   </svg>
-);
+)

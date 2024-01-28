@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from '../types'
 
-export const PlusLinearIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const PlusLinearIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -22,4 +27,4 @@ export const PlusLinearIcon = ({size = 24, width, height, ...props}: IconSvgProp
       <path d="M12 18V6" />
     </g>
   </svg>
-);
+)

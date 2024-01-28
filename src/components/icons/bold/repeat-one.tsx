@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from '../types'
 
-export const RepeatOneBoldIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const RepeatOneBoldIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -24,4 +29,4 @@ export const RepeatOneBoldIcon = ({size = 24, width, height, ...props}: IconSvgP
       fill="currentColor"
     />
   </svg>
-);
+)

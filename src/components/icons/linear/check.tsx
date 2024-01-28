@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from '../types'
 
-export const CheckLinearIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const CheckLinearIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -17,4 +22,4 @@ export const CheckLinearIcon = ({size = 24, width, height, ...props}: IconSvgPro
   >
     <polyline points="20 6 9 17 4 12" />
   </svg>
-);
+)

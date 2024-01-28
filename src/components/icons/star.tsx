@@ -1,6 +1,12 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from './types'
 
-export const StarIcon = ({size = 24, width, height, fill = "none", ...props}: IconSvgProps) => (
+export const StarIcon = ({
+  size = 24,
+  width,
+  height,
+  fill = 'none',
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill={fill}
@@ -19,4 +25,4 @@ export const StarIcon = ({size = 24, width, height, fill = "none", ...props}: Ic
       strokeWidth="1.5"
     />
   </svg>
-);
+)

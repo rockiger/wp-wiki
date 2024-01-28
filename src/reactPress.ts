@@ -2,7 +2,6 @@ interface ReactPress {
   api: {
     nonce: string
     rest_url: string
-    graphql_url: string
   }
   user: any
   usermeta: any

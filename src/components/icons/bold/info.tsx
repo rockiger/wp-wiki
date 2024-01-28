@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from '../types'
 
-export const InfoBoldIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const InfoBoldIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -16,4 +21,4 @@ export const InfoBoldIcon = ({size = 24, width, height, ...props}: IconSvgProps)
       fill="currentColor"
     />
   </svg>
-);
+)

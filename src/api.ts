@@ -1,21 +1,20 @@
 import reactPress from './reactPress'
 
-import apiFetch from '@wordpress/api-fetch'
-import { WikipageResponse, WikispaceResponse } from './api-types'
+import apiFetch, { APIFetchOptions } from '@wordpress/api-fetch'
 import { addQueryArgs } from '@wordpress/url'
+import { WikipageResponse, WikispaceResponse } from './api-types'
 import {
   UseMutationOptions,
   useMutation,
   useQuery,
 } from '@tanstack/react-query'
-
 apiFetch.use((options, next) => {
   const { headers = {} } = options
   return next({
     ...options,
     headers: {
       ...headers,
-      ...(import.meta.env.Prod
+      ...(import.meta.env.PROD
         ? { 'X-WP-Nonce': reactPress.api.nonce }
         : { Authorization: `Basic ${btoa('admin:pass')}` }),
     },
@@ -25,10 +24,12 @@ apiFetch.use((options, next) => {
 apiFetch.use(
   apiFetch.createRootURLMiddleware(
     import.meta.env.PROD
-      ? `${reactPress?.api.graphql_url}` //! needs to be wp-json url
+      ? `${reactPress?.api.rest_url}`
       : 'http://fulcrum.test/wp-json/'
   )
 )
+
+// apiFetch.use(apiFetch.mediaUploadMiddleware)
 
 /**
  * Consumes the properties of the new page and creates the
@@ -260,4 +261,26 @@ export const useUpdatePageMeta = (
   })
 
   return { updatePageMeta: mutate, ...rest }
+}
+
+export const uploadFile = async (file: File) => {
+  console.log('uploadFile', file)
+  const formData = new FormData()
+  formData.append('file', file, file.name || file.type.replace('/', '.'))
+  console.log(
+    'formData',
+    Array.from(formData.values()).map((value) => value)
+  )
+
+  const response = await apiFetch({
+    path: '/wp/v2/media',
+    method: 'POST',
+    data: formData,
+    headers: {
+      'Content-Type': file.type,
+      'Content-Disposition': 'attachment; filename="' + file.name + '"',
+    },
+  })
+  //@ts-expect-error
+  return response?.media_details?.sizes?.large?.source_url as string
 }

@@ -3,7 +3,6 @@ import { LoaderFunctionArgs, Outlet, useNavigation } from 'react-router-dom'
 import { pagesQuery, spacesQuery, useFetchPages, useFetchSpaces } from '../api'
 
 import { cx } from 'classix'
-import '../components/Search/react.css'
 import LoadingIcon from 'mdi-react/LoadingIcon'
 import { QueryClient } from '@tanstack/react-query'
 import { Navbar } from '../components/Navbar'
@@ -24,13 +23,6 @@ export const loader =
         (await queryClient.fetchQuery(pagesQ)),
     }
   }
-
-export type RouteTag =
-  | 'foundation'
-  | 'intermediate'
-  | 'advanced'
-  | 'experimental'
-  | 'deprecated'
 
 export default function Root() {
   const { data: pages } = useFetchPages()

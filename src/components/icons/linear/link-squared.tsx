@@ -1,10 +1,10 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from '../types'
 
 export const LinkSquaredLinearIcon = ({
   size = 24,
   width,
   height,
-  strokeWidth = "1.5",
+  strokeWidth = '1.5',
   ...props
 }: IconSvgProps) => (
   <svg
@@ -39,4 +39,4 @@ export const LinkSquaredLinearIcon = ({
       strokeWidth={strokeWidth}
     />
   </svg>
-);
+)

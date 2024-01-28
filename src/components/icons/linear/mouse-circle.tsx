@@ -1,6 +1,11 @@
-import {IconSvgProps} from "@/types";
+import { IconSvgProps } from '../types'
 
-export const MouseCircleLinearIcon = ({size = 24, width, height, ...props}: IconSvgProps) => (
+export const MouseCircleLinearIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -26,4 +31,4 @@ export const MouseCircleLinearIcon = ({size = 24, width, height, ...props}: Icon
       strokeWidth={1.5}
     />
   </svg>
-);
+)
