@@ -34,7 +34,7 @@ export default function Login() {
             <Button
               as="a"
               color="primary"
-              href={`${window.location.origin}/login?${location.search}`}
+              href={`${window.location.origin}/wp-login.php${location.search}`}
             >
               Login With WordPress
             </Button>

@@ -12,7 +12,6 @@ function renderChunks(deps: Record<string, string>) {
         'react-dom',
         '@tiptap/pm',
         '@types/lodash',
-        'mdi-react',
       ].includes(key)
     )
       return
@@ -59,6 +58,8 @@ export default defineConfig(({ command }) => {
                 '@tiptap/react',
                 '@tiptap/starter-kit',
               ],
+              '@blocknote': ['@blocknote/core', '@blocknote/react'],
+              '@next-ui': ['@nextui-org/react'],
               // 'body-scroll-lock': ['body-scroll-lock'],
               // classix: ['classix'],
             },

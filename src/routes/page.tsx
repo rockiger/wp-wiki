@@ -198,6 +198,7 @@ export default function Page() {
                   setIsEditable(false)
                   editor.isEditable = false
                   const body = await editor.blocksToHTMLLossy()
+                  //@ts-ignore
                   updatePage({
                     id: parseInt(pageId!),
                     body,
