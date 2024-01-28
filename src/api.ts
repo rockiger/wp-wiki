@@ -1,6 +1,6 @@
 import reactPress from './reactPress'
 
-import apiFetch, { APIFetchOptions } from '@wordpress/api-fetch'
+import apiFetch from '@wordpress/api-fetch'
 import { addQueryArgs } from '@wordpress/url'
 import { WikipageResponse, WikispaceResponse } from './api-types'
 import {

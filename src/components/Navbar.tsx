@@ -22,8 +22,6 @@ import { usePress } from '@react-aria/interactions'
 import { useFocusRing } from '@react-aria/focus'
 import { TbPlus as PlusIcon } from 'react-icons/tb'
 
-//! import { DocsSidebar } from '@/components/docs/sidebar'
-
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import fulcrumLogo from '../assets/fulcrum.svg'

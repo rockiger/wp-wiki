@@ -56,7 +56,9 @@ export function SidebarRouteTree({
               />
             }
             aria-label={title}
-            onPress={(ev) => console.log('ev', ev)}
+            onPress={() => {
+              /* is need to block onPress event from propagating */
+            }}
           >
             <ul className={cx('flex flex-col gap-3 first:mt-3')}>
               {routes.map((rt) => (

@@ -17,7 +17,7 @@ import {
 import {
   Page as PageType,
   pageQuery,
-  uploadFile,
+  //! uploadFile,
   useFetchPage,
   useFetchPages,
   useUpdatePage,
@@ -63,6 +63,7 @@ export default function Page() {
   const [width, _setWidth] = useState(page?.width ?? 'standard')
   const setWidth = (width: 'wide' | 'standard') => {
     _setWidth(width)
+    //@ts-ignore
     updatePageMeta({ id: page?.id ?? 0, width: width })
   }
 
@@ -122,7 +123,6 @@ export default function Page() {
     if (page && editor) {
       const fn = async () => {
         const contentBlocks = await editor.tryParseHTMLToBlocks(page.body)
-        console.log('contenBlocks', contentBlocks, editor.topLevelBlocks)
         editor.replaceBlocks(editor.topLevelBlocks, contentBlocks)
       }
       setTimeout(fn, 0)

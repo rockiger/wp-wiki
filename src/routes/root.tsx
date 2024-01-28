@@ -1,5 +1,10 @@
 import { Suspense } from 'react'
-import { LoaderFunctionArgs, Outlet, useNavigation } from 'react-router-dom'
+import {
+  LoaderFunctionArgs,
+  Outlet,
+  redirect,
+  useNavigation,
+} from 'react-router-dom'
 import { pagesQuery, spacesQuery, useFetchPages, useFetchSpaces } from '../api'
 
 import { cx } from 'classix'
@@ -8,9 +13,21 @@ import { QueryClient } from '@tanstack/react-query'
 import { Navbar } from '../components/Navbar'
 import { Cmdk } from '../components/cmdk'
 import Sidebar from '../components/Sidebar'
+import reactPress from '../reactPress'
 
 export const loader =
   (queryClient: QueryClient) => async (_args: LoaderFunctionArgs) => {
+    if (reactPress.user.ID === 0) {
+      const urlParams = new URLSearchParams()
+      urlParams.append('redirect_to', window.location.href)
+      return redirect(`/login?${urlParams.toString()}`)
+    }
+    if (
+      !['editor', 'admin'].some((role) => reactPress.user.roles.includes(role))
+    ) {
+      return redirect('/rights')
+    }
+
     const spacesQ = spacesQuery()
     const pagesQ = pagesQuery()
 

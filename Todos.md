@@ -5,11 +5,11 @@
 - [x] Add page button
 - [x] Style nice buttons with gradient
 - [x] Show menu on mobile
-- [ ] user authentication with react router, fix plugin first.
-- [ ] Image Upload without selecting from WordPress
+- [x] user authentication with react router
 
 ---
 
+- [ ] Image Upload without selecting from WordPress
 - [] Add Checkboxes again
 - [] Add subpages from sidebar
 - [] Persist sidebar, use Zustand with useLocalStorage?

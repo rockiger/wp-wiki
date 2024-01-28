@@ -11,6 +11,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { NextUIProvider } from '@nextui-org/react'
 import './index.css'
+import Login from './routes/login'
+import NoRights from './routes/no-rights'
 
 const queryClient = new QueryClient()
 
@@ -39,6 +41,8 @@ const router = createHashRouter([
       },
     ],
   },
+  { path: '/login', element: <Login /> },
+  { path: '/rights', element: <NoRights /> },
 ])
 
 export default function App() {
