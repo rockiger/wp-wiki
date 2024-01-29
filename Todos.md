@@ -9,7 +9,7 @@
 
 ---
 
-- [ ] Image Upload without selecting from WordPress
+- [] Image Upload without selecting from WordPress
 - [] Add Checkboxes again
 - [] Add subpages from sidebar
 - [] Persist sidebar, use Zustand with useLocalStorage?

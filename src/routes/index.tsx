@@ -4,7 +4,6 @@ import { useFetchPages } from '../api'
 export default function Index() {
   const { data: pages } = useFetchPages()
   const targetPage = pages.filter((page) => page.isOverview)[0]
-  console.log('targetPage', targetPage)
 
   if (targetPage) {
     return <Navigate to={`/page/${targetPage?.id}`} />

@@ -23,7 +23,9 @@ export const loader =
       return redirect(`/login?${urlParams.toString()}`)
     }
     if (
-      !['editor', 'admin'].some((role) => reactPress.user.roles.includes(role))
+      !['editor', 'administrator'].some((role) =>
+        reactPress.user.roles.includes(role)
+      )
     ) {
       return redirect('/rights')
     }

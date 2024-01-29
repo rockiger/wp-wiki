@@ -26,7 +26,8 @@ import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import fulcrumLogo from '../assets/fulcrum.svg'
 import cx from 'classix'
-import { ThemeSwitch } from './ThemeSwitch'
+//! Add theme switch when blocknote is ready
+//! import { ThemeSwitch } from './ThemeSwitch'
 import { SearchLinearIcon } from './icons'
 import { useCmdkStore } from './cmdk'
 import { useQueryClient } from '@tanstack/react-query'
@@ -160,7 +161,7 @@ export const Navbar: FC<NavbarProps> = ({ children, pages, spaces }) => {
                 'text-sm mr-0 w-6 h-6 text-link dark:text-link-dark flex origin-center transition-all ease-in-out'
               )}
             />
-            <div className="h-5 text-xl md:h-6">Fulcrum</div>
+            <div className="hidden h-5 text-xl sm:block md:h-6">Fulcrum</div>
           </NavLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start items-center">
@@ -191,9 +192,12 @@ export const Navbar: FC<NavbarProps> = ({ children, pages, spaces }) => {
       </NavbarContent>
 
       <NavbarContent className="flex w-full gap-2 sm:hidden" justify="end">
+        {/* 
+        //! Add theme switch when blocknote is ready 
         <NavbarItem className="flex h-full items-center">
           <ThemeSwitch />
-        </NavbarItem>
+        </NavbarItem> 
+        */}
         <NavbarItem className="flex h-full items-center">
           <button
             className={clsx(
@@ -223,9 +227,12 @@ export const Navbar: FC<NavbarProps> = ({ children, pages, spaces }) => {
         <NavbarItem className="hidden sm:flex">
           <SearchButton />
         </NavbarItem>
+        {/*
+        //! Add theme switch when blocknote is ready 
         <NavbarItem className="hidden sm:flex">
           <ThemeSwitch />
-        </NavbarItem>
+            </NavbarItem> 
+        */}
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           className="hidden sm:flex lg:hidden ml-4"
