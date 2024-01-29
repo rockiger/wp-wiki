@@ -132,15 +132,15 @@ export default function Page() {
 
   return (
     <article
-      className="no-bg-scrollbar pb-4"
+      className="no-bg-scrollbar pb-4 w-screen lg:w-auto"
       id="scrollwrapper"
       key={pageId}
       style={{ height: 'calc(100vh - 4rem - 2rem)', overflowY: 'auto' }}
     >
       <div
         className={cx(
-          'ml-0 2xl:mx-auto',
-          width === 'wide' ? 'max-w-full' : 'max-w-4xl'
+          'mx-auto max-w-full',
+          width === 'wide' ? 'w-full' : 'w-[44rem]'
         )}
       >
         <div className="flex h-8 items-center justify-between">

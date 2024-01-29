@@ -16,3 +16,6 @@
 - [] Add Space management
 - [] Fix sidebar order, order is random at the moment. Look into how wordpress is producing the order.
 - [] Create parser for WordPress' block editor and BlockNote to exchange content without loosing information
+- [] Re-add dark mode when blocknote is ready
+- [] Add ScrollArea for content page
+- [] SearchPage
