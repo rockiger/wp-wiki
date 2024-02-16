@@ -1,3 +1,5 @@
+To build and run this React app refer to the [Vite documentation](https://vitejs.dev/guide/)
+
 Potential Libraries:
 
 - [ahooks](https://ahooks.js.org/) - A high-quality & reliable React Hooks library

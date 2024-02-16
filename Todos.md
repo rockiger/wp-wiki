@@ -9,13 +9,17 @@
 
 ---
 
+- [x] Load 100 pages when fetching for pages, default is 25
+- [] Remove 'Privat: ' in Title of pages and add a label 'private' similar to draft
+- [] Fix padding in sidebar for accordions
+- [] Fix sidebar order, order is random at the moment. Look into how wordpress is producing the order. And how wordpress Menus work.
 - [] Image Upload without selecting from WordPress
+- [] SearchPage
 - [] Add Checkboxes again
 - [] Add subpages from sidebar
 - [] Persist sidebar, use Zustand with useLocalStorage?
 - [] Add Space management
-- [] Fix sidebar order, order is random at the moment. Look into how wordpress is producing the order.
 - [] Create parser for WordPress' block editor and BlockNote to exchange content without loosing information
 - [] Re-add dark mode when blocknote is ready
 - [] Add ScrollArea for content page
-- [] SearchPage
+- [] Think about a strategy to load pages for the sidebar, if there are more than 100. Should we load them on demand? If yes, how?

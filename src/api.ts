@@ -150,8 +150,9 @@ function normalizeWikipageResponseArray(nodes: WikipageResponse[]): Page[] {
 export async function fetchPages(search = '') {
   const queryParams = {
     status: 'draft,publish,private,pending',
+    per_page: '100',
     _fields:
-      'author,content,date,excerpt,id,isOverview,modified,parent,status,title, wikispaces, wikispace, wikispaceId',
+      'author,content,date,excerpt,id,isOverview,modified,parent,status,title, wikispaces, wikispace, wikispaceId, raw_title',
     search,
   }
   const response = await apiFetch({

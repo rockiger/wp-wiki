@@ -24,7 +24,7 @@ export default function SidebarNav({
 
   return (
     <aside>
-      <nav role="navigation">
+      <nav className="pt-1" role="navigation">
         {/* No fallback UI so need to be careful not to suspend directly inside. */}
         <Suspense fallback={null}>
           <ul>
