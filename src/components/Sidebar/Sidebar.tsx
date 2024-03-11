@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash'
+import { isEmpty, sortBy } from 'lodash'
 import { useMemo } from 'react'
 import { ScrollArea } from '../ScrollArea'
 import SidebarNav from './SidebarNav'
@@ -18,6 +18,8 @@ export interface RouteItem {
   isDraft?: boolean
   /** Whether the page is younger than 10 days */
   isNew?: boolean
+  /** Whether the page is private */
+  isPrivate?: boolean
   /** List of sub-routes */
   routes?: RouteItem[]
   /** Adds a section header above the route item */
@@ -66,7 +68,10 @@ export function createRouteTrees(pages: Page[], spaces: Space[]): RouteItem[] {
         title: p.wikispace.name ?? p?.title,
       }
     })
-  const subpages = pages.filter((p) => !p?.isOverview)
+  const subpages = sortBy(
+    pages.filter((p) => !p?.isOverview),
+    ['title', 'created']
+  )
 
   return overviews.map((o) => createRouteTreesHelper(o as Page, subpages))
 }
@@ -83,6 +88,7 @@ function createRouteTreesHelper(page: Page, subpages: Page[]): RouteItem {
     title: page?.title ?? '',
     isDraft: page?.status === 'draft',
     isNew: difference < 10,
+    isPrivate: page?.status === 'private',
     routes: children.map((c) => createRouteTreesHelper(c, subpages)),
   }
 }

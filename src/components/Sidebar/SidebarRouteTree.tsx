@@ -52,6 +52,8 @@ export function SidebarRouteTree({
                 selected={selected}
                 title={title}
                 isDraft={routeTree.isDraft}
+                isNew={routeTree.isNew}
+                isPrivate={routeTree.isPrivate}
                 hideArrow={!routes.length}
               />
             }
@@ -85,6 +87,7 @@ export function SidebarRouteTree({
           title={title}
           isDraft={routeTree.isDraft}
           isNew={routeTree.isNew}
+          isPrivate={routeTree.isPrivate}
           showDot={true}
         />
       </li>

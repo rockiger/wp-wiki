@@ -12,6 +12,7 @@ interface SidebarLinkProps {
   level?: number
   isDraft: boolean | undefined
   isNew?: boolean
+  isPrivate?: boolean
   icon?: React.ReactNode
   isExpanded?: boolean
   hideArrow?: boolean
@@ -24,6 +25,7 @@ export default function SidebarLink({
   title,
   isDraft,
   isNew,
+  isPrivate,
   level,
   showDot = false,
 }: SidebarLinkProps) {
@@ -81,6 +83,16 @@ export default function SidebarLink({
           variant="flat"
         >
           New
+        </Chip>
+      )}
+      {isPrivate && (
+        <Chip
+          className="ml-1 py-1 text-tiny"
+          color="success"
+          size="sm"
+          variant="flat"
+        >
+          Private
         </Chip>
       )}
     </Link>

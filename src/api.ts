@@ -25,7 +25,7 @@ apiFetch.use(
   apiFetch.createRootURLMiddleware(
     import.meta.env.PROD
       ? `${reactPress?.api.rest_url}`
-      : 'http://fulcrum.test/wp-json/'
+      : 'http://fulcrum.local/wp-json/'
   )
 )
 
@@ -113,7 +113,7 @@ export const normalizeWikipageResponse = (data: WikipageResponse) => {
     modified: modified,
     parentId: parent,
     status,
-    title: title.rendered,
+    title: status === 'private' ? title.rendered.slice(9) : title.rendered,
     wikispace,
     width,
   }

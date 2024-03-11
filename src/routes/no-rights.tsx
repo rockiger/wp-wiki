@@ -7,7 +7,6 @@ import {
   ModalFooter,
   Button,
 } from '@nextui-org/react'
-import { useLocation } from 'react-router-dom'
 
 import fulcrumLogo from '../assets/fulcrum.svg'
 

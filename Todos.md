@@ -6,14 +6,16 @@
 - [x] Style nice buttons with gradient
 - [x] Show menu on mobile
 - [x] user authentication with react router
+- [x] Load 100 pages when fetching for pages, default is 25
+- [x] Remove 'Privat: ' in Title of pages and add a label 'private' similar to draft
+- [x] Fix padding in sidebar for accordions
+- [x] Add alphabetical ordering
 
 ---
 
-- [x] Load 100 pages when fetching for pages, default is 25
-- [] Remove 'Privat: ' in Title of pages and add a label 'private' similar to draft
-- [] Fix padding in sidebar for accordions
-- [] Fix sidebar order, order is random at the moment. Look into how wordpress is producing the order. And how wordpress Menus work.
+- [] Improve Readme
 - [] Image Upload without selecting from WordPress
+- [] Fix sidebar order, order is random at the moment. Look into how wordpress is producing the order. And how wordpress Menus work.
 - [] SearchPage
 - [] Add Checkboxes again
 - [] Add subpages from sidebar

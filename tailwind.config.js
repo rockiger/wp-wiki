@@ -13,6 +13,7 @@ const config = {
     './src/**/*.{js,ts,jsx,tsx,css}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
+  safelist: ['pl-0', 'pl-4', 'pl-8', 'pl-12', 'pl-16'],
   darkMode: 'class',
   theme: {
     extend: {
